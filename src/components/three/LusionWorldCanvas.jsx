@@ -128,8 +128,16 @@ export default function LusionWorldCanvas({ activeTrackId, onSelectTrack }) {
   const scrollRef = useRef(0);
   const mouseRef = useRef({ x: 0, y: 0, targetX: 0, targetY: 0 });
   const [hoveredTrack, setHoveredTrack] = useState(null);
+  const hoveredTrackRef = useRef(null);
+  const onSelectTrackRef = useRef(onSelectTrack);
+  onSelectTrackRef.current = onSelectTrack;
+  const activeTrackIdRef = useRef(activeTrackId);
+  activeTrackIdRef.current = activeTrackId;
+
   const { theme } = useTheme();
   const isLight = theme === "light";
+  const sceneRef = useRef(null);
+  const rendererRef = useRef(null);
 
   // Global scroll listener for continuous choreography
   useEffect(() => {
@@ -144,6 +152,14 @@ export default function LusionWorldCanvas({ activeTrackId, onSelectTrack }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Dedicated Theme sync: dynamically updates fog and exposure WITHOUT recreating the canvas
+  useEffect(() => {
+    if (!sceneRef.current || !rendererRef.current) return;
+    const fogColor = isLight ? 0xf8fafc : 0x07090d;
+    sceneRef.current.fog.color.setHex(fogColor);
+    rendererRef.current.toneMappingExposure = isLight ? 1.05 : 1.2;
+  }, [isLight]);
+
   useEffect(() => {
     const container = mountRef.current;
     if (!container) return;
@@ -153,6 +169,7 @@ export default function LusionWorldCanvas({ activeTrackId, onSelectTrack }) {
 
     // Scene & Camera
     const scene = new THREE.Scene();
+    sceneRef.current = scene;
     const fogColor = isLight ? 0xf8fafc : 0x07090d;
     scene.fog = new THREE.FogExp2(fogColor, 0.038);
 
@@ -164,6 +181,7 @@ export default function LusionWorldCanvas({ activeTrackId, onSelectTrack }) {
       alpha: true,
       powerPreference: "high-performance",
     });
+    rendererRef.current = renderer;
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -381,7 +399,7 @@ export default function LusionWorldCanvas({ activeTrackId, onSelectTrack }) {
       const intersects = raycaster.intersectObjects(satelliteMeshes);
       if (intersects.length > 0) {
         const clicked = intersects[0].object;
-        if (onSelectTrack) onSelectTrack(clicked.userData.trackData);
+        if (onSelectTrackRef.current) onSelectTrackRef.current(clicked.userData.trackData);
       }
     };
 
@@ -477,12 +495,16 @@ export default function LusionWorldCanvas({ activeTrackId, onSelectTrack }) {
 
       if (intersects.length > 0) {
         const hit = intersects[0].object;
-        if (hoveredTrack?.id !== hit.userData.id) {
+        if (hoveredTrackRef.current?.id !== hit.userData.id) {
+          hoveredTrackRef.current = hit.userData.trackData;
           setHoveredTrack(hit.userData.trackData);
         }
         hit.scale.lerp(new THREE.Vector3(1.4, 1.4, 1.4), 0.15);
       } else {
-        if (hoveredTrack) setHoveredTrack(null);
+        if (hoveredTrackRef.current) {
+          hoveredTrackRef.current = null;
+          setHoveredTrack(null);
+        }
         satelliteMeshes.forEach((sat) => {
           sat.scale.lerp(new THREE.Vector3(1.0, 1.0, 1.0), 0.1);
         });
@@ -513,8 +535,10 @@ export default function LusionWorldCanvas({ activeTrackId, onSelectTrack }) {
         container.removeChild(renderer.domElement);
       }
       renderer.dispose();
+      sceneRef.current = null;
+      rendererRef.current = null;
     };
-  }, [isLight, hoveredTrack, onSelectTrack]);
+  }, []);
 
   return (
     <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">

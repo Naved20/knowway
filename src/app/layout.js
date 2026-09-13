@@ -6,6 +6,7 @@ import CustomCursor from "@/components/ui/CustomCursor";
 import SmoothScrollProvider from "@/components/providers/SmoothScrollProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import Intro3DPreloader from "@/components/ui/Intro3DPreloader";
+import AIAssistantModal from "@/components/ui/AIAssistantModal";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -66,6 +67,7 @@ export default function RootLayout({ children }) {
             <Navbar />
             <div className="flex-1 w-full">{children}</div>
             <Footer />
+            <AIAssistantModal />
           </SmoothScrollProvider>
         </ThemeProvider>
       </body>
