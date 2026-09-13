@@ -50,6 +50,10 @@ export const metadata = {
     description:
       "Central India's leading student technology ecosystem connecting developers, founders, and creators.",
   },
+  icons: {
+    icon: "/images/knowvy-logo.png",
+    apple: "/images/knowvy-logo.png",
+  },
 };
 
 export default function RootLayout({ children }) {

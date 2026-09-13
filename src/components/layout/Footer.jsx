@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { brandData } from "@/data/knowvy-data";
 import { ArrowUpRight, MessageSquare, Heart } from "lucide-react";
 import { GithubIcon, LinkedinIcon, TwitterIcon } from "@/components/ui/BrandIcons";
@@ -13,9 +14,15 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
           {/* Brand Column */}
           <div className="lg:col-span-2 space-y-4">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#4D8DFF] to-[#8B5CF6] flex items-center justify-center text-white font-display font-extrabold text-sm">
-                K
+            <Link href="/" className="flex items-center gap-3 group">
+              <div className="relative w-9 h-9 rounded-xl overflow-hidden bg-black border border-white/20 flex items-center justify-center p-0.5 shadow-md shadow-[#4D8DFF]/20 group-hover:border-[#4D8DFF]/50 transition-all">
+                <Image
+                  src="/images/knowvy-logo.png"
+                  alt="Knowvy Tiger Logo"
+                  width={32}
+                  height={32}
+                  className="object-contain"
+                />
               </div>
               <span className="text-xl font-display font-black tracking-tight text-white">
                 KNOWVY

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, ArrowUpRight, Sun, Moon } from "lucide-react";
 import { brandData } from "@/data/knowvy-data";
@@ -51,8 +52,15 @@ export default function Navbar() {
       >
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#4D8DFF] to-[#8B5CF6] flex items-center justify-center text-white font-display font-extrabold text-sm shadow-md shadow-[#4D8DFF]/25 group-hover:scale-105 group-hover:shadow-[#4D8DFF]/40 transition-all">
-            K
+          <div className="relative w-8 h-8 rounded-xl overflow-hidden bg-black border border-white/20 flex items-center justify-center p-0.5 shadow-md shadow-[#4D8DFF]/25 group-hover:scale-105 group-hover:border-[#4D8DFF]/60 group-hover:shadow-[#4D8DFF]/50 transition-all">
+            <Image
+              src="/images/knowvy-logo.png"
+              alt="Knowvy Tiger Logo"
+              width={28}
+              height={28}
+              className="object-contain filter drop-shadow-[0_0_8px_rgba(77,141,255,0.4)]"
+              priority
+            />
           </div>
           <div className="flex flex-col">
             <span className="text-lg sm:text-xl font-display font-black tracking-tight text-[var(--text-primary)] flex items-center gap-1.5">

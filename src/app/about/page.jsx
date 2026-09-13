@@ -136,6 +136,28 @@ export default function AboutPage() {
             ))}
           </div>
         </div>
+
+        {/* Mascot & Brand Emblem */}
+        <div className="p-8 sm:p-10 rounded-3xl bg-[#0D1118] border border-[#1C2430] flex flex-col sm:flex-row items-center gap-8">
+          <div className="relative w-28 h-28 rounded-2xl bg-black border border-white/20 p-2 flex items-center justify-center flex-shrink-0 shadow-xl shadow-[#4D8DFF]/20">
+            <img
+              src="/images/knowvy-logo.png"
+              alt="Knowvy Tiger Emblem"
+              className="w-full h-full object-contain filter drop-shadow-[0_0_12px_rgba(77,141,255,0.5)]"
+            />
+          </div>
+          <div className="space-y-2 text-center sm:text-left">
+            <span className="text-xs font-mono text-[#4D8DFF] uppercase tracking-wider">
+              Official Identity // Mascot
+            </span>
+            <h3 className="text-2xl font-display font-bold text-white">
+              The Knowvy Tiger
+            </h3>
+            <p className="text-sm text-[#8B95A5] leading-relaxed max-w-2xl">
+              Rooted in Central India (the land of the white tiger), the Knowvy Tiger embodies the fearless curiosity, tenacity, and relentless ambition of our student builder community. We don&apos;t wait for opportunities—we hunt them down and build what&apos;s next.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { brandData } from "@/data/knowvy-data";
 import { ArrowUpRight, ArrowRight, Compass, ChevronDown } from "lucide-react";
 
@@ -9,9 +10,17 @@ export default function LusionHeroOverlay() {
     <section className="relative min-h-screen flex flex-col justify-between pt-32 pb-16 px-4 sm:px-6 lg:px-12 pointer-events-none">
       {/* Top Telemetry Row */}
       <div className="flex flex-wrap items-center justify-between gap-4 text-[11px] font-mono tracking-wider text-[#8B95A5] uppercase">
-        <div className="flex items-center gap-2 lusion-tag px-3 py-1 rounded-full">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#4D8DFF] animate-ping" />
-          <span className="text-white font-bold">Knowvy WebGL // 2.0</span>
+        <div className="flex items-center gap-2.5 lusion-tag px-3.5 py-1.5 rounded-full border border-white/15 shadow-lg shadow-black/40">
+          <div className="w-5 h-5 rounded-md overflow-hidden bg-black flex items-center justify-center">
+            <Image
+              src="/images/knowvy-logo.png"
+              alt="Knowvy Mascot"
+              width={18}
+              height={18}
+              className="object-contain"
+            />
+          </div>
+          <span className="text-white font-bold tracking-widest">KNOWVY // 2.0</span>
         </div>
 
         <div className="hidden md:flex items-center gap-6 text-[#5A6475]">
