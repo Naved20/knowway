@@ -20,6 +20,7 @@ import {
   Copy,
   ExternalLink,
   ChevronRight,
+  ArrowRight,
   School,
   Phone,
   Lock,
