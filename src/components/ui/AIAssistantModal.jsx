@@ -1,7 +1,19 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Sparkles, X, Send, Bot, User, Loader2, Lightbulb, Code2 } from "lucide-react";
+import {
+  Sparkles,
+  X,
+  Send,
+  Bot,
+  User,
+  Loader2,
+  Lightbulb,
+  Zap,
+  CornerDownLeft,
+  Volume2,
+  Flame,
+} from "lucide-react";
 
 export default function AIAssistantModal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,7 +22,7 @@ export default function AIAssistantModal() {
     {
       role: "assistant",
       content:
-        "Hey Builder! 👋 I'm Knowvy AI, powered by Google Gemini. Ask me about hackathons, open source, cloud tracks, architecture ideas, or how to get involved in the Knowvy ecosystem.",
+        "Hey Builder! 👋 I'm Knowvy AI. Ask me about hackathons, technical tracks, open-source PRs, architecture blueprints, or how to get involved in our ecosystem.",
     },
   ]);
   const [loading, setLoading] = useState(false);
@@ -84,45 +96,82 @@ export default function AIAssistantModal() {
 
   return (
     <>
-      {/* Floating AI Button in Bottom-Right */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-40 p-3.5 rounded-full bg-gradient-to-r from-[#4D8DFF] to-[#8B5CF6] text-white shadow-2xl shadow-[#4D8DFF]/40 hover:shadow-[#4D8DFF]/60 hover:scale-110 active:scale-95 transition-all flex items-center gap-2 group cursor-pointer border border-white/20"
-        title="Knowvy AI Companion"
-        aria-label="Open Knowvy AI Assistant"
-      >
-        <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-        <span className="hidden md:inline text-xs font-display font-bold pr-1">
-          Ask Gemini
-        </span>
-      </button>
+      {/* ========================================================================= */}
+      {/* MOTION-ANIMATED FLOATING TRIGGER BUTTON ("Ask")                           */}
+      {/* ========================================================================= */}
+      <div className="fixed bottom-6 right-6 z-40">
+        {/* Pulsing Radar Aura Waves */}
+        <span className="absolute -inset-2 rounded-full bg-gradient-to-r from-[#4D8DFF] to-[#8B5CF6] opacity-30 blur-md animate-pulse pointer-events-none" />
+        <span className="absolute -inset-4 rounded-full bg-[#4D8DFF]/20 animate-ping [animation-duration:3s] pointer-events-none" />
 
-      {/* Glassmorphic AI Chat Modal */}
+        {/* Gyroscopic Animated Outer Cyber Ring */}
+        <div className="absolute -inset-1.5 rounded-full border border-dashed border-[#4D8DFF]/40 animate-[spin_10s_linear_infinite] pointer-events-none" />
+        <div className="absolute -inset-2.5 rounded-full border border-dotted border-[#8B5CF6]/30 animate-[spin_16s_linear_infinite_reverse] pointer-events-none" />
+
+        {/* Core Button */}
+        <button
+          onClick={() => setIsOpen(true)}
+          className="relative px-4 py-3 rounded-full bg-gradient-to-r from-[#0D1424] via-[#111A2E] to-[#0D1424] text-white shadow-[0_0_30px_rgba(77,141,255,0.4)] hover:shadow-[0_0_45px_rgba(77,141,255,0.7)] hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-2.5 group cursor-pointer border border-[#4D8DFF]/50 backdrop-blur-xl"
+          title="Open Knowvy AI Assistant"
+          aria-label="Open Knowvy AI Assistant"
+        >
+          {/* Animated AI Mascot Orb Icon */}
+          <div className="relative w-7 h-7 rounded-full bg-gradient-to-tr from-[#4D8DFF] to-[#8B5CF6] flex items-center justify-center text-white shadow-md shadow-[#4D8DFF]/40">
+            {/* Spinning micro particles */}
+            <span className="absolute inset-0 rounded-full border border-white/40 animate-ping [animation-duration:2.5s] opacity-75" />
+            <Sparkles className="w-3.5 h-3.5 group-hover:rotate-45 transition-transform duration-500" />
+          </div>
+
+          {/* User Requested Name: "Ask" */}
+          <span className="text-xs font-display font-extrabold tracking-wider text-white uppercase pr-1 flex items-center gap-1.5">
+            Ask
+            {/* 3-Bar Audio Frequency Waveform Animation */}
+            <span className="flex items-end gap-[2px] h-3.5 ml-0.5">
+              <span className="w-[2.5px] bg-[#4D8DFF] rounded-full animate-[pulse_0.8s_ease-in-out_infinite] h-2" />
+              <span className="w-[2.5px] bg-[#8B5CF6] rounded-full animate-[pulse_1.2s_ease-in-out_infinite] h-3.5" />
+              <span className="w-[2.5px] bg-[#00E5A3] rounded-full animate-[pulse_0.9s_ease-in-out_infinite] h-2.5" />
+            </span>
+          </span>
+        </button>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* GLASSMORPHIC AI CHAT MODAL                                                */}
+      {/* ========================================================================= */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="relative w-full max-w-xl h-[85vh] sm:h-[620px] rounded-t-3xl sm:rounded-3xl lusion-glass border border-white/15 shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-6 duration-300">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="relative w-full max-w-xl h-[88vh] sm:h-[640px] rounded-t-3xl sm:rounded-3xl bg-[#0B0F17]/95 backdrop-blur-2xl border border-white/15 shadow-[0_20px_60px_rgba(0,0,0,0.8)] flex flex-col overflow-hidden animate-in slide-in-from-bottom-8 duration-300">
+            {/* Ambient Top Laser Border Line */}
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#4D8DFF] to-transparent animate-pulse" />
+
             {/* Header */}
-            <div className="p-4 sm:p-5 border-b border-white/10 flex items-center justify-between bg-black/30">
+            <div className="p-4 sm:p-5 border-b border-white/10 flex items-center justify-between bg-black/40 relative">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#4D8DFF] to-[#8B5CF6] flex items-center justify-center text-white shadow-md shadow-[#4D8DFF]/30">
-                  <Bot className="w-4 h-4" />
+                {/* 3D Animated Gyroscopic Avatar */}
+                <div className="relative w-10 h-10 rounded-2xl bg-gradient-to-br from-[#4D8DFF] via-[#3B82F6] to-[#8B5CF6] flex items-center justify-center text-white shadow-lg shadow-[#4D8DFF]/30 overflow-hidden">
+                  <span className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.4),transparent)]" />
+                  <Bot className="w-5 h-5 relative z-10 animate-[bounce_3s_ease-in-out_infinite]" />
+                  {/* Scanning Laser Line */}
+                  <span className="absolute inset-x-0 h-[2px] bg-white/80 top-0 animate-[scan_2s_linear_infinite]" />
                 </div>
+
                 <div>
                   <h3 className="text-sm font-display font-bold text-white flex items-center gap-2">
-                    Knowvy AI Assistant
-                    <span className="px-2 py-0.5 rounded-full bg-[#4D8DFF]/20 text-[#4D8DFF] text-[10px] font-mono border border-[#4D8DFF]/30">
-                      Gemini 2.5
+                    Knowvy AI Companion
+                    <span className="px-2 py-0.5 rounded-full bg-[#4D8DFF]/20 text-[#4D8DFF] text-[10px] font-mono border border-[#4D8DFF]/30 flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-ping" />
+                      Gemini Online
                     </span>
                   </h3>
                   <p className="text-[11px] font-mono text-[#8B95A5]">
-                    Builder Companion for Student Developers
+                    Architecture, Hackathons & Code Mentor
                   </p>
                 </div>
               </div>
 
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1.5 rounded-xl hover:bg-white/10 text-[#8B95A5] hover:text-white transition-colors cursor-pointer"
+                className="p-2 rounded-xl hover:bg-white/10 text-[#8B95A5] hover:text-white transition-colors cursor-pointer"
                 aria-label="Close AI Chat"
               >
                 <X className="w-5 h-5" />
@@ -136,49 +185,59 @@ export default function AIAssistantModal() {
                   key={i}
                   className={`flex gap-3 ${
                     m.role === "user" ? "justify-end" : "justify-start"
-                  }`}
+                  } animate-in fade-in slide-in-from-bottom-2 duration-200`}
                 >
                   {m.role === "assistant" && (
-                    <div className="w-6 h-6 rounded-lg bg-[#4D8DFF]/20 border border-[#4D8DFF]/40 text-[#4D8DFF] flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Bot className="w-3.5 h-3.5" />
+                    <div className="w-7 h-7 rounded-xl bg-[#4D8DFF]/15 border border-[#4D8DFF]/40 text-[#4D8DFF] flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+                      <Bot className="w-4 h-4" />
                     </div>
                   )}
 
                   <div
-                    className={`max-w-[85%] sm:max-w-[75%] rounded-2xl p-3.5 leading-relaxed whitespace-pre-wrap ${
+                    className={`max-w-[85%] sm:max-w-[78%] rounded-2xl p-4 leading-relaxed whitespace-pre-wrap ${
                       m.role === "user"
-                        ? "bg-[#4D8DFF] text-white font-medium"
-                        : "bg-[#111722] border border-[#1C2430] text-[#CBD5E1]"
+                        ? "bg-gradient-to-r from-[#4D8DFF] to-[#3B82F6] text-white font-medium shadow-md shadow-[#4D8DFF]/20 rounded-tr-sm"
+                        : "bg-[#111722] border border-[#1C2430] text-[#CBD5E1] rounded-tl-sm shadow-sm"
                     }`}
                   >
                     {m.content}
                   </div>
 
                   {m.role === "user" && (
-                    <div className="w-6 h-6 rounded-lg bg-white/10 border border-white/20 text-white flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <User className="w-3.5 h-3.5" />
+                    <div className="w-7 h-7 rounded-xl bg-white/10 border border-white/20 text-white flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+                      <User className="w-4 h-4" />
                     </div>
                   )}
                 </div>
               ))}
 
+              {/* Generating Motion State */}
               {loading && (
-                <div className="flex items-center gap-2 text-xs font-mono text-[#4D8DFF] pt-1 pl-9">
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  <span>Gemini is generating response...</span>
+                <div className="flex items-center gap-3 text-xs font-mono text-[#4D8DFF] pt-2 pl-2">
+                  <div className="w-7 h-7 rounded-xl bg-[#4D8DFF]/10 border border-[#4D8DFF]/30 flex items-center justify-center">
+                    <Loader2 className="w-4 h-4 animate-spin text-[#4D8DFF]" />
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-[#8B95A5]">
+                    <span>Gemini is generating response</span>
+                    <span className="flex gap-1 items-center">
+                      <span className="w-1 h-1 bg-[#4D8DFF] rounded-full animate-bounce [animation-delay:-0.3s]" />
+                      <span className="w-1 h-1 bg-[#4D8DFF] rounded-full animate-bounce [animation-delay:-0.15s]" />
+                      <span className="w-1 h-1 bg-[#4D8DFF] rounded-full animate-bounce" />
+                    </span>
+                  </div>
                 </div>
               )}
               <div ref={messagesEndRef} />
             </div>
 
             {/* Quick Prompt Chips */}
-            <div className="px-4 py-2 border-t border-white/5 flex gap-2 overflow-x-auto bg-black/20 text-[11px] font-mono no-scrollbar">
+            <div className="px-4 py-2.5 border-t border-white/5 flex gap-2 overflow-x-auto bg-black/30 text-[11px] font-mono no-scrollbar">
               {QUICK_PROMPTS.map((qp, idx) => (
                 <button
                   key={idx}
                   onClick={() => handleSend(qp.prompt)}
                   disabled={loading}
-                  className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 hover:border-[#4D8DFF]/50 text-[#8B95A5] hover:text-white transition-all whitespace-nowrap cursor-pointer flex-shrink-0"
+                  className="px-3 py-1.5 rounded-full bg-[#111722] border border-[#1C2430] hover:border-[#4D8DFF]/60 hover:bg-[#4D8DFF]/10 text-[#8B95A5] hover:text-white transition-all whitespace-nowrap cursor-pointer flex-shrink-0 shadow-sm"
                 >
                   {qp.label}
                 </button>
@@ -191,20 +250,20 @@ export default function AIAssistantModal() {
                 e.preventDefault();
                 handleSend();
               }}
-              className="p-3 sm:p-4 border-t border-white/10 bg-black/40 flex items-center gap-2"
+              className="p-3 sm:p-4 border-t border-white/10 bg-black/50 flex items-center gap-2"
             >
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask about hackathons, code, tracks, or career..."
+                placeholder="Ask about hackathons, code, architecture, or career..."
                 disabled={loading}
-                className="flex-1 px-4 py-2.5 rounded-xl bg-[#0D1118] border border-[#1C2430] text-xs text-white placeholder:text-[#5A6475] focus:outline-none focus:border-[#4D8DFF]"
+                className="flex-1 px-4 py-3 rounded-xl bg-[#0D1118] border border-[#1C2430] text-xs text-white placeholder:text-[#5A6475] focus:outline-none focus:border-[#4D8DFF] transition-colors"
               />
               <button
                 type="submit"
                 disabled={loading || !input.trim()}
-                className="p-2.5 rounded-xl bg-gradient-to-r from-[#4D8DFF] to-[#3B82F6] text-white disabled:opacity-50 hover:scale-105 active:scale-95 transition-all cursor-pointer shadow-md shadow-[#4D8DFF]/30"
+                className="p-3 rounded-xl bg-gradient-to-r from-[#4D8DFF] to-[#3B82F6] text-white disabled:opacity-40 hover:scale-105 active:scale-95 transition-all cursor-pointer shadow-lg shadow-[#4D8DFF]/30 flex items-center justify-center"
                 aria-label="Send Message"
               >
                 <Send className="w-4 h-4" />

@@ -1,17 +1,24 @@
 import { GoogleGenAI } from "@google/genai";
 
-const apiKey = process.env.GEMINI_API_KEY || "";
-
-const isConfigured = Boolean(
-  apiKey &&
-  apiKey !== "your-gemini-api-key" &&
-  !apiKey.includes("placeholder")
-);
-
-const ai = isConfigured ? new GoogleGenAI({ apiKey }) : null;
+function getApiKey() {
+  const key = process.env.GEMINI_API_KEY || "";
+  return key.replace(/['"]/g, "").trim();
+}
 
 export function isGeminiReady() {
-  return isConfigured;
+  const key = getApiKey();
+  return Boolean(
+    key &&
+    key !== "your-gemini-api-key" &&
+    key !== "your-gemini-api-key-from-google-ai-studio" &&
+    !key.includes("placeholder")
+  );
+}
+
+function getAIClient() {
+  const key = getApiKey();
+  if (!key) return null;
+  return new GoogleGenAI({ apiKey: key });
 }
 
 const KNOWVY_SYSTEM_PROMPT = `
@@ -27,13 +34,21 @@ Tone: Technical, empowering, encouraging, concise, and builder-focused. Format r
 `;
 
 /**
- * Generate a response using Google Gemini
+ * Generate a response using Google Gemini with multi-model resiliency
  */
 export async function askGemini(prompt, history = []) {
-  if (!isConfigured || !ai) {
+  if (!isGeminiReady()) {
     return {
       success: false,
       error: "Gemini API Key is not set in .env. Please add GEMINI_API_KEY to enable AI features.",
+    };
+  }
+
+  const ai = getAIClient();
+  if (!ai) {
+    return {
+      success: false,
+      error: "Could not initialize Google GenAI client.",
     };
   }
 
@@ -56,19 +71,36 @@ export async function askGemini(prompt, history = []) {
       parts: [{ text: prompt }],
     });
 
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: formattedContents,
-      config: {
-        systemInstruction: KNOWVY_SYSTEM_PROMPT,
-        temperature: 0.7,
-      },
-    });
+    // Try primary modern models in order of capability
+    const candidateModels = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
+    let lastError = null;
 
-    return {
-      success: true,
-      text: response.text || "No response generated.",
-    };
+    for (const modelName of candidateModels) {
+      try {
+        const response = await ai.models.generateContent({
+          model: modelName,
+          contents: formattedContents,
+          config: {
+            systemInstruction: KNOWVY_SYSTEM_PROMPT,
+            temperature: 0.7,
+          },
+        });
+
+        if (response && response.text) {
+          return {
+            success: true,
+            text: response.text,
+            modelUsed: modelName,
+          };
+        }
+      } catch (err) {
+        lastError = err;
+        // Continue to next model if model was not found
+        console.warn(`Model ${modelName} failed, trying next candidate...`, err.message);
+      }
+    }
+
+    throw lastError || new Error("All Gemini model candidates failed.");
   } catch (err) {
     console.error("Gemini API Error:", err);
     return {

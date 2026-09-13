@@ -18,11 +18,16 @@ import {
   Trophy,
   Globe,
   Database,
+  Mail,
+  Send,
 } from "lucide-react";
 
 export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState("events");
   const [eventsList, setEventsList] = useState(eventsData);
+  const [smtpTesting, setSmtpTesting] = useState(false);
+  const [smtpResult, setSmtpResult] = useState(null);
+  const [testEmailInput, setTestEmailInput] = useState("knowvy1@gmail.com");
   const [showAddModal, setShowAddModal] = useState(false);
   const [newEventTitle, setNewEventTitle] = useState("");
   const [newEventCategory, setNewEventCategory] = useState("Technical Workshop");
@@ -63,6 +68,29 @@ export default function AdminDashboardPage() {
       handleTriggerSync(customPlatform, eventsArray);
     } catch (err) {
       alert("Invalid JSON format: " + err.message);
+    }
+  };
+
+  const handleTestSmtp = async (e) => {
+    e?.preventDefault();
+    setSmtpTesting(true);
+    setSmtpResult(null);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          isTest: true,
+          email: testEmailInput,
+          name: "Knowvy Admin",
+        }),
+      });
+      const data = await res.json();
+      setSmtpResult(data);
+    } catch (err) {
+      setSmtpResult({ error: err.message });
+    } finally {
+      setSmtpTesting(false);
     }
   };
 
@@ -130,6 +158,7 @@ export default function AdminDashboardPage() {
           {[
             { id: "events", label: "Events & Hackathons", icon: Calendar },
             { id: "sync", label: "Multi-Platform Ingestion (Unstop, MLH, etc.)", icon: UploadCloud },
+            { id: "smtp", label: "SMTP Mail Dispatcher", icon: Mail },
             { id: "team", label: "Team & Ambassadors", icon: Users },
             { id: "gallery", label: "Gallery & Cloudinary", icon: ImageIcon },
           ].map((tab) => {
@@ -488,6 +517,105 @@ export default function AdminDashboardPage() {
                 </pre>
               </div>
             )}
+          </div>
+        )}
+
+        {/* Tab: SMTP Mail Dispatcher */}
+        {activeTab === "smtp" && (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h3 className="text-xl font-display font-bold text-white flex items-center gap-2">
+                  <Mail className="w-5 h-5 text-[#4D8DFF]" />
+                  SMTP Mail Server Management
+                </h3>
+                <p className="text-xs text-[#8B95A5]">
+                  Live Gmail SMTP dispatch engine for student inquiries, welcome emails, and hackathon alerts.
+                </p>
+              </div>
+
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#10B981]/10 border border-[#10B981]/30 text-xs font-mono text-[#10B981]">
+                <CheckCircle2 className="w-4 h-4" />
+                <span>Port 465 SSL Active</span>
+              </div>
+            </div>
+
+            {/* Server Config Highlights */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="p-4 rounded-xl bg-[#0D1118] border border-[#1C2430] space-y-1">
+                <span className="text-[10px] font-mono text-[#5A6475] uppercase block">SMTP Host</span>
+                <span className="text-sm font-bold font-mono text-white">smtp.gmail.com</span>
+              </div>
+              <div className="p-4 rounded-xl bg-[#0D1118] border border-[#1C2430] space-y-1">
+                <span className="text-[10px] font-mono text-[#5A6475] uppercase block">Authenticated Sender</span>
+                <span className="text-sm font-bold font-mono text-[#4D8DFF] truncate block">knowvy1@gmail.com</span>
+              </div>
+              <div className="p-4 rounded-xl bg-[#0D1118] border border-[#1C2430] space-y-1">
+                <span className="text-[10px] font-mono text-[#5A6475] uppercase block">Security & Port</span>
+                <span className="text-sm font-bold font-mono text-[#10B981]">Port 465 (SSL / TLS)</span>
+              </div>
+            </div>
+
+            {/* Live Test Email Dispatcher Card */}
+            <div className="p-6 sm:p-8 rounded-2xl bg-[#0D1118] border border-[#1C2430] space-y-6">
+              <div className="space-y-1">
+                <h4 className="text-base font-display font-bold text-white">
+                  Send Instant Verification Email
+                </h4>
+                <p className="text-xs text-[#8B95A5]">
+                  Sends a real test email with Knowvy branded HTML formatting via your Google SMTP App Password.
+                </p>
+              </div>
+
+              <form onSubmit={handleTestSmtp} className="flex flex-col sm:flex-row gap-3 max-w-xl">
+                <input
+                  type="email"
+                  value={testEmailInput}
+                  onChange={(e) => setTestEmailInput(e.target.value)}
+                  placeholder="Recipient email address..."
+                  required
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-[#111722] border border-[#1C2430] text-xs font-mono text-white placeholder:text-[#5A6475] focus:outline-none focus:border-[#4D8DFF]"
+                />
+                <button
+                  type="submit"
+                  disabled={smtpTesting}
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#4D8DFF] to-[#3B82F6] text-white font-display font-bold text-xs flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all shadow-md shadow-[#4D8DFF]/25 disabled:opacity-50 cursor-pointer"
+                >
+                  {smtpTesting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Dispatching...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      Send Test Email
+                    </>
+                  )}
+                </button>
+              </form>
+
+              {/* Status Output Box */}
+              {smtpResult && (
+                <div className="p-4 rounded-xl bg-[#111722] border border-[#1C2430] space-y-2 animate-in fade-in">
+                  <div className="flex items-center gap-2 text-xs font-mono">
+                    {smtpResult.success ? (
+                      <span className="text-[#10B981] font-bold flex items-center gap-1.5">
+                        <CheckCircle2 className="w-4 h-4" />
+                        Email Dispatched Successfully!
+                      </span>
+                    ) : (
+                      <span className="text-red-400 font-bold">
+                        ⚠️ Dispatch Failed: {smtpResult.error || "Check SMTP credentials in .env"}
+                      </span>
+                    )}
+                  </div>
+                  <pre className="p-3 rounded-lg bg-black/60 text-[11px] font-mono text-[#8B95A5] overflow-x-auto">
+                    {JSON.stringify(smtpResult, null, 2)}
+                  </pre>
+                </div>
+              )}
+            </div>
           </div>
         )}
 
