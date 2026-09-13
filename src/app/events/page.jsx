@@ -5,6 +5,8 @@ import Link from "next/link";
 import { eventsData } from "@/data/knowvy-data";
 import { Calendar, MapPin, Users, ArrowRight, ArrowUpRight, Search, SlidersHorizontal, Sparkles, Trophy } from "lucide-react";
 import { PLATFORM_FEEDS } from "@/lib/eventsSync";
+import EventCard3D from "@/components/events/EventCard3D";
+import EventsAmbientCanvas from "@/components/three/EventsAmbientCanvas";
 
 export default function EventsPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -58,8 +60,11 @@ export default function EventsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#07090D] pt-32 pb-24 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+    <div className="min-h-screen bg-[#07090D] pt-32 pb-24 text-white relative overflow-hidden">
+      {/* 3D Ambient WebGL Background Constellation */}
+      <EventsAmbientCanvas />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 relative z-10">
         {/* Header */}
         <div className="space-y-4 max-w-3xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#4D8DFF]/10 border border-[#4D8DFF]/30 text-xs font-mono text-[#4D8DFF]">
@@ -75,7 +80,7 @@ export default function EventsPage() {
         </div>
 
         {/* Filters Bar */}
-        <div className="p-4 rounded-2xl bg-[#0D1118] border border-[#1C2430] flex flex-col md:flex-row items-center gap-4 justify-between">
+        <div className="p-4 rounded-2xl bg-[#0D1118]/80 backdrop-blur-md border border-[#1C2430] flex flex-col md:flex-row items-center gap-4 justify-between">
           {/* Search Box */}
           <div className="relative w-full md:w-80">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#5A6475]" />
@@ -133,96 +138,13 @@ export default function EventsPage() {
           ))}
         </div>
 
-        {/* Event Cards Grid */}
+        {/* 3D WebGL Interactive Event Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredEvents.map((event) => (
-            <div
-              key={event.slug}
-              className="group flex flex-col rounded-2xl bg-[#0D1118] border border-[#1C2430] overflow-hidden hover:border-[#4D8DFF]/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-[#4D8DFF]/10"
-            >
-              <div className="relative h-52 overflow-hidden bg-[#07090D]">
-                <img
-                  src={event.banner || event.banner_url}
-                  alt={event.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-85 group-hover:opacity-100"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0D1118] via-transparent to-transparent" />
-                <span
-                  className={`absolute top-4 left-4 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase ${
-                    event.status === "Upcoming"
-                      ? "bg-[#4D8DFF] text-white"
-                      : event.status === "Ongoing"
-                      ? "bg-[#10B981] text-black"
-                      : "bg-[#1C2430] text-[#8B95A5]"
-                  }`}
-                >
-                  {event.status}
-                </span>
-
-                <div className="absolute top-4 right-4 px-2 py-0.5 rounded-full bg-black/70 backdrop-blur-md border border-white/10 text-[10px] font-mono text-[#4D8DFF] uppercase font-bold">
-                  {event.platform || "Knowvy"}
-                </div>
-
-                {event.prizes && (
-                  <div className="absolute bottom-3 left-4 text-xs font-mono text-[#F59E0B] px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-sm border border-[#F59E0B]/30 flex items-center gap-1.5 font-bold">
-                    <Trophy className="w-3.5 h-3.5" />
-                    {event.prizes}
-                  </div>
-                )}
-              </div>
-
-              <div className="p-6 flex flex-col flex-1 space-y-4">
-                <div>
-                  <span className="text-[10px] font-mono text-[#8B5CF6] uppercase block mb-1">
-                    {event.category}
-                  </span>
-                  <h3 className="text-xl font-display font-bold text-white group-hover:text-[#4D8DFF] transition-colors line-clamp-2">
-                    {event.title}
-                  </h3>
-                </div>
-
-                <p className="text-xs text-[#8B95A5] line-clamp-2 leading-relaxed">
-                  {event.shortDescription || event.short_description}
-                </p>
-
-                <div className="pt-2 border-t border-[#1C2430] space-y-2 text-xs font-mono text-[#8B95A5]">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-3.5 h-3.5 text-[#4D8DFF]" />
-                    <span>{event.date}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-3.5 h-3.5 text-[#8B5CF6]" />
-                    <span>{event.location}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Users className="w-3.5 h-3.5 text-[#10B981]" />
-                    <span>{event.participants}</span>
-                  </div>
-                </div>
-
-                <div className="pt-4 mt-auto">
-                  {event.isInternal ? (
-                    <Link
-                      href={`/events/${event.slug}`}
-                      className="w-full py-2.5 rounded-xl bg-[#111722] border border-[#1C2430] group-hover:bg-[#4D8DFF] group-hover:border-[#4D8DFF] text-white group-hover:text-black font-display font-bold text-xs flex items-center justify-center gap-2 transition-all duration-300"
-                    >
-                      View Details & Challenges
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                  ) : (
-                    <a
-                      href={event.external_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full py-2.5 rounded-xl bg-[#111722] border border-[#1C2430] group-hover:bg-[#4D8DFF] group-hover:border-[#4D8DFF] text-white group-hover:text-black font-display font-bold text-xs flex items-center justify-center gap-2 transition-all duration-300"
-                    >
-                      Register on {(event.platform || "Platform").toUpperCase()}
-                      <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </a>
-                  )}
-                </div>
-              </div>
-            </div>
+            <EventCard3D
+              key={event.slug || event.id || event.title}
+              event={event}
+            />
           ))}
         </div>
 
@@ -233,9 +155,9 @@ export default function EventsPage() {
               onClick={() => {
                 setSearchQuery("");
                 setStatusFilter("all");
-                setCategoryFilter("all");
+                setPlatformFilter("all");
               }}
-              className="text-xs font-mono text-[#4D8DFF] hover:underline"
+              className="text-xs font-mono text-[#4D8DFF] hover:underline cursor-pointer"
             >
               Reset all filters
             </button>

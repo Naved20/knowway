@@ -4,6 +4,7 @@ import { opportunitiesData, brandData } from "@/data/knowvy-data";
 import { ArrowLeft, ArrowUpRight, CheckCircle2, ShieldCheck, Compass, Calendar, MapPin, Trophy, Users, Sparkles } from "lucide-react";
 import { getEventsByPlatform } from "@/lib/supabase";
 import { PLATFORM_FEEDS } from "@/lib/eventsSync";
+import EventCard3D from "@/components/events/EventCard3D";
 
 export function generateStaticParams() {
   return opportunitiesData.map((plat) => ({
@@ -106,69 +107,15 @@ export default async function PlatformDetailPage({ params }) {
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {liveEvents.map((evt) => (
-              <div
-                key={evt.slug}
-                className="rounded-2xl overflow-hidden bg-[#0D1118] border border-[#1C2430] hover:border-[#4D8DFF]/50 transition-all group flex flex-col justify-between"
-              >
-                {/* Banner Image with Cloudinary Optimization */}
-                <div className="relative h-48 w-full overflow-hidden bg-black/50">
-                  <img
-                    src={evt.banner_url}
-                    alt={evt.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0D1118] via-transparent to-transparent" />
-                  <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-md border border-white/10 text-[10px] font-mono text-white font-bold uppercase">
-                    {evt.status}
-                  </div>
-                  {evt.prizes && (
-                    <div className="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg bg-[#F59E0B]/20 border border-[#F59E0B]/40 backdrop-blur-md text-[11px] font-mono text-[#F59E0B] font-bold flex items-center gap-1.5">
-                      <Trophy className="w-3.5 h-3.5" />
-                      {evt.prizes}
-                    </div>
-                  )}
-                </div>
-
-                {/* Content */}
-                <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
-                  <div className="space-y-2">
-                    <span className="text-[10px] font-mono text-[#8B5CF6] uppercase tracking-wider block">
-                      {evt.category}
-                    </span>
-                    <h3 className="text-xl font-display font-bold text-white group-hover:text-[#4D8DFF] transition-colors line-clamp-2">
-                      {evt.title}
-                    </h3>
-                    <p className="text-xs text-[#8B95A5] leading-relaxed line-clamp-3">
-                      {evt.short_description || evt.about}
-                    </p>
-                  </div>
-
-                  <div className="space-y-4 pt-3 border-t border-[#1C2430]">
-                    <div className="grid grid-cols-2 gap-2 text-[11px] font-mono text-[#8B95A5]">
-                      <div className="flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5 text-[#4D8DFF]" />
-                        <span className="truncate">{evt.date}</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <MapPin className="w-3.5 h-3.5 text-[#10B981]" />
-                        <span className="truncate">{evt.location}</span>
-                      </div>
-                    </div>
-
-                    <a
-                      href={evt.external_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full py-2.5 rounded-xl bg-[#111722] hover:bg-[#4D8DFF] border border-[#1C2430] hover:border-transparent text-white text-xs font-display font-bold flex items-center justify-center gap-2 transition-all group-hover:shadow-md"
-                    >
-                      Register on {plat.name}
-                      <ArrowUpRight className="w-3.5 h-3.5" />
-                    </a>
-                  </div>
-                </div>
-              </div>
+              <EventCard3D
+                key={evt.slug || evt.id || evt.title}
+                event={{
+                  ...evt,
+                  platform: evt.platform || platform,
+                }}
+              />
             ))}
           </div>
         </div>
