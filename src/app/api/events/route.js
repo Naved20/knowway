@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getPublishedEvents, getAllEventsAdmin, createEvent } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
-import { queueNewEventPromotionalBroadcast } from "@/lib/email-service";
+import { runDailyPromotionalCampaign } from "@/lib/campaign-service";
 
 export async function GET(request) {
   try {
@@ -42,10 +42,10 @@ export async function POST(request) {
       isPublished: Boolean(isPublished),
     });
 
-    // If published immediately, queue promotional broadcast to opted-in subscribers
+    // If published immediately, queue Gemini AI promotional broadcast to opted-in subscribers
     if (newEvent.isPublished) {
-      queueNewEventPromotionalBroadcast(newEvent).catch((e) =>
-        console.error("[Promotional Broadcast Queue Error]:", e)
+      runDailyPromotionalCampaign({ eventSlug: newEvent.slug, force: true }).catch((e) =>
+        console.error("[Promotional Campaign Error]:", e)
       );
     }
 

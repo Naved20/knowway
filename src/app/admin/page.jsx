@@ -99,9 +99,93 @@ function AdminPortal() {
   // Global Notification Feedback
   const [notice, setNotice] = useState({ type: "", text: "" });
 
+  // Gemini AI Campaign States
+  const [campaignData, setCampaignData] = useState({
+    metrics: {},
+    eventCampaigns: [],
+    recentLogs: [],
+  });
+  const [loadingCampaigns, setLoadingCampaigns] = useState(false);
+  const [campaignRunning, setCampaignRunning] = useState(false);
+  const [previewModalOpen, setPreviewModalOpen] = useState(false);
+  const [previewData, setPreviewData] = useState(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+
   const showToast = (type, text) => {
     setNotice({ type, text });
     setTimeout(() => setNotice({ type: "", text: "" }), 5000);
+  };
+
+  const loadCampaignData = async () => {
+    try {
+      setLoadingCampaigns(true);
+      const res = await fetch("/api/admin/campaigns");
+      if (res.ok) {
+        const d = await res.json();
+        setCampaignData(d);
+      }
+    } catch (e) {
+      console.error("Error loading campaigns:", e);
+    } finally {
+      setLoadingCampaigns(false);
+    }
+  };
+
+  const handleRunDailyCampaign = async (eventSlug = null) => {
+    setCampaignRunning(true);
+    try {
+      const res = await fetch("/api/admin/campaigns", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ eventSlug, force: true }),
+      });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d.error || "Failed to execute daily campaign.");
+      showToast("success", d.message);
+      loadCampaignData();
+      loadAdminData();
+    } catch (err) {
+      showToast("error", err.message);
+    } finally {
+      setCampaignRunning(false);
+    }
+  };
+
+  const handlePreviewCopy = async (eventSlug) => {
+    setPreviewLoading(true);
+    setPreviewModalOpen(true);
+    setPreviewData(null);
+    try {
+      const res = await fetch("/api/admin/campaigns/preview", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ eventSlug }),
+      });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d.error || "Failed to generate Gemini copy preview.");
+      setPreviewData(d.preview);
+    } catch (err) {
+      showToast("error", err.message);
+      setPreviewModalOpen(false);
+    } finally {
+      setPreviewLoading(false);
+    }
+  };
+
+  const handleToggleCampaign = async (eventSlug, currentActive) => {
+    try {
+      const res = await fetch("/api/admin/campaigns/toggle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ eventSlug, isActive: !currentActive }),
+      });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d.error || "Failed to toggle campaign.");
+      showToast("success", d.message);
+      loadCampaignData();
+    } catch (err) {
+      showToast("error", err.message);
+    }
   };
 
   // 1. Check Admin Auth on load
@@ -573,6 +657,21 @@ function AdminPortal() {
           >
             <Users className="w-3.5 h-3.5" />
             User Directory ({users.length})
+          </button>
+
+          <button
+            onClick={() => {
+              setActiveTab("campaigns");
+              loadCampaignData();
+            }}
+            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
+              activeTab === "campaigns"
+                ? "bg-purple-600 text-white shadow-md shadow-purple-500/20"
+                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+            }`}
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+            Gemini AI Daily Promotions
           </button>
 
           <button
@@ -1221,6 +1320,405 @@ function AdminPortal() {
               )}
             </button>
           </form>
+        </div>
+      )}
+
+      {/* TAB: GEMINI AI DAILY CAMPAIGNS */}
+      {activeTab === "campaigns" && (
+        <div className="space-y-8">
+          {/* Header Card */}
+          <div className="bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden shadow-lg">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative">
+              <div className="space-y-2 max-w-2xl">
+                <div className="flex items-center gap-2">
+                  <span className="px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-purple-500/30 text-purple-200 border border-purple-400/30 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                    AUTONOMOUS GEMINI AI CAMPAIGN ENGINE
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                    DAILY CRON SCHEDULED (09:00 UTC)
+                  </span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-bold font-display leading-tight">
+                  Gemini AI Daily Promotional Engine
+                </h2>
+                <p className="text-xs sm:text-sm text-purple-200/80 leading-relaxed">
+                  Every day, Gemini AI generates a fresh, high-converting promotional message for each upcoming event until the event date. Emails are automatically delivered to opted-in builders who have not yet registered for that event.
+                </p>
+              </div>
+
+              <button
+                onClick={() => handleRunDailyCampaign(null)}
+                disabled={campaignRunning}
+                className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-bold font-display text-xs sm:text-sm flex items-center justify-center gap-2 shadow-xl shadow-amber-500/20 active:scale-[0.98] transition-all cursor-pointer disabled:opacity-60 whitespace-nowrap"
+              >
+                {campaignRunning ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    <span>Executing AI Campaigns...</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4 text-slate-950" />
+                    <span>Run Daily AI Promotions for All Events Now</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Metrics Row */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
+              <span className="text-xs text-slate-500 font-medium block">Total Registered Builders</span>
+              <span className="text-2xl font-bold font-display text-slate-900 mt-1 block">
+                {campaignData.metrics?.totalUsers ?? users.length}
+              </span>
+              <span className="text-[10px] text-slate-400 font-mono mt-1 block">
+                Total accounts on Knowvy
+              </span>
+            </div>
+
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
+              <span className="text-xs text-slate-500 font-medium block">Promotional Subscribers</span>
+              <span className="text-2xl font-bold font-display text-emerald-600 mt-1 block">
+                {campaignData.metrics?.subscribedUsersCount ?? 0}
+              </span>
+              <span className="text-[10px] text-emerald-600 font-mono mt-1 block">
+                Opted-in target pool
+              </span>
+            </div>
+
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
+              <span className="text-xs text-slate-500 font-medium block">Active Daily Campaigns</span>
+              <span className="text-2xl font-bold font-display text-purple-600 mt-1 block">
+                {campaignData.metrics?.activeCampaignsCount ?? 0}
+              </span>
+              <span className="text-[10px] text-purple-600 font-mono mt-1 block">
+                Upcoming events monitored
+              </span>
+            </div>
+
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
+              <span className="text-xs text-slate-500 font-medium block">Total AI Dispatches</span>
+              <span className="text-2xl font-bold font-display text-orange-600 mt-1 block">
+                {campaignData.metrics?.totalCampaignDispatches ?? 0}
+              </span>
+              <span className="text-[10px] text-orange-600 font-mono mt-1 block">
+                AI copies logged & delivered
+              </span>
+            </div>
+          </div>
+
+          {/* Active Upcoming Events Campaign Studio */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-base font-bold font-display text-slate-900">
+                  Active Upcoming Events & AI Automation
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Daily emails will run automatically until each event kickoff date is reached
+                </p>
+              </div>
+
+              <button
+                onClick={loadCampaignData}
+                disabled={loadingCampaigns}
+                className="text-xs font-semibold text-purple-600 hover:text-purple-700 flex items-center gap-1 cursor-pointer"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${loadingCampaigns ? "animate-spin" : ""}`} />
+                Refresh Status
+              </button>
+            </div>
+
+            {loadingCampaigns && !campaignData.eventCampaigns?.length ? (
+              <div className="p-12 text-center bg-white rounded-3xl border border-slate-200">
+                <div className="w-8 h-8 border-3 border-purple-600/20 border-t-purple-600 rounded-full animate-spin mx-auto mb-3" />
+                <p className="text-xs text-slate-500 font-mono">Loading campaign parameters...</p>
+              </div>
+            ) : !campaignData.eventCampaigns || campaignData.eventCampaigns.length === 0 ? (
+              <div className="p-8 text-center bg-white rounded-3xl border border-slate-200">
+                <p className="text-xs text-slate-500">No active upcoming events found.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {campaignData.eventCampaigns.map((item) => {
+                  const ev = item.event;
+                  const camp = item.campaign;
+                  const days = item.daysRemaining;
+
+                  return (
+                    <div
+                      key={ev.slug}
+                      className="bg-white border border-slate-200 rounded-3xl p-5 shadow-xs flex flex-col justify-between"
+                    >
+                      <div>
+                        {/* Top Badge bar */}
+                        <div className="flex items-center justify-between gap-2 mb-3">
+                          <span
+                            className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase ${
+                              camp.isActive
+                                ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                                : "bg-slate-100 text-slate-600"
+                            }`}
+                          >
+                            {camp.isActive ? "● DAILY AUTOMATION ACTIVE" : "PAUSED"}
+                          </span>
+
+                          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                            {days <= 1 ? "TOMORROW" : `${days} DAYS LEFT`}
+                          </span>
+                        </div>
+
+                        <h4 className="text-base font-bold font-display text-slate-900 mb-1">
+                          {ev.title}
+                        </h4>
+                        <div className="text-xs text-slate-500 flex items-center gap-2 mb-3">
+                          <span>🗓️ {ev.date}</span>
+                          <span>•</span>
+                          <span>📍 {ev.location}</span>
+                        </div>
+
+                        {/* Audience Targeting Metrics */}
+                        <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5 mb-4 text-xs">
+                          <div className="flex items-center justify-between text-slate-700">
+                            <span>Pending Non-Registered Builders:</span>
+                            <strong className="font-mono text-purple-700">
+                              {item.eligiblePendingCount} builders
+                            </strong>
+                          </div>
+                          <div className="flex items-center justify-between text-slate-500 text-[11px]">
+                            <span>Already Registered for Event:</span>
+                            <span className="font-mono">{item.registeredCount} builders</span>
+                          </div>
+                        </div>
+
+                        {/* Last Gemini AI Copy Record */}
+                        {camp.lastSubject ? (
+                          <div className="p-3 rounded-xl bg-purple-50/60 border border-purple-100 mb-4 space-y-1">
+                            <span className="text-[10px] font-mono font-bold text-purple-700 uppercase block">
+                              LAST AI COPY DISPATCHED ({camp.lastRunDate}):
+                            </span>
+                            <p className="text-xs font-semibold text-slate-800 italic truncate">
+                              &ldquo;{camp.lastSubject}&rdquo;
+                            </p>
+                          </div>
+                        ) : (
+                          <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/60 text-[11px] text-slate-400 mb-4 font-mono">
+                            No automated daily run recorded yet for this event.
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-2 text-xs flex-wrap">
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => handlePreviewCopy(ev.slug)}
+                            className="px-3 py-1.5 rounded-lg bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100 transition-colors font-medium flex items-center gap-1 cursor-pointer"
+                          >
+                            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                            <span>Preview Gemini Copy</span>
+                          </button>
+
+                          <button
+                            onClick={() => handleRunDailyCampaign(ev.slug)}
+                            disabled={campaignRunning}
+                            className="px-3 py-1.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition-colors font-medium flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                          >
+                            <Send className="w-3 h-3" />
+                            <span>Run for This Event</span>
+                          </button>
+                        </div>
+
+                        <button
+                          onClick={() => handleToggleCampaign(ev.slug, camp.isActive)}
+                          className={`text-[11px] font-semibold underline cursor-pointer ${
+                            camp.isActive ? "text-slate-400 hover:text-rose-600" : "text-emerald-600"
+                          }`}
+                        >
+                          {camp.isActive ? "Pause Automation" : "Resume Automation"}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Campaign Delivery Logs */}
+          <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs">
+            <h3 className="text-base font-bold font-display text-slate-900 mb-1">
+              Gemini AI Campaign History Log ({campaignData.recentLogs?.length || 0})
+            </h3>
+            <p className="text-xs text-slate-500 mb-5">
+              Audit trail of every AI-generated promotional copy dispatched to builders
+            </p>
+
+            <div className="overflow-x-auto rounded-2xl border border-slate-100">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-50 text-slate-500 font-mono uppercase text-[10px] border-b border-slate-200">
+                  <tr>
+                    <th className="py-3 px-4">Date</th>
+                    <th className="py-3 px-4">Event</th>
+                    <th className="py-3 px-4">Gemini AI Subject</th>
+                    <th className="py-3 px-4">Recipients</th>
+                    <th className="py-3 px-4">Engine</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {!campaignData.recentLogs || campaignData.recentLogs.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="py-8 text-center text-slate-400 font-mono">
+                        No promotional campaign dispatches recorded yet.
+                      </td>
+                    </tr>
+                  ) : (
+                    campaignData.recentLogs.map((log) => (
+                      <tr key={log.id} className="hover:bg-slate-50/60 transition-colors">
+                        <td className="py-3 px-4 font-mono text-slate-600">{log.runDate}</td>
+                        <td className="py-3 px-4 font-semibold text-slate-900 max-w-[160px] truncate">
+                          {log.eventTitle || log.eventSlug}
+                        </td>
+                        <td className="py-3 px-4 text-slate-800 max-w-[280px] truncate">
+                          {log.subject}
+                        </td>
+                        <td className="py-3 px-4 font-mono font-bold text-purple-700">
+                          {log.recipientsCount} builders
+                        </td>
+                        <td className="py-3 px-4">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-purple-50 text-purple-700 border border-purple-200 flex items-center gap-1 w-fit">
+                            <Sparkles className="w-3 h-3 text-amber-500" />
+                            GEMINI AI
+                          </span>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: GEMINI COPY PREVIEW */}
+      {previewModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-white border border-slate-200 rounded-3xl w-full max-w-xl max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl relative">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center">
+                  <Sparkles className="w-4 h-4 text-purple-600" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold font-display text-slate-900">
+                    Gemini AI Promotional Preview
+                  </h3>
+                  <span className="text-[11px] font-mono text-purple-600">
+                    Live copy generated by Google Gemini
+                  </span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setPreviewModalOpen(false)}
+                className="p-1.5 rounded-lg border border-slate-200 text-slate-400 hover:text-slate-700 cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            {previewLoading ? (
+              <div className="py-16 text-center">
+                <div className="w-8 h-8 border-3 border-purple-600/20 border-t-purple-600 rounded-full animate-spin mx-auto mb-3" />
+                <p className="text-xs text-slate-600 font-medium">
+                  Gemini AI is crafting today&apos;s builder promotional copy...
+                </p>
+              </div>
+            ) : previewData ? (
+              <div className="space-y-4">
+                {/* Event banner context */}
+                <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs flex items-center justify-between">
+                  <div>
+                    <span className="font-bold text-slate-900">{previewData.event.title}</span>
+                    <span className="block text-slate-500 text-[11px]">
+                      {previewData.event.date} • {previewData.daysRemaining} days remaining
+                    </span>
+                  </div>
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-100 text-amber-800">
+                    ACTIVE SPRINT
+                  </span>
+                </div>
+
+                {/* Subject Line */}
+                <div>
+                  <label className="block text-[10px] font-mono uppercase text-slate-400 font-bold mb-1">
+                    EMAIL SUBJECT LINE
+                  </label>
+                  <div className="p-3 rounded-xl bg-purple-50 border border-purple-200 font-semibold text-xs text-purple-950">
+                    {previewData.copy.subject}
+                  </div>
+                </div>
+
+                {/* Headline Hook */}
+                <div>
+                  <label className="block text-[10px] font-mono uppercase text-slate-400 font-bold mb-1">
+                    HEADLINE HOOK
+                  </label>
+                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 font-bold text-sm text-slate-900">
+                    {previewData.copy.headline}
+                  </div>
+                </div>
+
+                {/* Paragraphs */}
+                <div>
+                  <label className="block text-[10px] font-mono uppercase text-slate-400 font-bold mb-1">
+                    BODY COPY
+                  </label>
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 space-y-2 leading-relaxed">
+                    {previewData.copy.paragraphs?.map((p, idx) => (
+                      <p key={idx}>{p}</p>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Highlight callout */}
+                <div>
+                  <label className="block text-[10px] font-mono uppercase text-slate-400 font-bold mb-1">
+                    HIGHLIGHT CALLOUT
+                  </label>
+                  <div className="p-3 rounded-xl bg-blue-50 border border-blue-200 text-xs font-semibold text-blue-900">
+                    🌟 {previewData.copy.highlightCallout}
+                  </div>
+                </div>
+
+                <div className="pt-4 flex items-center justify-end gap-2 border-t border-slate-100">
+                  <button
+                    onClick={() => setPreviewModalOpen(false)}
+                    className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-xs font-medium cursor-pointer"
+                  >
+                    Close Preview
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setPreviewModalOpen(false);
+                      handleRunDailyCampaign(previewData.event.slug);
+                    }}
+                    disabled={campaignRunning}
+                    className="px-5 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs shadow-md shadow-purple-500/20 flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Send className="w-3.5 h-3.5" />
+                    <span>Dispatch Today&apos;s Campaign Now</span>
+                  </button>
+                </div>
+              </div>
+            ) : null}
+          </div>
         </div>
       )}
 

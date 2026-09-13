@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { getEventBySlug, updateEvent, deleteEvent } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
-import { sendEventUpdatedAlert, queueNewEventPromotionalBroadcast } from "@/lib/email-service";
+import { sendEventUpdatedAlert } from "@/lib/email-service";
+import { runDailyPromotionalCampaign } from "@/lib/campaign-service";
 
 export async function GET(request, { params }) {
   try {
@@ -37,9 +38,9 @@ export async function PATCH(request, { params }) {
 
     const updated = await updateEvent(existing.id, updates);
 
-    // If previously unpublished and now published, queue promotional broadcast
+    // If previously unpublished and now published, queue Gemini AI promotional broadcast
     if (!existing.isPublished && updated.isPublished) {
-      queueNewEventPromotionalBroadcast(updated).catch((e) =>
+      runDailyPromotionalCampaign({ eventSlug: updated.slug, force: true }).catch((e) =>
         console.error("[Broadcast Error]:", e)
       );
     }

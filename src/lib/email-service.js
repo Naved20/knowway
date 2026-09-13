@@ -5,7 +5,7 @@ const BRAND_NAME = "Knowvy Technologies";
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
 // Common Brand Header & Footer Wrapper
-function wrapEmailTemplate(content, { title = "Knowvy Notification", showUnsubscribe = false } = {}) {
+export function wrapEmailTemplate(content, { title = "Knowvy Notification", showUnsubscribe = false } = {}) {
   return `
     <!DOCTYPE html>
     <html lang="en">
