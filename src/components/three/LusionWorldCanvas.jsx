@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import * as THREE from "three";
+import { useTheme } from "@/components/providers/ThemeProvider";
 
 // The 7 Core Developer Tracks of the Knowvy Ecosystem
 export const LUSION_TRACKS = [
@@ -127,6 +128,8 @@ export default function LusionWorldCanvas({ activeTrackId, onSelectTrack }) {
   const scrollRef = useRef(0);
   const mouseRef = useRef({ x: 0, y: 0, targetX: 0, targetY: 0 });
   const [hoveredTrack, setHoveredTrack] = useState(null);
+  const { theme } = useTheme();
+  const isLight = theme === "light";
 
   // Global scroll listener for continuous choreography
   useEffect(() => {
@@ -150,7 +153,8 @@ export default function LusionWorldCanvas({ activeTrackId, onSelectTrack }) {
 
     // Scene & Camera
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x07090d, 0.04);
+    const fogColor = isLight ? 0xf8fafc : 0x07090d;
+    scene.fog = new THREE.FogExp2(fogColor, 0.038);
 
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     camera.position.set(0, 0, 7.5);
@@ -163,7 +167,7 @@ export default function LusionWorldCanvas({ activeTrackId, onSelectTrack }) {
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = isLight ? 1.05 : 1.2;
     container.appendChild(renderer.domElement);
 
     // Root World Group
@@ -182,7 +186,7 @@ export default function LusionWorldCanvas({ activeTrackId, onSelectTrack }) {
       color: 0x4d8dff,
       wireframe: true,
       transparent: true,
-      opacity: 0.35,
+      opacity: isLight ? 0.5 : 0.35,
     });
     const seedMesh = new THREE.Mesh(seedGeo, seedMat);
     coreGroup.add(seedMesh);
@@ -190,15 +194,15 @@ export default function LusionWorldCanvas({ activeTrackId, onSelectTrack }) {
     // Physical Glass Shell
     const glassGeo = new THREE.IcosahedronGeometry(1.5, 3);
     const glassMat = new THREE.MeshPhysicalMaterial({
-      color: 0x0a101d,
-      emissive: 0x050c18,
+      color: isLight ? 0xe2e8f0 : 0x0a101d,
+      emissive: isLight ? 0x1e293b : 0x050c18,
       roughness: 0.12,
-      metalness: 0.88,
+      metalness: isLight ? 0.7 : 0.88,
       reflectivity: 0.9,
       clearcoat: 1.0,
       clearcoatRoughness: 0.08,
       transparent: true,
-      opacity: 0.92,
+      opacity: isLight ? 0.88 : 0.92,
     });
     const glassMesh = new THREE.Mesh(glassGeo, glassMat);
     coreGroup.add(glassMesh);
@@ -206,8 +210,8 @@ export default function LusionWorldCanvas({ activeTrackId, onSelectTrack }) {
     // Unfolding Outer Lattice Cage
     const cageGeo = new THREE.IcosahedronGeometry(1.95, 1);
     const cageMat = new THREE.MeshStandardMaterial({
-      color: 0x1c2430,
-      emissive: 0x0d1424,
+      color: isLight ? 0x94a3b8 : 0x1c2430,
+      emissive: isLight ? 0x334155 : 0x0d1424,
       wireframe: true,
       roughness: 0.3,
       metalness: 0.9,
@@ -348,7 +352,7 @@ export default function LusionWorldCanvas({ activeTrackId, onSelectTrack }) {
     // -------------------------------------------------------------
     // 5. Volumetric Dual Point Lighting
     // -------------------------------------------------------------
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.45);
+    const ambientLight = new THREE.AmbientLight(0xffffff, isLight ? 0.9 : 0.45);
     scene.add(ambientLight);
 
     const keyLight = new THREE.PointLight(0x4d8dff, 4.5, 25);
@@ -510,7 +514,7 @@ export default function LusionWorldCanvas({ activeTrackId, onSelectTrack }) {
       }
       renderer.dispose();
     };
-  }, [hoveredTrack, onSelectTrack]);
+  }, [isLight, hoveredTrack, onSelectTrack]);
 
   return (
     <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
@@ -519,7 +523,7 @@ export default function LusionWorldCanvas({ activeTrackId, onSelectTrack }) {
       {/* Floating 3D HUD Tooltip when hovering any node */}
       {hoveredTrack && (
         <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-30 pointer-events-none animate-in fade-in zoom-in-95 duration-200">
-          <div className="px-5 py-3 rounded-2xl bg-[#07090D]/85 border border-[#4D8DFF]/40 backdrop-blur-2xl shadow-2xl flex items-center gap-4">
+          <div className="px-5 py-3 rounded-2xl lusion-glass border border-[#4D8DFF]/40 shadow-2xl flex items-center gap-4">
             <div
               className="w-3 h-3 rounded-full animate-ping"
               style={{ backgroundColor: hoveredTrack.color }}

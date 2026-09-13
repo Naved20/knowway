@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, ArrowUpRight, Sparkles } from "lucide-react";
+import { Menu, X, ArrowUpRight, Sun, Moon } from "lucide-react";
 import { brandData } from "@/data/knowvy-data";
+import { useTheme } from "@/components/providers/ThemeProvider";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
@@ -20,6 +21,7 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { theme, toggleTheme, isMounted } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,7 +45,7 @@ export default function Navbar() {
     <header
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
         isScrolled
-          ? "bg-[#07090D]/85 backdrop-blur-xl border-b border-[#1C2430] py-3 shadow-2xl shadow-black/40"
+          ? "bg-[var(--bg-primary)]/85 backdrop-blur-xl border-b border-[var(--border-color)] py-3 shadow-2xl shadow-black/10"
           : "bg-transparent py-5"
       }`}
     >
@@ -54,7 +56,7 @@ export default function Navbar() {
             K
           </div>
           <div className="flex flex-col">
-            <span className="text-xl font-display font-black tracking-tight text-white flex items-center gap-1">
+            <span className="text-xl font-display font-black tracking-tight text-[var(--text-primary)] flex items-center gap-1">
               KNOWVY
               <span className="w-1.5 h-1.5 rounded-full bg-[#4D8DFF] animate-pulse" />
             </span>
@@ -62,7 +64,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-1 bg-[#111722]/60 border border-[#1C2430]/70 rounded-full px-5 py-1.5 backdrop-blur-md">
+        <nav className="hidden lg:flex items-center gap-1 lusion-glass rounded-full px-5 py-1.5">
           {NAV_LINKS.map((link) => {
             const isActive = pathname === link.href;
             return (
@@ -72,7 +74,7 @@ export default function Navbar() {
                 className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                   isActive
                     ? "bg-[#4D8DFF]/20 text-[#4D8DFF] font-semibold border border-[#4D8DFF]/40"
-                    : "text-[#8B95A5] hover:text-white hover:bg-white/5"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-black/5"
                 }`}
               >
                 {link.label}
@@ -81,11 +83,27 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Action Button */}
+        {/* Action Buttons & Theme Switch */}
         <div className="hidden sm:flex items-center gap-3">
+          {/* Theme Toggle Button */}
+          {isMounted && (
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-xl lusion-glass hover:border-[#4D8DFF]/50 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all"
+              title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+              aria-label="Toggle Light / Dark Mode"
+            >
+              {theme === "dark" ? (
+                <Sun className="w-4 h-4 text-[#F59E0B]" />
+              ) : (
+                <Moon className="w-4 h-4 text-[#4D8DFF]" />
+              )}
+            </button>
+          )}
+
           <Link
             href="/admin"
-            className="text-xs font-mono text-[#5A6475] hover:text-[#8B95A5] transition-colors"
+            className="text-xs font-mono text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors"
           >
             Admin
           </Link>
@@ -99,6 +117,7 @@ export default function Navbar() {
             <ArrowUpRight className="w-3.5 h-3.5" />
           </a>
         </div>
+
 
         {/* Mobile Hamburger Toggle */}
         <button
@@ -130,7 +149,26 @@ export default function Navbar() {
                 </Link>
               );
             })}
-            <div className="pt-4 mt-2 border-t border-[#1C2430] flex flex-col gap-3">
+            <div className="pt-4 mt-2 border-t border-[var(--border-color)] flex flex-col gap-3">
+              {isMounted && (
+                <button
+                  onClick={toggleTheme}
+                  className="w-full py-2.5 rounded-xl lusion-glass flex items-center justify-center gap-2 text-xs font-mono text-[var(--text-primary)]"
+                >
+                  {theme === "dark" ? (
+                    <>
+                      <Sun className="w-4 h-4 text-[#F59E0B]" />
+                      <span>Switch to Light Theme</span>
+                    </>
+                  ) : (
+                    <>
+                      <Moon className="w-4 h-4 text-[#4D8DFF]" />
+                      <span>Switch to Dark Theme</span>
+                    </>
+                  )}
+                </button>
+              )}
+
               <a
                 href={brandData.links.whatsapp}
                 target="_blank"

@@ -4,6 +4,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import CustomCursor from "@/components/ui/CustomCursor";
 import SmoothScrollProvider from "@/components/providers/SmoothScrollProvider";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -53,17 +54,20 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${manrope.variable} ${inter.variable} dark`}
+      className={`${manrope.variable} ${inter.variable}`}
       suppressHydrationWarning
     >
-      <body className="min-h-screen bg-[#07090D] text-white font-body antialiased flex flex-col selection:bg-[#4D8DFF]/30 selection:text-white">
-        <SmoothScrollProvider>
-          <CustomCursor />
-          <Navbar />
-          <div className="flex-1 w-full">{children}</div>
-          <Footer />
-        </SmoothScrollProvider>
+      <body className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] font-body antialiased flex flex-col selection:bg-[#4D8DFF]/30 selection:text-[var(--text-primary)] transition-colors duration-300">
+        <ThemeProvider>
+          <SmoothScrollProvider>
+            <CustomCursor />
+            <Navbar />
+            <div className="flex-1 w-full">{children}</div>
+            <Footer />
+          </SmoothScrollProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
 }
+

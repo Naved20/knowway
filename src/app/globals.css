@@ -15,6 +15,20 @@
     --border-highlight: #2C3A4E;
   }
 
+  html.light {
+    --bg-primary: #F8FAFC;
+    --bg-secondary: #F1F5F9;
+    --bg-card: #FFFFFF;
+    --bg-card-hover: #F8FAFC;
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #94A3B8;
+    --accent-blue: #2563EB;
+    --accent-violet: #7C3AED;
+    --border-color: #E2E8F0;
+    --border-highlight: #CBD5E1;
+  }
+
   * {
     box-sizing: border-box;
     margin: 0;
@@ -167,4 +181,107 @@
   body {
     cursor: default;
   }
+}
+
+/* ============================================================
+   LIGHT THEME OVERRIDES
+   ============================================================ */
+html.light body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+html.light .lusion-glass {
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(28px) !important;
+  border-color: rgba(226, 232, 240, 0.8) !important;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+  color: #0F172A !important;
+}
+
+html.light .lusion-glass:hover {
+  border-color: rgba(37, 99, 235, 0.4) !important;
+  box-shadow: 0 25px 50px rgba(37, 99, 235, 0.08) !important;
+}
+
+html.light .lusion-tag {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border-color: rgba(226, 232, 240, 0.9) !important;
+  color: #475569 !important;
+}
+
+html.light .text-white {
+  color: #0F172A !important;
+}
+
+html.light .text-white\/90 {
+  color: #1E293B !important;
+}
+
+html.light .text-white\/80 {
+  color: #334155 !important;
+}
+
+html.light .text-\[\#8B95A5\] {
+  color: #475569 !important;
+}
+
+html.light .text-\[\#5A6475\] {
+  color: #64748B !important;
+}
+
+html.light .bg-\[\#07090D\] {
+  background-color: var(--bg-primary) !important;
+}
+
+html.light .bg-\[\#0D1118\] {
+  background-color: var(--bg-secondary) !important;
+}
+
+html.light .bg-\[\#111722\] {
+  background-color: var(--bg-card) !important;
+}
+
+html.light .bg-\[\#161F2E\] {
+  background-color: var(--bg-card-hover) !important;
+}
+
+html.light .border-\[\#1C2430\] {
+  border-color: var(--border-color) !important;
+}
+
+html.light .border-white\/5,
+html.light .border-white\/10 {
+  border-color: rgba(226, 232, 240, 0.8) !important;
+}
+
+html.light .bg-black\/40,
+html.light .bg-black\/60,
+html.light .bg-black\/70 {
+  background-color: rgba(241, 245, 249, 0.8) !important;
+  color: #0F172A !important;
+}
+
+html.light .gradient-text-blue {
+  background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 40%, #2563EB 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+html.light .gradient-text-violet {
+  background: linear-gradient(135deg, #0F172A 20%, #581C87 60%, #7C3AED 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+html.light ::-webkit-scrollbar-track {
+  background: #F8FAFC;
+}
+
+html.light ::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+}
+
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
 }
