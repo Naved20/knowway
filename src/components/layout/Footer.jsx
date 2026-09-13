@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { brandData } from "@/data/knowvy-data";
-import { ArrowUpRight, Github, Linkedin, Twitter, MessageSquare, Heart } from "lucide-react";
+import { ArrowUpRight, MessageSquare, Heart } from "lucide-react";
+import { GithubIcon, LinkedinIcon, TwitterIcon } from "@/components/ui/BrandIcons";
 
 export default function Footer() {
   return (
@@ -154,7 +155,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="text-[#8B95A5] hover:text-white transition-colors"
             >
-              <Github className="w-4 h-4" />
+              <GithubIcon className="w-4 h-4" />
             </a>
             <a
               href={brandData.links.linkedin}
@@ -162,7 +163,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="text-[#8B95A5] hover:text-white transition-colors"
             >
-              <Linkedin className="w-4 h-4" />
+              <LinkedinIcon className="w-4 h-4" />
             </a>
             <a
               href={brandData.links.twitter}
@@ -170,7 +171,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="text-[#8B95A5] hover:text-white transition-colors"
             >
-              <Twitter className="w-4 h-4" />
+              <TwitterIcon className="w-4 h-4" />
             </a>
           </div>
         </div>

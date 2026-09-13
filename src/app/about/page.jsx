@@ -1,5 +1,6 @@
 import { brandData, teamData } from "@/data/knowvy-data";
-import { Github, Linkedin, Twitter, Mail, MapPin, CheckCircle2, Sparkles, Award } from "lucide-react";
+import { Mail, MapPin, CheckCircle2, Sparkles, Award } from "lucide-react";
+import { GithubIcon, LinkedinIcon, TwitterIcon } from "@/components/ui/BrandIcons";
 
 export const metadata = {
   title: "About Knowvy — Student Technology Ecosystem",
@@ -79,7 +80,7 @@ export default function AboutPage() {
                   className="p-2 rounded-xl bg-[#111722] border border-[#1C2430] text-[#8B95A5] hover:text-white transition-colors"
                   title="GitHub"
                 >
-                  <Github className="w-4 h-4" />
+                  <GithubIcon className="w-4 h-4" />
                 </a>
                 <a
                   href={founder.socials.linkedin}
@@ -88,7 +89,7 @@ export default function AboutPage() {
                   className="p-2 rounded-xl bg-[#111722] border border-[#1C2430] text-[#8B95A5] hover:text-[#4D8DFF] transition-colors"
                   title="LinkedIn"
                 >
-                  <Linkedin className="w-4 h-4" />
+                  <LinkedinIcon className="w-4 h-4" />
                 </a>
                 <a
                   href={founder.socials.twitter}
@@ -97,7 +98,7 @@ export default function AboutPage() {
                   className="p-2 rounded-xl bg-[#111722] border border-[#1C2430] text-[#8B95A5] hover:text-[#38BDF8] transition-colors"
                   title="Twitter"
                 >
-                  <Twitter className="w-4 h-4" />
+                  <TwitterIcon className="w-4 h-4" />
                 </a>
                 <a
                   href={`mailto:${brandData.links.email}`}

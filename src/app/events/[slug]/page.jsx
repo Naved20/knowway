@@ -6,6 +6,7 @@ import {
   MapPin,
   Users,
   ArrowLeft,
+  ArrowRight,
   ArrowUpRight,
   Trophy,
   CheckCircle2,

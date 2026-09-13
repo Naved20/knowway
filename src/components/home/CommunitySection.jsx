@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { teamData } from "@/data/knowvy-data";
-import { Github, Linkedin, Twitter, Users, Award, MapPin } from "lucide-react";
+import { Users, Award, MapPin } from "lucide-react";
+import { GithubIcon, LinkedinIcon, TwitterIcon } from "@/components/ui/BrandIcons";
 
 const CATEGORIES = ["All", "Core Team", "Campus Communities"];
 
@@ -116,7 +117,7 @@ export default function CommunitySection() {
                       className="text-[#8B95A5] hover:text-white transition-colors"
                       title="GitHub"
                     >
-                      <Github className="w-4 h-4" />
+                      <GithubIcon className="w-4 h-4" />
                     </a>
                   )}
                   {member.socials.linkedin && (
@@ -127,7 +128,7 @@ export default function CommunitySection() {
                       className="text-[#8B95A5] hover:text-[#4D8DFF] transition-colors"
                       title="LinkedIn"
                     >
-                      <Linkedin className="w-4 h-4" />
+                      <LinkedinIcon className="w-4 h-4" />
                     </a>
                   )}
                   {member.socials.twitter && (
@@ -138,7 +139,7 @@ export default function CommunitySection() {
                       className="text-[#8B95A5] hover:text-[#38BDF8] transition-colors"
                       title="Twitter / X"
                     >
-                      <Twitter className="w-4 h-4" />
+                      <TwitterIcon className="w-4 h-4" />
                     </a>
                   )}
                 </div>
