@@ -11,6 +11,7 @@ import { useTheme } from "@/components/providers/ThemeProvider";
 const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "Events", href: "/events" },
+  { label: "HeyGen RoadShow", href: "/heygen" },
   { label: "Community", href: "/community" },
   { label: "Programs", href: "/programs" },
   { label: "Opportunities", href: "/opportunities" },

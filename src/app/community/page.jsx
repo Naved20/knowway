@@ -5,7 +5,7 @@ import { ArrowUpRight, MessageCircle, Sparkles } from "lucide-react";
 
 export const metadata = {
   title: "Community — Knowvy",
-  description: "Connect with 1,500+ student developers, core leads, and mentors across Bhopal and India.",
+  description: "Connect with 2,000+ student builders, core leads, and mentors across Bhopal and India.",
 };
 
 export default function CommunityPage() {

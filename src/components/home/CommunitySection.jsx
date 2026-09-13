@@ -5,7 +5,7 @@ import { teamData } from "@/data/knowvy-data";
 import { Users, Award, MapPin } from "lucide-react";
 import { GithubIcon, LinkedinIcon, TwitterIcon } from "@/components/ui/BrandIcons";
 
-const CATEGORIES = ["All", "Core Team", "Campus Communities"];
+const CATEGORIES = ["All", "Leadership", "Engineering"];
 
 export default function CommunitySection() {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -28,7 +28,7 @@ export default function CommunitySection() {
               People make <span className="gradient-text-blue">Knowvy.</span>
             </h2>
             <p className="text-sm sm:text-base text-[#8B95A5] max-w-xl">
-              Built by students. Run by builders. Founded in Bhopal and led by passionate engineers and Microsoft Student Ambassadors.
+              Built by students. Run by builders. Founded in Bhopal and led by passionate engineers, organizers, and tech leads.
             </p>
           </div>
 
@@ -51,7 +51,7 @@ export default function CommunitySection() {
         </div>
 
         {/* Member Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {filteredMembers.map((member, idx) => (
             <div
               key={idx}

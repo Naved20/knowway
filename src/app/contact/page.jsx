@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { brandData } from "@/data/knowvy-data";
-import { Mail, MessageCircle, MapPin, Send, CheckCircle2, ArrowUpRight, Loader2 } from "lucide-react";
-import { submitContactMessage } from "@/lib/supabase";
+import { Mail, MessageCircle, MapPin, Send, CheckCircle2, ArrowUpRight, Loader2, Phone } from "lucide-react";
+import { InstagramIcon } from "@/components/ui/BrandIcons";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -20,11 +20,15 @@ export default function ContactPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      await submitContactMessage({
-        name: formData.name,
-        email: formData.email,
-        subject: `[${formData.topic.toUpperCase()}] from ${formData.collegeOrOrg || "Student"}`,
-        message: formData.message,
+      await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          subject: `[${formData.topic.toUpperCase()}] from ${formData.collegeOrOrg || "Student"}`,
+          message: formData.message,
+        }),
       });
     } catch {
       // Graceful fallback
@@ -46,7 +50,7 @@ export default function ContactPage() {
             Connect with <span className="gradient-text-blue">Knowvy.</span>
           </h1>
           <p className="text-base sm:text-lg text-[#8B95A5] leading-relaxed">
-            Whether you want to partner for a hackathon, bring a workshop to your college, or join the core developer circle, our team is always accessible.
+            Have questions about ambassador registrations, partnerships, or upcoming hackathons? Drop us a line and our operations team will respond.
           </p>
         </div>
 
@@ -58,38 +62,69 @@ export default function ContactPage() {
                 Direct Channels
               </h3>
 
-              <div className="space-y-4 text-sm text-[#8B95A5]">
+              <div className="space-y-3.5 text-sm text-[#8B95A5]">
                 <a
                   href={brandData.links.whatsapp}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 p-3 rounded-xl bg-[#111722] border border-[#1C2430] hover:border-[#4D8DFF] hover:text-white transition-all group"
+                  className="flex items-center gap-3 p-3 rounded-xl bg-[#111722] border border-[#1C2430] hover:border-[#10B981] hover:text-white transition-all group"
                 >
-                  <MessageCircle className="w-5 h-5 text-[#4D8DFF]" />
+                  <MessageCircle className="w-5 h-5 text-[#10B981]" />
                   <div className="flex-1">
                     <span className="text-white font-bold block text-xs">WhatsApp Community</span>
-                    <span className="text-[11px] font-mono text-[#5A6475]">Instant response from leads</span>
+                    <span className="text-[11px] font-mono text-[#10B981]">2,000+ builders online</span>
+                  </div>
+                  <ArrowUpRight className="w-4 h-4 text-[#5A6475] group-hover:text-white" />
+                </a>
+
+                <a
+                  href={`mailto:${brandData.links.email}`}
+                  className="flex items-start gap-3 p-3 rounded-xl bg-[#111722] border border-[#1C2430] hover:border-[#4D8DFF] transition-all group"
+                >
+                  <Mail className="w-5 h-5 text-[#4D8DFF] flex-shrink-0 mt-0.5" />
+                  <div className="flex-1 min-w-0">
+                    <span className="text-white font-bold block text-xs">Community Email</span>
+                    <span className="text-xs font-mono text-[#4D8DFF] truncate block">
+                      {brandData.links.email}
+                    </span>
+                  </div>
+                  <ArrowUpRight className="w-4 h-4 text-[#5A6475] group-hover:text-white" />
+                </a>
+
+                <a
+                  href={`tel:${brandData.links.phone}`}
+                  className="flex items-start gap-3 p-3 rounded-xl bg-[#111722] border border-[#1C2430] hover:border-[#8B5CF6] transition-all group"
+                >
+                  <Phone className="w-5 h-5 text-[#8B5CF6] flex-shrink-0 mt-0.5" />
+                  <div className="flex-1 min-w-0">
+                    <span className="text-white font-bold block text-xs">Support Hotline</span>
+                    <span className="text-xs font-mono text-[#CBD5E1] block">
+                      {brandData.links.phone}
+                    </span>
+                  </div>
+                  <ArrowUpRight className="w-4 h-4 text-[#5A6475] group-hover:text-white" />
+                </a>
+
+                <a
+                  href={brandData.links.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start gap-3 p-3 rounded-xl bg-[#111722] border border-[#1C2430] hover:border-[#E1306C] transition-all group"
+                >
+                  <InstagramIcon className="w-5 h-5 text-[#E1306C] flex-shrink-0 mt-0.5" />
+                  <div className="flex-1 min-w-0">
+                    <span className="text-white font-bold block text-xs">Instagram</span>
+                    <span className="text-xs font-mono text-[#CBD5E1] block">
+                      @knowvy.technologies
+                    </span>
                   </div>
                   <ArrowUpRight className="w-4 h-4 text-[#5A6475] group-hover:text-white" />
                 </a>
 
                 <div className="flex items-start gap-3 p-3 rounded-xl bg-[#111722] border border-[#1C2430]">
-                  <Mail className="w-5 h-5 text-[#8B5CF6] flex-shrink-0 mt-0.5" />
+                  <MapPin className="w-5 h-5 text-[#F59E0B] flex-shrink-0 mt-0.5" />
                   <div>
-                    <span className="text-white font-bold block text-xs">Founder & Admin Email</span>
-                    <a
-                      href={`mailto:${brandData.links.email}`}
-                      className="text-xs font-mono text-[#4D8DFF] hover:underline"
-                    >
-                      {brandData.links.email}
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3 p-3 rounded-xl bg-[#111722] border border-[#1C2430]">
-                  <MapPin className="w-5 h-5 text-[#10B981] flex-shrink-0 mt-0.5" />
-                  <div>
-                    <span className="text-white font-bold block text-xs">Origin Location</span>
+                    <span className="text-white font-bold block text-xs">Origin & Headquarters</span>
                     <span className="text-xs font-mono text-[#8B95A5]">
                       {brandData.location}
                     </span>

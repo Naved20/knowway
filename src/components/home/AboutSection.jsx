@@ -2,16 +2,17 @@
 
 import { useState } from "react";
 import { brandData } from "@/data/knowvy-data";
-import { BookOpen, Hammer, Network, Sparkles, CheckCircle2 } from "lucide-react";
+import { BookOpen, Calendar, Users, Rocket, Sparkles, CheckCircle2 } from "lucide-react";
 
 const PILLAR_ICONS = {
-  learn: BookOpen,
-  build: Hammer,
-  connect: Network,
+  "student-community": Users,
+  "events-meetups": Calendar,
+  "mentorship-growth": BookOpen,
+  "build-ship": Rocket,
 };
 
 export default function AboutSection() {
-  const [activePillar, setActivePillar] = useState(brandData.pillars[0].id);
+  const [activePillar, setActivePillar] = useState(brandData.pillars[0]?.id || "student-community");
 
   return (
     <section className="py-24 bg-[#07090D] relative overflow-hidden">

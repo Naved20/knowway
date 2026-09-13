@@ -49,6 +49,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/heygen" className="hover:text-white transition-colors text-[#4D8DFF] font-semibold">
+                  HeyGen RoadShow (9 Cities)
+                </Link>
+              </li>
+              <li>
                 <Link href="/programs" className="hover:text-white transition-colors">
                   Programs & Bootcamps
                 </Link>
@@ -78,23 +83,23 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2 text-sm text-[#8B95A5]">
               <li>
-                <Link href="/opportunities/mlh" className="hover:text-white transition-colors">
-                  Major League Hacking
-                </Link>
-              </li>
-              <li>
                 <Link href="/opportunities/unstop" className="hover:text-white transition-colors">
                   Unstop Challenges
                 </Link>
               </li>
               <li>
-                <Link href="/opportunities/devpost" className="hover:text-white transition-colors">
-                  Devpost Hackathons
+                <Link href="/opportunities/devfolio" className="hover:text-white transition-colors">
+                  Devfolio Builders
                 </Link>
               </li>
               <li>
-                <Link href="/opportunities/devfolio" className="hover:text-white transition-colors">
-                  Devfolio Builders
+                <Link href="/opportunities/mlh" className="hover:text-white transition-colors">
+                  Major League Hacking
+                </Link>
+              </li>
+              <li>
+                <Link href="/opportunities/devpost" className="hover:text-white transition-colors">
+                  Devpost Hackathons
                 </Link>
               </li>
             </ul>
@@ -111,9 +116,20 @@ export default function Footer() {
                   href={brandData.links.whatsapp}
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="hover:text-white flex items-center gap-1 transition-colors text-[#10B981]"
+                >
+                  WhatsApp (2,000+ Builders)
+                  <ArrowUpRight className="w-3 h-3" />
+                </a>
+              </li>
+              <li>
+                <a
+                  href={brandData.links.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-white flex items-center gap-1 transition-colors"
                 >
-                  WhatsApp Community
+                  Instagram (@knowvy.technologies)
                   <ArrowUpRight className="w-3 h-3 text-[#4D8DFF]" />
                 </a>
               </li>
@@ -135,7 +151,7 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   className="hover:text-white flex items-center gap-1 transition-colors"
                 >
-                  Twitter / X
+                  Twitter / X (@knowvytech)
                   <ArrowUpRight className="w-3 h-3 text-[#4D8DFF]" />
                 </a>
               </li>

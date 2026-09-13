@@ -71,8 +71,13 @@ export async function askGemini(prompt, history = []) {
       parts: [{ text: prompt }],
     });
 
-    // Try primary modern models in order of capability
-    const candidateModels = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
+    // Try supported modern models in order of capability
+    const candidateModels = [
+      "gemini-3.6-flash",
+      "gemini-flash-latest",
+      "gemini-3-flash-preview",
+      "gemini-2.5-flash-lite",
+    ];
     let lastError = null;
 
     for (const modelName of candidateModels) {

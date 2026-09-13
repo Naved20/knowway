@@ -114,16 +114,24 @@ export default function AboutPage() {
 
         {/* Core Principles */}
         <div className="space-y-6">
-          <h2 className="text-2xl font-display font-bold text-white">
-            Our Core Tenets
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="space-y-2">
+            <span className="text-xs font-mono text-[#8B5CF6] uppercase tracking-wider">
+              Community Philosophy
+            </span>
+            <h2 className="text-3xl font-display font-bold text-white">
+              Our Core Tenets
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {brandData.pillars.map((pillar) => (
               <div
                 key={pillar.id}
-                className="p-6 rounded-2xl bg-[#0D1118] border border-[#1C2430] space-y-3"
+                className="p-6 rounded-2xl bg-[#0D1118] border border-[#1C2430] hover:border-[#4D8DFF]/40 transition-colors space-y-3"
               >
-                <h3 className="text-xl font-display font-bold text-white">
+                <span className="text-xs font-mono text-[#4D8DFF] font-bold block">
+                  {pillar.number} //
+                </span>
+                <h3 className="text-lg font-display font-bold text-white">
                   {pillar.title}
                 </h3>
                 <p className="text-xs text-[#8B5CF6] font-mono">
@@ -132,6 +140,87 @@ export default function AboutPage() {
                 <p className="text-xs text-[#8B95A5] leading-relaxed">
                   {pillar.description}
                 </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Core Leadership Team */}
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <span className="text-xs font-mono text-[#4D8DFF] uppercase tracking-wider">
+              Bhopal Leadership
+            </span>
+            <h2 className="text-3xl font-display font-bold text-white">
+              The Team Running Knowvy
+            </h2>
+            <p className="text-sm text-[#8B95A5]">
+              Managing schedules, designing learning materials, securing corporate sponsors, and hosting our meetups.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {teamData.map((member) => (
+              <div
+                key={member.name}
+                className="p-6 rounded-2xl bg-[#0D1118] border border-[#1C2430] hover:border-[#4D8DFF]/50 transition-all space-y-4 flex flex-col justify-between"
+              >
+                <div className="space-y-3">
+                  <div className="w-16 h-16 rounded-2xl overflow-hidden bg-[#111722] border border-[#1C2430]">
+                    <img
+                      src={member.avatar}
+                      alt={member.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-display font-bold text-white">
+                      {member.name}
+                    </h3>
+                    <span className="text-xs font-mono text-[#4D8DFF] block">
+                      {member.role}
+                    </span>
+                  </div>
+                  <p className="text-xs text-[#8B95A5] leading-relaxed line-clamp-3">
+                    {member.bio}
+                  </p>
+                </div>
+
+                <div className="pt-3 border-t border-[#1C2430] flex items-center gap-3">
+                  {member.socials.github && (
+                    <a
+                      href={member.socials.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#8B95A5] hover:text-white transition-colors"
+                      title="GitHub"
+                    >
+                      <GithubIcon className="w-4 h-4" />
+                    </a>
+                  )}
+                  {member.socials.linkedin && (
+                    <a
+                      href={member.socials.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#8B95A5] hover:text-[#4D8DFF] transition-colors"
+                      title="LinkedIn"
+                    >
+                      <LinkedinIcon className="w-4 h-4" />
+                    </a>
+                  )}
+                  {member.socials.twitter && (
+                    <a
+                      href={member.socials.twitter}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#8B95A5] hover:text-[#38BDF8] transition-colors"
+                      title="Twitter / X"
+                    >
+                      <TwitterIcon className="w-4 h-4" />
+                    </a>
+                  )}
+                </div>
               </div>
             ))}
           </div>

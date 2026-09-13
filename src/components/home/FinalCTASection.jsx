@@ -21,7 +21,7 @@ export default function FinalCTASection() {
         </h2>
 
         <p className="text-base sm:text-lg text-[#8B95A5] max-w-2xl mx-auto leading-relaxed">
-          Join 1,500+ student developers, creators, and founders across Bhopal and India who are shipping real software and unlocking career opportunities.
+          Join 2,000+ student builders, creators, and founders across Bhopal and India who are shipping real software and unlocking career opportunities.
         </p>
 
         {/* 3 Action Buttons */}
