@@ -65,12 +65,13 @@ export default function CreativeLabPage() {
                   </p>
                 </div>
 
-                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs font-mono text-slate-600 leading-relaxed">
-                  <span className="text-slate-500 uppercase block text-[10px] mb-1 font-bold">
+                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs font-mono text-slate-700 leading-relaxed">
+                  <span className="text-violet-600 uppercase block text-[10px] mb-1 font-bold">
                     Generative Prompt Direction:
                   </span>
                   "{item.prompt}"
                 </div>
+
               </div>
 
               <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-mono text-slate-500">

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { eventsData, brandData } from "@/data/knowvy-data";
+import EventRegistrationSection from "@/components/events/EventRegistrationSection";
 import {
   Calendar,
   MapPin,
@@ -54,47 +55,46 @@ export default async function EventDetailPage({ params }) {
         </Link>
 
         {/* Hero Visual & Title */}
-        <div className="relative rounded-3xl overflow-hidden border border-slate-200 bg-white shadow-md">
-          <div className="relative h-72 sm:h-96 w-full">
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-10 shadow-sm space-y-6">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-600 border border-blue-200 text-xs font-mono font-bold uppercase shadow-xs">
+              {event.status}
+            </span>
+            <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-xs font-mono text-slate-700 font-semibold shadow-xs">
+              {event.category}
+            </span>
+          </div>
+
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-display font-extrabold tracking-tight text-slate-900">
+            {event.title}
+          </h1>
+
+          {/* Quick Metadata Bar */}
+          <div className="flex flex-wrap items-center gap-6 text-xs sm:text-sm font-mono text-slate-600 pt-2 border-t border-slate-200">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-blue-600" />
+              <span className="text-slate-900 font-medium">{event.date}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-violet-600" />
+              <span className="text-slate-900 font-medium">{event.location}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Users className="w-4 h-4 text-emerald-600" />
+              <span className="text-slate-900 font-medium">{event.participants}</span>
+            </div>
+          </div>
+
+          {/* Banner Container */}
+          <div className="relative h-64 sm:h-96 w-full rounded-2xl overflow-hidden border border-slate-200 bg-slate-100 mt-6 shadow-xs">
             <img
               src={event.banner}
               alt={event.title}
-              className="w-full h-full object-cover opacity-85"
+              className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/40 to-transparent" />
-          </div>
-
-          <div className="absolute bottom-0 inset-x-0 p-6 sm:p-10 space-y-4">
-            <div className="flex flex-wrap items-center gap-3">
-              <span className="px-3 py-1 rounded-full bg-blue-600 text-white text-xs font-mono font-bold uppercase shadow-xs">
-                {event.status}
-              </span>
-              <span className="px-3 py-1 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 text-xs font-mono text-slate-800 shadow-xs">
-                {event.category}
-              </span>
-            </div>
-
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-display font-extrabold tracking-tight text-white">
-              {event.title}
-            </h1>
-
-            {/* Quick Metadata Bar */}
-            <div className="flex flex-wrap items-center gap-6 text-xs sm:text-sm font-mono text-slate-200 pt-2 border-t border-white/20">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-blue-400" />
-                <span>{event.date}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-violet-400" />
-                <span>{event.location}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Users className="w-4 h-4 text-emerald-400" />
-                <span>{event.participants}</span>
-              </div>
-            </div>
           </div>
         </div>
+
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
@@ -196,11 +196,14 @@ export default async function EventDetailPage({ params }) {
                 </h3>
               </div>
 
+              {/* Instant RSVP & Digital Pass Dispatch */}
+              <EventRegistrationSection event={event} />
+
               <a
                 href={brandData.links.whatsapp}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 text-white font-display font-bold text-sm shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/35 flex items-center justify-center gap-2 transition-all"
+                className="w-full py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-display font-bold text-sm shadow-md flex items-center justify-center gap-2 transition-all"
               >
                 Join Event Community
                 <ArrowUpRight className="w-4 h-4" />

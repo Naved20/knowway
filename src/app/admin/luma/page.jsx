@@ -196,7 +196,7 @@ export default function AdminLumaStudioPage() {
                       <CheckCircle2 className="w-3.5 h-3.5" /> Sent
                     </span>
                   ) : (
-                    <span className="text-slate-400">Pending</span>
+                    <span className="text-slate-500 font-medium">Pending</span>
                   )}
                 </div>
 
@@ -207,7 +207,7 @@ export default function AdminLumaStudioPage() {
                       <CheckCircle2 className="w-3.5 h-3.5" /> Synthesized
                     </span>
                   ) : (
-                    <span className="text-slate-400">Waiting</span>
+                    <span className="text-slate-500 font-medium">Waiting</span>
                   )}
                 </div>
 
@@ -218,7 +218,7 @@ export default function AdminLumaStudioPage() {
                       <CheckCircle2 className="w-3.5 h-3.5" /> Synced
                     </span>
                   ) : (
-                    <span className="text-slate-400">Waiting</span>
+                    <span className="text-slate-500 font-medium">Waiting</span>
                   )}
                 </div>
               </div>
@@ -232,14 +232,15 @@ export default function AdminLumaStudioPage() {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="text-center p-6 space-y-2 text-slate-400">
-                    <UploadCloud className="w-8 h-8 mx-auto text-blue-500/40" />
+                  <div className="text-center p-6 space-y-2 text-slate-600">
+                    <UploadCloud className="w-8 h-8 mx-auto text-blue-600/50" />
                     <span className="text-xs font-mono block">
                       Asset preview will render here after generation completes.
                     </span>
                   </div>
                 )}
               </div>
+
             </div>
 
             {generatedResult && (

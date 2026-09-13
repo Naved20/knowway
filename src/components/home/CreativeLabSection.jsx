@@ -58,12 +58,13 @@ export default function CreativeLabSection() {
                   </p>
                 </div>
 
-                <div className="p-3 rounded-lg bg-white border border-slate-200 text-[11px] font-mono text-slate-600 line-clamp-3 shadow-xs">
-                  <span className="text-slate-400 uppercase block text-[9px] mb-1 font-semibold">
+                <div className="p-3 rounded-lg bg-white border border-slate-200 text-[11px] font-mono text-slate-700 line-clamp-3 shadow-xs">
+                  <span className="text-purple-600 uppercase block text-[9px] mb-1 font-bold">
                     Luma Dream Prompt:
                   </span>
                   "{item.prompt}"
                 </div>
+
               </div>
 
               <div className="pt-3 border-t border-slate-200 flex items-center justify-between text-xs font-mono text-slate-500">

@@ -197,11 +197,7 @@
   box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
 }
 
-/* ============================================================
-   UNIVERSAL LIGHT THEME RESILIENCE OVERRIDES
-   Guarantees that any legacy dark colors/classes instantly render
-   with modern light theme styling across every route.
-   ============================================================ */
+/* Universal Light Theme Class Normalizers */
 .bg-\[\#07090D\],
 .bg-\[\#04060a\] {
   background-color: var(--bg-primary) !important;
@@ -231,14 +227,6 @@
   border-color: rgba(226, 232, 240, 0.9) !important;
 }
 
-.bg-black\/40,
-.bg-black\/60,
-.bg-black\/70,
-.bg-black\/80 {
-  background-color: rgba(241, 245, 249, 0.85) !important;
-  color: #0F172A !important;
-}
-
 .text-\[\#8B95A5\] {
   color: #475569 !important;
 }
@@ -246,3 +234,4 @@
 .text-\[\#5A6475\] {
   color: #64748B !important;
 }
+

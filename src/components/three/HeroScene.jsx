@@ -52,16 +52,17 @@ export default function HeroScene() {
     // Inner glowing sphere
     const innerGeo = new THREE.IcosahedronGeometry(1.6, 3);
     const innerMat = new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color("#0D1424"),
-      roughness: 0.15,
-      metalness: 0.9,
-      reflectivity: 0.8,
+      color: new THREE.Color("#2563EB"),
+      roughness: 0.2,
+      metalness: 0.3,
+      reflectivity: 0.9,
       clearcoat: 1.0,
       clearcoatRoughness: 0.1,
       wireframe: false,
     });
     const innerMesh = new THREE.Mesh(innerGeo, innerMat);
     coreGroup.add(innerMesh);
+
 
     // Outer wireframe shell
     const outerGeo = new THREE.IcosahedronGeometry(2.0, 2);
@@ -256,12 +257,13 @@ export default function HeroScene() {
       {/* Floating Interactive Tag Indicators */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
         <div className="relative w-full max-w-lg h-80">
-          <div className="absolute top-4 left-6 px-3 py-1 bg-[#111722]/80 border border-[#1C2430] rounded-full text-xs font-medium text-[#4D8DFF] backdrop-blur-md animate-pulse">
+          <div className="absolute top-4 left-6 px-3.5 py-1.5 bg-white/90 border border-blue-200 rounded-full text-xs font-mono font-bold text-blue-600 backdrop-blur-md shadow-md animate-pulse">
             ⚡ 1,500+ Active Builders
           </div>
-          <div className="absolute bottom-6 right-8 px-3 py-1 bg-[#111722]/80 border border-[#1C2430] rounded-full text-xs font-medium text-[#8B5CF6] backdrop-blur-md">
+          <div className="absolute bottom-6 right-8 px-3.5 py-1.5 bg-white/90 border border-violet-200 rounded-full text-xs font-mono font-bold text-violet-700 backdrop-blur-md shadow-md">
             🌐 Bhopal → National Ecosystem
           </div>
+
         </div>
       </div>
     </div>

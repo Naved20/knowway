@@ -40,38 +40,38 @@ export default function GallerySection() {
                 key={item.id}
                 data-cursor="open"
                 onClick={() => setActiveItem(item)}
-                className="group relative rounded-2xl overflow-hidden bg-white border border-slate-200 hover:border-blue-400 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer h-72"
+                className="group flex flex-col rounded-2xl overflow-hidden bg-white border border-slate-200 hover:border-blue-400 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer"
               >
-                <img
-                  src={optimizedUrl}
-                  alt={item.title}
-                  loading="lazy"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                />
+                {/* Image Frame */}
+                <div className="relative h-56 w-full overflow-hidden bg-slate-100">
+                  <img
+                    src={optimizedUrl}
+                    alt={item.title}
+                    loading="lazy"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                  />
 
-                {/* Gradient Overlay for Photo Contrast */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-80 group-hover:opacity-70 transition-opacity" />
+                  {/* Top Badge */}
+                  <div className="absolute top-3 left-3">
+                    <span className="px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-md border border-slate-200 text-[10px] font-mono uppercase text-blue-600 font-bold shadow-xs">
+                      {item.category}
+                    </span>
+                  </div>
 
-                {/* Top Badge */}
-                <div className="absolute top-4 left-4">
-                  <span className="px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 text-[10px] font-mono uppercase text-blue-600 font-bold shadow-sm">
-                    {item.category}
-                  </span>
-                </div>
-
-                {/* Hover Maximize Icon */}
-                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="p-2 rounded-xl bg-white/90 backdrop-blur-md border border-slate-200 text-slate-800 shadow-sm">
-                    <Maximize2 className="w-3.5 h-3.5" />
+                  {/* Hover Maximize Icon */}
+                  <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="p-1.5 rounded-lg bg-white/95 backdrop-blur-md border border-slate-200 text-slate-800 shadow-xs">
+                      <Maximize2 className="w-3.5 h-3.5" />
+                    </div>
                   </div>
                 </div>
 
-                {/* Bottom Information */}
-                <div className="absolute bottom-4 left-4 right-4">
-                  <h4 className="text-base font-display font-bold text-white group-hover:text-blue-300 transition-colors truncate">
+                {/* Bottom Information (High-Contrast Light Theme) */}
+                <div className="p-4 space-y-1 bg-white border-t border-slate-100">
+                  <h4 className="text-base font-display font-bold text-slate-900 group-hover:text-blue-600 transition-colors truncate">
                     {item.title}
                   </h4>
-                  <p className="text-xs text-slate-200 line-clamp-1 mt-0.5">
+                  <p className="text-xs text-slate-600 line-clamp-1">
                     {item.caption}
                   </p>
                 </div>
@@ -84,7 +84,7 @@ export default function GallerySection() {
       {/* Fullscreen Lightbox Modal */}
       {activeItem && (
         <div
-          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 sm:p-8 animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-4 sm:p-8 animate-in fade-in duration-200"
           onClick={() => setActiveItem(null)}
         >
           <button
@@ -120,6 +120,7 @@ export default function GallerySection() {
           </div>
         </div>
       )}
+
     </section>
   );
 }
