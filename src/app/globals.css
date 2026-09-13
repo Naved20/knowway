@@ -222,6 +222,19 @@ html.light .text-white\/80 {
   color: #334155 !important;
 }
 
+/* Ensure buttons and badges with filled/gradient backgrounds retain crisp white text */
+html.light [class*="bg-gradient-"],
+html.light [class*="bg-gradient-"] *,
+html.light .bg-\[\#4D8DFF\],
+html.light .bg-\[\#4D8DFF\] *,
+html.light .bg-blue-600,
+html.light .bg-blue-600 *,
+html.light [class*="from-\[\#4D8DFF\]"],
+html.light [class*="from-\[\#4D8DFF\]"] *,
+html.light .keep-white {
+  color: #FFFFFF !important;
+}
+
 html.light .text-\[\#8B95A5\] {
   color: #475569 !important;
 }
