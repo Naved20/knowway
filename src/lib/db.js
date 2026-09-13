@@ -1,33 +1,35 @@
 import crypto from "crypto";
-import { Redis } from "@upstash/redis";
+import { createClient } from "@supabase/supabase-js";
 import { eventsData } from "@/data/knowvy-data";
 import { hashPassword, verifyPassword } from "./auth";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Upstash Redis Client (lazy-initialized)
+// Supabase Client (lazy-initialized)
 // ─────────────────────────────────────────────────────────────────────────────
-let redisClient = null;
+let supabaseClient = null;
 
-function getRedis() {
-  if (redisClient) return redisClient;
+function getSupabase() {
+  if (supabaseClient) return supabaseClient;
 
-  const url = process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-  if (!url || !token || url === "your_upstash_url_here") {
+  if (!url || !key || key === url) {
     throw new Error(
-      "[DB] Upstash Redis not configured. Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN in environment variables."
+      "[DB] Supabase not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in environment variables."
     );
   }
 
-  redisClient = new Redis({ url, token });
-  return redisClient;
+  supabaseClient = createClient(url, key, {
+    auth: { persistSession: false },
+  });
+  return supabaseClient;
 }
 
-const DB_KEY = "knowvy:db:v1";
+const STORE_KEY = "knowvy_main_db";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// In-memory cache (warm requests within the same function instance)
+// In-memory cache (warm requests within same function instance)
 // ─────────────────────────────────────────────────────────────────────────────
 let cache = null;
 let initPromise = null;
@@ -44,27 +46,53 @@ function getInitialState() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Read from Supabase
+// ─────────────────────────────────────────────────────────────────────────────
+async function readFromSupabase() {
+  const supabase = getSupabase();
+  const { data, error } = await supabase
+    .from("knowvy_store")
+    .select("value")
+    .eq("key", STORE_KEY)
+    .maybeSingle();
+
+  if (error) {
+    console.error("[DB] Supabase read error:", error.message);
+    return null;
+  }
+  return data?.value || null;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Write to Supabase (upsert)
+// ─────────────────────────────────────────────────────────────────────────────
+async function writeToSupabase(data) {
+  const supabase = getSupabase();
+  const { error } = await supabase.from("knowvy_store").upsert(
+    { key: STORE_KEY, value: data, updated_at: new Date().toISOString() },
+    { onConflict: "key" }
+  );
+
+  if (error) {
+    console.error("[DB] Supabase write error:", error.message);
+    throw new Error(`Failed to save database: ${error.message}`);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Initialize Database
 // ─────────────────────────────────────────────────────────────────────────────
 async function initializeDatabase() {
-  const redis = getRedis();
-
-  // Try to load from Redis
+  // Try to load from Supabase
   let existing = null;
   try {
-    existing = await redis.get(DB_KEY);
+    existing = await readFromSupabase();
   } catch (e) {
-    console.error("[DB] Redis get error:", e.message);
+    console.error("[DB] Could not connect to Supabase:", e.message);
   }
 
   if (existing && typeof existing === "object") {
     cache = existing;
-  } else if (typeof existing === "string") {
-    try {
-      cache = JSON.parse(existing);
-    } catch {
-      cache = getInitialState();
-    }
   } else {
     cache = getInitialState();
   }
@@ -79,7 +107,7 @@ async function initializeDatabase() {
 
   let needsSave = false;
 
-  // 1. Seed Flagship Events if empty
+  // 1. Seed Events if empty
   if (cache.events.length === 0 && Array.isArray(eventsData) && eventsData.length > 0) {
     cache.events = eventsData.map((ev) => ({
       id: `evt_${crypto.randomUUID()}`,
@@ -115,9 +143,7 @@ async function initializeDatabase() {
     process.env.ADMIN_EMAIL ||
     process.env.SMTP_USER ||
     "knowvy1@gmail.com"
-  )
-    .toLowerCase()
-    .trim();
+  ).toLowerCase().trim();
   const existingAdmin = cache.users.find((u) => u.email === adminEmail);
 
   if (!existingAdmin) {
@@ -146,33 +172,21 @@ async function initializeDatabase() {
   }
 
   if (needsSave) {
-    await persistToRedis();
+    await writeToSupabase(cache);
   }
 
   return cache;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Persist to Redis (with 30-day TTL)
-// ─────────────────────────────────────────────────────────────────────────────
-async function persistToRedis() {
-  if (!cache) return;
-  try {
-    const redis = getRedis();
-    await redis.set(DB_KEY, JSON.stringify(cache), { ex: 60 * 60 * 24 * 30 }); // 30 days TTL
-  } catch (err) {
-    console.error("[DB] Redis set error:", err.message);
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Public API
+// Public API — same as before, no changes needed in calling code
 // ─────────────────────────────────────────────────────────────────────────────
 export async function getDb() {
   if (cache) return cache;
   if (!initPromise) {
     initPromise = initializeDatabase().catch((err) => {
-      initPromise = null; // allow retry on next call
+      initPromise = null;
+      cache = null;
       throw err;
     });
   }
@@ -180,7 +194,8 @@ export async function getDb() {
 }
 
 export async function saveDb() {
-  await persistToRedis();
+  if (!cache) return;
+  await writeToSupabase(cache);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -189,8 +204,7 @@ export async function saveDb() {
 export async function findUserByEmail(email) {
   const db = await getDb();
   if (!email) return null;
-  const clean = email.toLowerCase().trim();
-  return db.users.find((u) => u.email === clean) || null;
+  return db.users.find((u) => u.email === email.toLowerCase().trim()) || null;
 }
 
 export async function findUserById(id) {
@@ -199,23 +213,14 @@ export async function findUserById(id) {
 }
 
 export async function createUser({
-  email,
-  passwordHash,
-  name,
-  role = "user",
-  college = "",
-  year = "",
-  github = "",
-  phone = "",
-  bio = "",
+  email, passwordHash, name, role = "user",
+  college = "", year = "", github = "", phone = "", bio = "",
   emailPreferences = { promotional: true, transactional: true },
 }) {
   const db = await getDb();
-  const cleanEmail = email.toLowerCase().trim();
-
   const user = {
     id: `usr_${crypto.randomUUID()}`,
-    email: cleanEmail,
+    email: email.toLowerCase().trim(),
     passwordHash,
     name: name.trim(),
     role: role === "admin" ? "admin" : "user",
@@ -232,7 +237,6 @@ export async function createUser({
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
-
   db.users.push(user);
   await saveDb();
   return user;
@@ -242,13 +246,7 @@ export async function updateUser(id, updates) {
   const db = await getDb();
   const index = db.users.findIndex((u) => u.id === id);
   if (index === -1) return null;
-
-  db.users[index] = {
-    ...db.users[index],
-    ...updates,
-    updatedAt: new Date().toISOString(),
-  };
-
+  db.users[index] = { ...db.users[index], ...updates, updatedAt: new Date().toISOString() };
   await saveDb();
   return db.users[index];
 }
@@ -264,9 +262,7 @@ export async function getAllUsers() {
 export async function saveOtp({ email, otpHash, purpose = "register", expiresInMinutes = 10 }) {
   const db = await getDb();
   const cleanEmail = email.toLowerCase().trim();
-
   db.otps = db.otps.filter((o) => !(o.email === cleanEmail && o.purpose === purpose));
-
   const otpRecord = {
     id: `otp_${crypto.randomUUID()}`,
     email: cleanEmail,
@@ -277,7 +273,6 @@ export async function saveOtp({ email, otpHash, purpose = "register", expiresInM
     expiresAt: Date.now() + expiresInMinutes * 60 * 1000,
     createdAt: Date.now(),
   };
-
   db.otps.push(otpRecord);
   await saveDb();
   return otpRecord;
@@ -285,17 +280,13 @@ export async function saveOtp({ email, otpHash, purpose = "register", expiresInM
 
 export async function getOtpRecord(email, purpose = "register") {
   const db = await getDb();
-  const cleanEmail = email.toLowerCase().trim();
-  return db.otps.find((o) => o.email === cleanEmail && o.purpose === purpose) || null;
+  return db.otps.find((o) => o.email === email.toLowerCase().trim() && o.purpose === purpose) || null;
 }
 
 export async function incrementOtpAttempts(id) {
   const db = await getDb();
-  const index = db.otps.findIndex((o) => o.id === id);
-  if (index !== -1) {
-    db.otps[index].attempts += 1;
-    await saveDb();
-  }
+  const idx = db.otps.findIndex((o) => o.id === id);
+  if (idx !== -1) { db.otps[idx].attempts += 1; await saveDb(); }
 }
 
 export async function deleteOtpRecord(id) {
@@ -313,8 +304,7 @@ export async function getPublishedEvents() {
 }
 
 export async function getAllEventsAdmin() {
-  const db = await getDb();
-  return db.events;
+  return (await getDb()).events;
 }
 
 export async function getEventBySlug(slug) {
@@ -325,7 +315,6 @@ export async function getEventBySlug(slug) {
 export async function createEvent(eventData) {
   const db = await getDb();
   const slug = eventData.slug || eventData.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-
   const newEvent = {
     id: `evt_${crypto.randomUUID()}`,
     slug,
@@ -337,9 +326,7 @@ export async function createEvent(eventData) {
     time: eventData.time || "10:00 AM - 05:00 PM IST",
     location: eventData.location || "Bhopal, India",
     meetingLink: eventData.meetingLink || "",
-    banner:
-      eventData.banner ||
-      "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80",
+    banner: eventData.banner || "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80",
     shortDescription: eventData.shortDescription || "",
     about: eventData.about || "",
     highlights: Array.isArray(eventData.highlights) ? eventData.highlights : [],
@@ -351,7 +338,6 @@ export async function createEvent(eventData) {
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
-
   db.events.unshift(newEvent);
   await saveDb();
   return newEvent;
@@ -361,13 +347,7 @@ export async function updateEvent(idOrSlug, updates) {
   const db = await getDb();
   const index = db.events.findIndex((e) => e.id === idOrSlug || e.slug === idOrSlug);
   if (index === -1) return null;
-
-  db.events[index] = {
-    ...db.events[index],
-    ...updates,
-    updatedAt: new Date().toISOString(),
-  };
-
+  db.events[index] = { ...db.events[index], ...updates, updatedAt: new Date().toISOString() };
   await saveDb();
   return db.events[index];
 }
@@ -376,7 +356,6 @@ export async function deleteEvent(idOrSlug) {
   const db = await getDb();
   const index = db.events.findIndex((e) => e.id === idOrSlug || e.slug === idOrSlug);
   if (index === -1) return false;
-
   db.events.splice(index, 1);
   await saveDb();
   return true;
@@ -387,33 +366,19 @@ export async function deleteEvent(idOrSlug) {
 // ─────────────────────────────────────────────────────────────────────────────
 export function generateTicketCode(eventSlug) {
   const cleanSlug = (eventSlug || "EVT").toUpperCase().slice(0, 4);
-  const randomSuffix = crypto.randomBytes(3).toString("hex").toUpperCase();
-  const dateYear = new Date().getFullYear();
-  return `KNOWVY-${dateYear}-${cleanSlug}-${randomSuffix}`;
+  return `KNOWVY-${new Date().getFullYear()}-${cleanSlug}-${crypto.randomBytes(3).toString("hex").toUpperCase()}`;
 }
 
-export async function createRegistration({
-  eventSlug,
-  eventTitle,
-  userId,
-  userEmail,
-  userName,
-  college = "",
-  github = "",
-  phone = "",
-}) {
+export async function createRegistration({ eventSlug, eventTitle, userId, userEmail, userName, college = "", github = "", phone = "" }) {
   const db = await getDb();
   const cleanEmail = userEmail.toLowerCase().trim();
-
   const existing = db.registrations.find(
     (r) => r.eventSlug === eventSlug && r.userEmail === cleanEmail && r.status !== "cancelled"
   );
-  if (existing) {
-    return { success: false, alreadyRegistered: true, registration: existing };
-  }
+  if (existing) return { success: false, alreadyRegistered: true, registration: existing };
 
   const event = db.events.find((e) => e.slug === eventSlug);
-  if (event && event.maxCapacity && event.registeredCount >= event.maxCapacity) {
+  if (event?.maxCapacity && event.registeredCount >= event.maxCapacity) {
     return { success: false, capacityFull: true, error: "Event registration is at maximum capacity." };
   }
 
@@ -435,11 +400,7 @@ export async function createRegistration({
   };
 
   db.registrations.push(registration);
-
-  if (event) {
-    event.registeredCount = (event.registeredCount || 0) + 1;
-  }
-
+  if (event) event.registeredCount = (event.registeredCount || 0) + 1;
   await saveDb();
   return { success: true, registration };
 }
@@ -447,137 +408,82 @@ export async function createRegistration({
 export async function getUserRegistrations(userEmail, userId = null) {
   const db = await getDb();
   const cleanEmail = (userEmail || "").toLowerCase().trim();
-
   return db.registrations
-    .filter(
-      (r) =>
-        (cleanEmail && r.userEmail === cleanEmail) || (userId && r.userId === userId)
-    )
+    .filter((r) => (cleanEmail && r.userEmail === cleanEmail) || (userId && r.userId === userId))
     .map((reg) => {
       const event = db.events.find((e) => e.slug === reg.eventSlug) || {};
-      return {
-        ...reg,
-        event: {
-          title: event.title || reg.eventTitle,
-          date: event.date,
-          time: event.time,
-          location: event.location,
-          meetingLink: event.meetingLink,
-          banner: event.banner,
-          status: event.status,
-        },
-      };
+      return { ...reg, event: { title: event.title || reg.eventTitle, date: event.date, time: event.time, location: event.location, meetingLink: event.meetingLink, banner: event.banner, status: event.status } };
     })
     .sort((a, b) => new Date(b.registeredAt) - new Date(a.registeredAt));
 }
 
 export async function getEventRegistrations(eventSlug) {
-  const db = await getDb();
-  return db.registrations.filter((r) => r.eventSlug === eventSlug);
+  return (await getDb()).registrations.filter((r) => r.eventSlug === eventSlug);
 }
 
 export async function getAllRegistrations() {
-  const db = await getDb();
-  return db.registrations;
+  return (await getDb()).registrations;
 }
 
 export async function updateRegistrationStatus(id, status) {
   const db = await getDb();
   const reg = db.registrations.find((r) => r.id === id);
   if (!reg) return null;
-
   const oldStatus = reg.status;
   reg.status = status;
-
   const event = db.events.find((e) => e.slug === reg.eventSlug);
   if (event) {
-    if (oldStatus !== "cancelled" && status === "cancelled") {
-      event.registeredCount = Math.max(0, (event.registeredCount || 1) - 1);
-    } else if (oldStatus === "cancelled" && status === "confirmed") {
-      event.registeredCount = (event.registeredCount || 0) + 1;
-    }
+    if (oldStatus !== "cancelled" && status === "cancelled") event.registeredCount = Math.max(0, (event.registeredCount || 1) - 1);
+    else if (oldStatus === "cancelled" && status === "confirmed") event.registeredCount = (event.registeredCount || 0) + 1;
   }
-
   await saveDb();
   return reg;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Email Queue & Delivery Logging Operations
+// Email Queue & Delivery Logging
 // ─────────────────────────────────────────────────────────────────────────────
-export async function enqueueEmail({
-  recipient,
-  emailType = "transactional",
-  subject,
-  html,
-  text,
-  campaignId = null,
-}) {
+export async function enqueueEmail({ recipient, emailType = "transactional", subject, html, text, campaignId = null }) {
   const db = await getDb();
-  const queueItem = {
+  const item = {
     id: `queue_${crypto.randomUUID()}`,
     recipient: recipient.toLowerCase().trim(),
-    emailType,
-    subject,
-    html,
-    text,
-    campaignId,
-    status: "pending",
-    attempts: 0,
-    maxAttempts: 3,
-    error: null,
-    scheduledAt: new Date().toISOString(),
-    sentAt: null,
+    emailType, subject, html, text, campaignId,
+    status: "pending", attempts: 0, maxAttempts: 3,
+    error: null, scheduledAt: new Date().toISOString(), sentAt: null,
   };
-
-  db.emailQueue.push(queueItem);
+  db.emailQueue.push(item);
   await saveDb();
-  return queueItem;
+  return item;
 }
 
-export async function logEmailDelivery({
-  recipient,
-  emailType,
-  subject,
-  status,
-  error = null,
-  campaignId = null,
-}) {
+export async function logEmailDelivery({ recipient, emailType, subject, status, error = null, campaignId = null }) {
   const db = await getDb();
   const logItem = {
     id: `log_${crypto.randomUUID()}`,
     recipient: recipient.toLowerCase().trim(),
-    emailType,
-    subject,
-    status,
-    error,
-    campaignId,
+    emailType, subject, status, error, campaignId,
     sentAt: new Date().toISOString(),
   };
-
   db.emailLogs.unshift(logItem);
-  if (db.emailLogs.length > 1000) {
-    db.emailLogs = db.emailLogs.slice(0, 1000);
-  }
-
+  if (db.emailLogs.length > 1000) db.emailLogs = db.emailLogs.slice(0, 1000);
   await saveDb();
   return logItem;
 }
 
 export async function getEmailLogs(limit = 100) {
-  const db = await getDb();
-  return db.emailLogs.slice(0, limit);
+  return (await getDb()).emailLogs.slice(0, limit);
 }
 
 export async function getQueueStatus() {
   const db = await getDb();
-  const pending = db.emailQueue.filter((q) => q.status === "pending").length;
-  const processing = db.emailQueue.filter((q) => q.status === "processing").length;
-  const failed = db.emailQueue.filter((q) => q.status === "failed").length;
-  const sent = db.emailLogs.filter((l) => l.status === "sent").length;
-
-  return { pending, processing, failed, sent, totalLogs: db.emailLogs.length };
+  return {
+    pending: db.emailQueue.filter((q) => q.status === "pending").length,
+    processing: db.emailQueue.filter((q) => q.status === "processing").length,
+    failed: db.emailQueue.filter((q) => q.status === "failed").length,
+    sent: db.emailLogs.filter((l) => l.status === "sent").length,
+    totalLogs: db.emailLogs.length,
+  };
 }
 
-// Export verifyPassword for routes that need it
 export { verifyPassword };
