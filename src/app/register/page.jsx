@@ -9,7 +9,6 @@ import {
   Lock,
   User,
   School,
-  Github,
   Phone,
   ShieldCheck,
   ArrowRight,
@@ -21,6 +20,7 @@ import {
   Sparkles,
   RefreshCw,
 } from "lucide-react";
+import { GithubIcon } from "@/components/ui/BrandIcons";
 
 function RegisterWizard() {
   const router = useRouter();
@@ -517,7 +517,7 @@ function RegisterWizard() {
                     GitHub Username
                   </label>
                   <div className="relative">
-                    <Github className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                    <GithubIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                     <input
                       type="text"
                       value={github}

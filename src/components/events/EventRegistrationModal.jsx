@@ -10,7 +10,6 @@ import {
   Mail,
   User,
   School,
-  Github,
   CheckCircle2,
   AlertCircle,
   Sparkles,
@@ -18,6 +17,7 @@ import {
   ExternalLink,
   ArrowRight,
 } from "lucide-react";
+import { GithubIcon } from "@/components/ui/BrandIcons";
 
 export default function EventRegistrationModal({ isOpen, onClose, event, onRegistered }) {
   const [session, setSession] = useState(null);
@@ -306,7 +306,7 @@ export default function EventRegistrationModal({ isOpen, onClose, event, onRegis
                     GitHub Username
                   </label>
                   <div className="relative">
-                    <Github className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+                    <GithubIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
                     <input
                       type="text"
                       value={github}

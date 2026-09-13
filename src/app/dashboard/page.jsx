@@ -21,12 +21,12 @@ import {
   ExternalLink,
   ChevronRight,
   School,
-  Github,
   Phone,
   Lock,
   CalendarPlus,
   XCircle,
 } from "lucide-react";
+import { GithubIcon } from "@/components/ui/BrandIcons";
 
 export default function DashboardPage() {
   const router = useRouter();
