@@ -1,39 +1,27 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect } from "react";
 
 const ThemeContext = createContext({
-  theme: "dark",
+  theme: "light",
   toggleTheme: () => {},
+  isMounted: true,
 });
 
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState("dark");
-  const [mounted, setMounted] = useState(false);
-
   useEffect(() => {
-    // Check saved theme in localStorage or system preference
-    const savedTheme = localStorage.getItem("knowvy-theme");
-    if (savedTheme === "light" || savedTheme === "dark") {
-      setTheme(savedTheme);
-      document.documentElement.classList.remove("dark", "light");
-      document.documentElement.classList.add(savedTheme);
-    } else {
-      document.documentElement.classList.add("dark");
+    // Pure Light Theme enforcement
+    document.documentElement.classList.remove("dark");
+    document.documentElement.classList.add("light");
+    try {
+      localStorage.setItem("knowvy-theme", "light");
+    } catch {
+      // ignore
     }
-    setMounted(true);
   }, []);
 
-  const toggleTheme = () => {
-    const nextTheme = theme === "dark" ? "light" : "dark";
-    setTheme(nextTheme);
-    localStorage.setItem("knowvy-theme", nextTheme);
-    document.documentElement.classList.remove("dark", "light");
-    document.documentElement.classList.add(nextTheme);
-  };
-
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, isMounted: mounted }}>
+    <ThemeContext.Provider value={{ theme: "light", toggleTheme: () => {}, isMounted: true }}>
       {children}
     </ThemeContext.Provider>
   );

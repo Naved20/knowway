@@ -19,8 +19,8 @@ const LusionWorldCanvas = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="fixed inset-0 z-0 bg-[#07090D] flex items-center justify-center pointer-events-none">
-        <div className="w-12 h-12 rounded-full border-2 border-[#4D8DFF]/20 border-t-[#4D8DFF] animate-spin" />
+      <div className="fixed inset-0 z-0 bg-[#F8FAFC] flex items-center justify-center pointer-events-none">
+        <div className="w-12 h-12 rounded-full border-2 border-blue-200 border-t-blue-600 animate-spin" />
       </div>
     ),
   }
@@ -30,7 +30,7 @@ export default function LusionHomePage() {
   const [activeTrack, setActiveTrack] = useState(LUSION_TRACKS[0]);
 
   return (
-    <main className="relative w-full min-h-screen bg-[#07090D] text-white selection:bg-[#4D8DFF]/30 selection:text-white overflow-x-hidden">
+    <main className="relative w-full min-h-screen bg-[#F8FAFC] text-slate-900 selection:bg-blue-100 selection:text-slate-900 overflow-x-hidden">
       {/* -------------------------------------------------------------
           1. Master Continuous WebGL Canvas Engine (Fixed Background)
           ------------------------------------------------------------- */}
@@ -62,7 +62,7 @@ export default function LusionHomePage() {
         <LusionImpactOverlay />
 
         {/* Verified Community Voices & Leadership */}
-        <div className="relative z-10 bg-[#07090D]/80 backdrop-blur-xl border-t border-[#1C2430]">
+        <div className="relative z-10 bg-white/85 backdrop-blur-xl border-t border-slate-200 shadow-sm">
           <CommunitySection />
           <TestimonialsSection />
           <GallerySection />

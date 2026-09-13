@@ -32,9 +32,9 @@ export default function EventsAmbientCanvas() {
     const positions = new Float32Array(count * 3);
     const colors = new Float32Array(count * 3);
 
-    const baseColor1 = new THREE.Color("#4D8DFF");
-    const baseColor2 = new THREE.Color("#8B5CF6");
-    const baseColor3 = new THREE.Color("#00E5A3");
+    const baseColor1 = new THREE.Color("#2563EB");
+    const baseColor2 = new THREE.Color("#7C3AED");
+    const baseColor3 = new THREE.Color("#059669");
 
     for (let i = 0; i < count; i++) {
       positions[i * 3] = (Math.random() - 0.5) * 35;
@@ -52,11 +52,11 @@ export default function EventsAmbientCanvas() {
     geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
 
     const material = new THREE.PointsMaterial({
-      size: 0.12,
+      size: 0.14,
       vertexColors: true,
       transparent: true,
-      opacity: 0.45,
-      blending: THREE.AdditiveBlending,
+      opacity: 0.6,
+      blending: THREE.NormalBlending,
     });
 
     const particles = new THREE.Points(geometry, material);
@@ -68,10 +68,10 @@ export default function EventsAmbientCanvas() {
 
     const sGeo = new THREE.IcosahedronGeometry(3.5, 1);
     const sMat = new THREE.MeshBasicMaterial({
-      color: 0x4d8dff,
+      color: 0x2563eb,
       wireframe: true,
       transparent: true,
-      opacity: 0.04,
+      opacity: 0.08,
     });
     const sMesh = new THREE.Mesh(sGeo, sMat);
     sMesh.position.set(-10, 4, -5);

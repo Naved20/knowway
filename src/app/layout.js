@@ -60,7 +60,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${manrope.variable} ${inter.variable}`}
+      className={`${manrope.variable} ${inter.variable} light`}
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] font-body antialiased flex flex-col selection:bg-[#4D8DFF]/30 selection:text-[var(--text-primary)] transition-colors duration-300">

@@ -2,48 +2,53 @@
 
 import { useState, useRef, useCallback } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import {
   Calendar,
   MapPin,
   Users,
+  Trophy,
   ArrowRight,
   ArrowUpRight,
-  Trophy,
-  ExternalLink,
   Sparkles,
 } from "lucide-react";
-import WebGLCardCanvas from "@/components/three/WebGLCardCanvas";
+
+// Dynamically import the real-time Three.js WebGL card canvas (client-side only)
+const WebGLCardCanvas = dynamic(
+  () => import("@/components/three/WebGLCardCanvas"),
+  { ssr: false }
+);
 
 const PLATFORM_THEMES = {
   knowvy: {
-    accent: "#4D8DFF",
-    glow: "rgba(77, 141, 255, 0.25)",
-    border: "group-hover:border-[#4D8DFF]/60",
-    badgeBg: "bg-[#4D8DFF]/15 text-[#4D8DFF] border-[#4D8DFF]/30",
+    accent: "#2563EB",
+    glow: "rgba(37, 99, 235, 0.18)",
+    border: "group-hover:border-blue-500/70",
+    badgeBg: "bg-blue-50 text-blue-600 border-blue-200",
   },
   unstop: {
-    accent: "#00B4D8",
-    glow: "rgba(0, 180, 216, 0.25)",
-    border: "group-hover:border-[#00B4D8]/60",
-    badgeBg: "bg-[#00B4D8]/15 text-[#00B4D8] border-[#00B4D8]/30",
+    accent: "#0284C7",
+    glow: "rgba(2, 132, 199, 0.18)",
+    border: "group-hover:border-sky-500/70",
+    badgeBg: "bg-sky-50 text-sky-600 border-sky-200",
   },
   mlh: {
-    accent: "#FF4757",
-    glow: "rgba(255, 71, 87, 0.25)",
-    border: "group-hover:border-[#FF4757]/60",
-    badgeBg: "bg-[#FF4757]/15 text-[#FF4757] border-[#FF4757]/30",
+    accent: "#E11D48",
+    glow: "rgba(225, 29, 72, 0.18)",
+    border: "group-hover:border-rose-500/70",
+    badgeBg: "bg-rose-50 text-rose-600 border-rose-200",
   },
   devfolio: {
-    accent: "#3B82F6",
-    glow: "rgba(59, 130, 246, 0.25)",
-    border: "group-hover:border-[#3B82F6]/60",
-    badgeBg: "bg-[#3B82F6]/15 text-[#3B82F6] border-[#3B82F6]/30",
+    accent: "#2563EB",
+    glow: "rgba(37, 99, 235, 0.18)",
+    border: "group-hover:border-blue-500/70",
+    badgeBg: "bg-blue-50 text-blue-600 border-blue-200",
   },
   devpost: {
-    accent: "#00E5A3",
-    glow: "rgba(0, 229, 163, 0.25)",
-    border: "group-hover:border-[#00E5A3]/60",
-    badgeBg: "bg-[#00E5A3]/15 text-[#00E5A3] border-[#00E5A3]/30",
+    accent: "#059669",
+    glow: "rgba(5, 150, 105, 0.18)",
+    border: "group-hover:border-emerald-500/70",
+    badgeBg: "bg-emerald-50 text-emerald-600 border-emerald-200",
   },
 };
 
@@ -69,11 +74,10 @@ export default function EventCard3D({ event }) {
 
     // Maximum tilt angles in degrees
     const maxTilt = 12;
-    setRotations({
-      x: -normY * maxTilt,
-      y: normX * maxTilt,
-    });
+    const rotX = -normY * maxTilt;
+    const rotY = normX * maxTilt;
 
+    setRotations({ x: rotX, y: rotY });
     setPointerOffset({ x: normX, y: normY });
     setGlarePos({
       x: Math.round((x / rect.width) * 100),
@@ -104,15 +108,15 @@ export default function EventCard3D({ event }) {
     >
       {/* 3D Transform Stage Container */}
       <div
-        className={`relative w-full h-full rounded-2xl bg-[#0D1118]/90 backdrop-blur-xl border border-[#1C2430] ${theme.border} overflow-hidden transition-all duration-300 ease-out flex flex-col`}
+        className={`relative w-full h-full rounded-2xl bg-white border border-slate-200 ${theme.border} overflow-hidden transition-all duration-300 ease-out flex flex-col`}
         style={{
           transform: `rotateX(${rotations.x}deg) rotateY(${rotations.y}deg) ${
             isHovered ? "scale3d(1.02, 1.02, 1.02)" : "scale3d(1, 1, 1)"
           }`,
           transformStyle: "preserve-3d",
           boxShadow: isHovered
-            ? `0 24px 48px -12px ${theme.glow}, 0 0 20px 0 ${theme.glow}`
-            : "0 10px 25px -5px rgba(0, 0, 0, 0.4)",
+            ? `0 20px 35px -10px rgba(0, 0, 0, 0.1), 0 0 20px 0 ${theme.glow}`
+            : "0 4px 15px -3px rgba(0, 0, 0, 0.05)",
         }}
       >
         {/* Holographic Specular Glare Overlay */}
@@ -120,13 +124,13 @@ export default function EventCard3D({ event }) {
           className="pointer-events-none absolute inset-0 z-30 transition-opacity duration-300 rounded-2xl"
           style={{
             opacity: isHovered ? 0.35 : 0,
-            background: `radial-gradient(circle 350px at ${glarePos.x}% ${glarePos.y}%, rgba(255, 255, 255, 0.25), ${theme.glow} 35%, transparent 70%)`,
+            background: `radial-gradient(circle 350px at ${glarePos.x}% ${glarePos.y}%, rgba(255, 255, 255, 0.6), ${theme.glow} 35%, transparent 70%)`,
           }}
         />
 
         {/* Ambient Top Glow Line */}
         <div
-          className="absolute top-0 left-0 right-0 h-[1.5px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20"
+          className="absolute top-0 left-0 right-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20"
           style={{
             background: `linear-gradient(90deg, transparent, ${theme.accent}, transparent)`,
           }}
@@ -134,7 +138,7 @@ export default function EventCard3D({ event }) {
 
         {/* --- Top Banner & WebGL 3D Zone --- */}
         <div
-          className="relative h-56 overflow-hidden bg-[#07090D]"
+          className="relative h-56 overflow-hidden bg-slate-100"
           style={{ transform: "translateZ(0px)" }}
         >
           {/* Real-time 3D WebGL Scene */}
@@ -148,12 +152,11 @@ export default function EventCard3D({ event }) {
           <img
             src={event.banner || event.banner_url}
             alt={event.title}
-            className="w-full h-full object-cover opacity-75 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700 ease-out"
+            className="w-full h-full object-cover opacity-85 group-hover:opacity-95 group-hover:scale-105 transition-all duration-700 ease-out"
           />
 
           {/* Vignette Gradients for Immersion */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0D1118] via-[#0D1118]/30 to-black/40 pointer-events-none" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,transparent_40%,#0D1118_95%)] pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-transparent pointer-events-none" />
 
           {/* Top Floating Status Pill (Pops out in 3D: translateZ 35px) */}
           <div
@@ -161,12 +164,12 @@ export default function EventCard3D({ event }) {
             style={{ transform: isHovered ? "translateZ(35px)" : "translateZ(0px)" }}
           >
             <span
-              className={`px-3 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase shadow-lg backdrop-blur-md ${
+              className={`px-3 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase shadow-xs backdrop-blur-md ${
                 event.status === "Upcoming"
-                  ? "bg-[#4D8DFF] text-white shadow-[#4D8DFF]/30"
+                  ? "bg-blue-600 text-white shadow-blue-500/30"
                   : event.status === "Ongoing"
-                  ? "bg-[#10B981] text-black shadow-[#10B981]/30 font-extrabold"
-                  : "bg-[#1C2430]/90 text-[#8B95A5] border border-white/5"
+                  ? "bg-emerald-600 text-white shadow-emerald-500/30 font-extrabold"
+                  : "bg-slate-100 text-slate-600 border border-slate-200"
               }`}
             >
               {event.status || "Upcoming"}
@@ -179,7 +182,7 @@ export default function EventCard3D({ event }) {
             style={{ transform: isHovered ? "translateZ(35px)" : "translateZ(0px)" }}
           >
             <div
-              className={`px-2.5 py-1 rounded-full backdrop-blur-md border text-[10px] font-mono uppercase font-bold tracking-wider flex items-center gap-1.5 shadow-lg ${theme.badgeBg}`}
+              className={`px-2.5 py-1 rounded-full backdrop-blur-md border text-[10px] font-mono uppercase font-bold tracking-wider flex items-center gap-1.5 shadow-xs ${theme.badgeBg}`}
             >
               <Sparkles className="w-2.5 h-2.5" />
               {event.platform || "Knowvy"}
@@ -192,8 +195,8 @@ export default function EventCard3D({ event }) {
               className="absolute bottom-3 left-4 z-20 transition-transform duration-200"
               style={{ transform: isHovered ? "translateZ(40px)" : "translateZ(0px)" }}
             >
-              <div className="text-xs font-mono text-[#F59E0B] px-3 py-1 rounded-xl bg-black/80 backdrop-blur-md border border-[#F59E0B]/30 flex items-center gap-1.5 font-bold shadow-lg">
-                <Trophy className="w-3.5 h-3.5" />
+              <div className="text-xs font-mono text-amber-800 px-3 py-1 rounded-xl bg-amber-50/95 backdrop-blur-md border border-amber-200 flex items-center gap-1.5 font-bold shadow-xs">
+                <Trophy className="w-3.5 h-3.5 text-amber-600" />
                 <span>{event.prizes}</span>
               </div>
             </div>
@@ -213,14 +216,14 @@ export default function EventCard3D({ event }) {
             >
               {event.category || "Technical Initiative"}
             </span>
-            <h3 className="text-xl font-display font-bold text-white group-hover:text-white transition-colors line-clamp-2 leading-tight">
+            <h3 className="text-xl font-display font-bold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2 leading-tight">
               {event.title}
             </h3>
           </div>
 
           {/* Description */}
           <p
-            className="text-xs text-[#8B95A5] line-clamp-2 leading-relaxed transition-transform duration-200"
+            className="text-xs text-slate-600 line-clamp-2 leading-relaxed transition-transform duration-200"
             style={{ transform: isHovered ? "translateZ(25px)" : "translateZ(0px)" }}
           >
             {event.shortDescription || event.short_description}
@@ -228,20 +231,20 @@ export default function EventCard3D({ event }) {
 
           {/* Metadata Grid (translateZ 30px) */}
           <div
-            className="pt-3 border-t border-[#1C2430] space-y-2.5 text-xs font-mono text-[#8B95A5] transition-transform duration-200"
+            className="pt-3 border-t border-slate-200 space-y-2.5 text-xs font-mono text-slate-500 transition-transform duration-200"
             style={{ transform: isHovered ? "translateZ(30px)" : "translateZ(0px)" }}
           >
             <div className="flex items-center gap-2">
-              <Calendar className="w-3.5 h-3.5 text-[#4D8DFF] shrink-0" />
+              <Calendar className="w-3.5 h-3.5 text-blue-600 shrink-0" />
               <span className="truncate">{event.date}</span>
             </div>
             <div className="flex items-center gap-2">
-              <MapPin className="w-3.5 h-3.5 text-[#8B5CF6] shrink-0" />
+              <MapPin className="w-3.5 h-3.5 text-purple-600 shrink-0" />
               <span className="truncate">{event.location}</span>
             </div>
             {event.participants && (
               <div className="flex items-center gap-2">
-                <Users className="w-3.5 h-3.5 text-[#10B981] shrink-0" />
+                <Users className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                 <span className="truncate">{event.participants}</span>
               </div>
             )}
@@ -255,7 +258,7 @@ export default function EventCard3D({ event }) {
             {event.isInternal ? (
               <Link
                 href={`/events/${event.slug}`}
-                className="w-full py-3 rounded-xl bg-[#111722] border border-[#1C2430] group-hover:bg-[#4D8DFF] group-hover:border-[#4D8DFF] text-white group-hover:text-black font-display font-bold text-xs flex items-center justify-center gap-2 transition-all duration-300 shadow-md group-hover:shadow-lg group-hover:shadow-[#4D8DFF]/25"
+                className="w-full py-3 rounded-xl bg-slate-50 border border-slate-200 group-hover:bg-blue-600 group-hover:border-blue-600 text-slate-800 group-hover:text-white font-display font-bold text-xs flex items-center justify-center gap-2 transition-all duration-300 shadow-xs group-hover:shadow-md"
               >
                 View Details & Challenges
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
@@ -265,12 +268,12 @@ export default function EventCard3D({ event }) {
                 href={event.external_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-3 rounded-xl bg-[#111722] border border-[#1C2430] text-white font-display font-bold text-xs flex items-center justify-center gap-2 transition-all duration-300 shadow-md group-hover:shadow-lg"
+                className="w-full py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 font-display font-bold text-xs flex items-center justify-center gap-2 transition-all duration-300 shadow-xs group-hover:shadow-md"
                 style={{
                   backgroundColor: isHovered ? theme.accent : undefined,
                   borderColor: isHovered ? theme.accent : undefined,
-                  color: isHovered ? "#000000" : undefined,
-                  boxShadow: isHovered ? `0 8px 24px ${theme.glow}` : undefined,
+                  color: isHovered ? "#FFFFFF" : undefined,
+                  boxShadow: isHovered ? `0 8px 20px ${theme.glow}` : undefined,
                 }}
               >
                 Register on {(event.platform || "Platform").toUpperCase()}

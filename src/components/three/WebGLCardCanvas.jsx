@@ -4,11 +4,11 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
 const PLATFORM_COLORS = {
-  knowvy: { primary: "#4D8DFF", secondary: "#8B5CF6", emissive: 0x4d8dff },
-  unstop: { primary: "#00B4D8", secondary: "#48CAE4", emissive: 0x00b4d8 },
-  mlh: { primary: "#FF4757", secondary: "#FF6B81", emissive: 0xff4757 },
-  devfolio: { primary: "#3B82F6", secondary: "#60A5FA", emissive: 0x3b82f6 },
-  devpost: { primary: "#00E5A3", secondary: "#2DD4BF", emissive: 0x00e5a3 },
+  knowvy: { primary: "#2563EB", secondary: "#7C3AED", emissive: 0x2563eb },
+  unstop: { primary: "#0284C7", secondary: "#0EA5E9", emissive: 0x0284c7 },
+  mlh: { primary: "#E11D48", secondary: "#F43F5E", emissive: 0xe11d48 },
+  devfolio: { primary: "#2563EB", secondary: "#3B82F6", emissive: 0x2563eb },
+  devpost: { primary: "#059669", secondary: "#10B981", emissive: 0x059669 },
 };
 
 export default function WebGLCardCanvas({
@@ -119,10 +119,10 @@ export default function WebGLCardCanvas({
     // Particle Material
     const particleMat = new THREE.PointsMaterial({
       color: new THREE.Color(colors.primary),
-      size: 0.055,
+      size: 0.065,
       transparent: true,
-      opacity: 0.65,
-      blending: THREE.AdditiveBlending,
+      opacity: 0.75,
+      blending: THREE.NormalBlending,
     });
     const particleSystem = new THREE.Points(particleGeo, particleMat);
     rootGroup.add(particleSystem);

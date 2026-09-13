@@ -59,7 +59,7 @@ export default function Intro3DPreloader() {
     const height = window.innerHeight;
 
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x04060a, 0.035);
+    scene.fog = new THREE.FogExp2(0xf8fafc, 0.035);
 
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
     camera.position.set(0, 0, 7.5);
@@ -71,9 +71,9 @@ export default function Intro3DPreloader() {
     });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0x04060a, 1);
+    renderer.setClearColor(0xf8fafc, 1);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.25;
+    renderer.toneMappingExposure = 1.1;
     container.appendChild(renderer.domElement);
 
     // Root Group
@@ -349,7 +349,7 @@ export default function Intro3DPreloader() {
       className={`fixed inset-0 z-50 flex flex-col items-center justify-between p-6 sm:p-10 select-none transition-all duration-700 pointer-events-auto ${
         isExiting
           ? "opacity-0 scale-105 pointer-events-none backdrop-blur-2xl"
-          : "opacity-100 scale-100 bg-[#04060a]"
+          : "opacity-100 scale-100 bg-[#F8FAFC]"
       }`}
       style={{ willChange: "opacity, transform" }}
     >
@@ -357,16 +357,16 @@ export default function Intro3DPreloader() {
       <div ref={mountRef} className="absolute inset-0 z-0 overflow-hidden" />
 
       {/* Subtle Background Radial Glow */}
-      <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,rgba(77,141,255,0.08)_0%,transparent_70%)]" />
+      <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,rgba(37,99,235,0.06)_0%,transparent_70%)]" />
 
       {/* Top Bar: Minimal Discreet Skip Button */}
       <div className="relative z-10 w-full max-w-6xl flex items-center justify-end">
         <button
           onClick={handleFinish}
-          className="px-3.5 py-1.5 rounded-full border border-white/10 bg-black/40 hover:bg-white/10 text-[#8B95A5] hover:text-white transition-all text-xs font-mono flex items-center gap-2 cursor-pointer backdrop-blur-md"
+          className="px-3.5 py-1.5 rounded-full border border-slate-200 bg-white/80 hover:bg-white text-slate-600 hover:text-slate-900 transition-all text-xs font-mono flex items-center gap-2 cursor-pointer backdrop-blur-md shadow-xs"
         >
           <span>SKIP</span>
-          <kbd className="px-1.5 py-0.5 rounded bg-white/10 text-[10px] text-[#4D8DFF]">
+          <kbd className="px-1.5 py-0.5 rounded bg-slate-100 text-[10px] text-blue-600 font-semibold">
             ESC
           </kbd>
         </button>
@@ -379,21 +379,21 @@ export default function Intro3DPreloader() {
       <div className="relative z-10 w-full max-w-md flex flex-col items-center gap-3 pb-4">
         {/* Brand & Counter Row */}
         <div className="w-full flex items-baseline justify-between px-1">
-          <span className="text-xl sm:text-2xl font-display font-black tracking-widest text-white/95">
+          <span className="text-xl sm:text-2xl font-display font-black tracking-widest text-slate-900">
             KNOWVY
           </span>
-          <div className="flex items-baseline gap-0.5 font-mono text-[#4D8DFF]">
-            <span className="text-2xl sm:text-3xl font-display font-black text-white">
+          <div className="flex items-baseline gap-0.5 font-mono text-blue-600">
+            <span className="text-2xl sm:text-3xl font-display font-black text-slate-900">
               {String(progress).padStart(2, "0")}
             </span>
             <span className="text-xs font-bold">%</span>
           </div>
         </div>
 
-        {/* Minimal High-Precision 1.5px Glowing Laser Line */}
-        <div className="relative w-full h-[2px] rounded-full bg-white/10 overflow-hidden">
+        {/* Minimal High-Precision Glowing Laser Line */}
+        <div className="relative w-full h-[3px] rounded-full bg-slate-200 overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-[#4D8DFF] via-[#38BDF8] to-[#8B5CF6] transition-all duration-75 ease-out shadow-[0_0_10px_#4D8DFF]"
+            className="h-full bg-gradient-to-r from-blue-600 via-sky-500 to-indigo-600 transition-all duration-75 ease-out shadow-[0_0_10px_rgba(37,99,235,0.5)]"
             style={{ width: `${progress}%` }}
           />
         </div>

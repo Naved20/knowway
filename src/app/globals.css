@@ -2,27 +2,13 @@
 
 @layer base {
   :root {
-    --bg-primary: #07090D;
-    --bg-secondary: #0D1118;
-    --bg-card: #111722;
-    --bg-card-hover: #161F2E;
-    --text-primary: #FFFFFF;
-    --text-secondary: #8B95A5;
-    --text-muted: #5A6475;
-    --accent-blue: #4D8DFF;
-    --accent-violet: #8B5CF6;
-    --border-color: #1C2430;
-    --border-highlight: #2C3A4E;
-  }
-
-  html.light {
     --bg-primary: #F8FAFC;
-    --bg-secondary: #F1F5F9;
+    --bg-secondary: #FFFFFF;
     --bg-card: #FFFFFF;
-    --bg-card-hover: #F8FAFC;
+    --bg-card-hover: #F1F5F9;
     --text-primary: #0F172A;
     --text-secondary: #475569;
-    --text-muted: #94A3B8;
+    --text-muted: #64748B;
     --accent-blue: #2563EB;
     --accent-violet: #7C3AED;
     --border-color: #E2E8F0;
@@ -49,12 +35,12 @@
     min-height: 100vh;
     overflow-x: hidden;
     position: relative;
-    selection-background-color: #4D8DFF33;
+    selection-background-color: #2563EB25;
   }
 
   ::selection {
-    background: rgba(77, 141, 255, 0.3);
-    color: #FFFFFF;
+    background: rgba(37, 99, 235, 0.2);
+    color: #0F172A;
   }
 }
 
@@ -67,38 +53,41 @@
   font-family: var(--font-inter), system-ui, sans-serif;
 }
 
-/* Premium Surface Utilities */
+/* Premium Surface Utilities (Light Theme Defaults) */
 .tech-card {
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
 }
 
 .tech-card:hover {
   border-color: var(--border-highlight);
   background-color: var(--bg-card-hover);
-  box-shadow: 0 10px 30px -10px rgba(77, 141, 255, 0.1);
+  box-shadow: 0 12px 30px -10px rgba(37, 99, 235, 0.12);
 }
 
 /* Lusion Frosted Glass & Telemetry */
 .lusion-glass {
-  background: rgba(13, 17, 24, 0.45);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  color: #0F172A;
 }
 
 .lusion-glass:hover {
-  border-color: rgba(77, 141, 255, 0.35);
-  box-shadow: 0 25px 60px rgba(77, 141, 255, 0.08), inset 0 1px 0 rgba(77, 141, 255, 0.2);
+  border-color: rgba(37, 99, 235, 0.45);
+  box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
 .lusion-tag {
-  background: rgba(7, 9, 13, 0.6);
-  border: 1px solid rgba(28, 36, 48, 0.8);
+  background: rgba(248, 250, 252, 0.85);
+  border: 1px solid rgba(226, 232, 240, 0.9);
   backdrop-filter: blur(16px);
   font-family: monospace;
+  color: #334155;
 }
 
 .tech-border {
@@ -106,39 +95,39 @@
 }
 
 .tech-glow-blue {
-  box-shadow: 0 0 30px -5px rgba(77, 141, 255, 0.25);
+  box-shadow: 0 0 30px -5px rgba(37, 99, 235, 0.2);
 }
 
 .tech-glow-violet {
-  box-shadow: 0 0 30px -5px rgba(139, 92, 246, 0.25);
+  box-shadow: 0 0 30px -5px rgba(124, 58, 237, 0.2);
 }
 
 .gradient-text-blue {
-  background: linear-gradient(135deg, #FFFFFF 0%, #B8D3FF 40%, #4D8DFF 100%);
+  background: linear-gradient(135deg, #0F172A 0%, #1D4ED8 45%, #2563EB 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .gradient-text-violet {
-  background: linear-gradient(135deg, #FFFFFF 20%, #C4B5FD 60%, #8B5CF6 100%);
+  background: linear-gradient(135deg, #0F172A 20%, #6D28D9 60%, #7C3AED 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .gradient-accent {
-  background: linear-gradient(135deg, #4D8DFF 0%, #8B5CF6 100%);
+  background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%);
 }
 
 /* Subtle Grid Background Pattern */
 .bg-tech-grid {
   background-size: 40px 40px;
   background-image: 
-    linear-gradient(to right, rgba(28, 36, 48, 0.3) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(28, 36, 48, 0.3) 1px, transparent 1px);
+    linear-gradient(to right, rgba(203, 213, 225, 0.35) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(203, 213, 225, 0.35) 1px, transparent 1px);
 }
 
 .bg-radial-gradient {
-  background: radial-gradient(circle at 50% 30%, rgba(77, 141, 255, 0.1) 0%, rgba(13, 17, 24, 0) 70%);
+  background: radial-gradient(circle at 50% 30%, rgba(37, 99, 235, 0.08) 0%, rgba(248, 250, 252, 0) 70%);
 }
 
 /* Custom Scrollbar */
@@ -148,16 +137,16 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #07090D;
+  background: #F1F5F9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1C2430;
+  background: #CBD5E1;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #4D8DFF66;
+  background: #94A3B8;
 }
 
 /* Marquee Animation */
@@ -176,191 +165,84 @@
   animation-play-state: paused;
 }
 
-/* Custom Cursor default behavior */
-@media (hover: hover) and (pointer: fine) {
-  body {
-    cursor: default;
-  }
-}
-
-/* ============================================================
-   LIGHT THEME OVERRIDES
-   ============================================================ */
-html.light body {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-}
-
-html.light .lusion-glass {
-  background: rgba(255, 255, 255, 0.72) !important;
-  backdrop-filter: blur(28px) !important;
-  border-color: rgba(226, 232, 240, 0.8) !important;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
-  color: #0F172A !important;
-}
-
-html.light .lusion-glass:hover {
-  border-color: rgba(37, 99, 235, 0.4) !important;
-  box-shadow: 0 25px 50px rgba(37, 99, 235, 0.08) !important;
-}
-
-html.light .lusion-tag {
-  background: rgba(255, 255, 255, 0.85) !important;
-  border-color: rgba(226, 232, 240, 0.9) !important;
-  color: #475569 !important;
-}
-
-html.light .text-white {
-  color: #0F172A !important;
-}
-
-html.light .text-white\/90 {
-  color: #1E293B !important;
-}
-
-html.light .text-white\/80 {
-  color: #334155 !important;
-}
-
-/* Ensure buttons and badges with filled/gradient backgrounds retain crisp white text */
-html.light [class*="bg-gradient-"],
-html.light [class*="bg-gradient-"] *,
-html.light .bg-\[\#4D8DFF\],
-html.light .bg-\[\#4D8DFF\] *,
-html.light .bg-blue-600,
-html.light .bg-blue-600 *,
-html.light [class*="from-\[\#4D8DFF\]"],
-html.light [class*="from-\[\#4D8DFF\]"] *,
-html.light .keep-white {
-  color: #FFFFFF !important;
-}
-
-html.light .text-\[\#8B95A5\] {
-  color: #475569 !important;
-}
-
-html.light .text-\[\#5A6475\] {
-  color: #64748B !important;
-}
-
-html.light .bg-\[\#07090D\] {
-  background-color: var(--bg-primary) !important;
-}
-
-html.light .bg-\[\#0D1118\] {
-  background-color: var(--bg-secondary) !important;
-}
-
-html.light .bg-\[\#111722\] {
-  background-color: var(--bg-card) !important;
-}
-
-html.light .bg-\[\#161F2E\] {
-  background-color: var(--bg-card-hover) !important;
-}
-
-html.light .border-\[\#1C2430\] {
-  border-color: var(--border-color) !important;
-}
-
-html.light .border-white\/5,
-html.light .border-white\/10 {
-  border-color: rgba(226, 232, 240, 0.8) !important;
-}
-
-html.light .bg-black\/40,
-html.light .bg-black\/60,
-html.light .bg-black\/70 {
-  background-color: rgba(241, 245, 249, 0.8) !important;
-  color: #0F172A !important;
-}
-
-html.light .gradient-text-blue {
-  background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 40%, #2563EB 100%) !important;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-}
-
-html.light .gradient-text-violet {
-  background: linear-gradient(135deg, #0F172A 20%, #581C87 60%, #7C3AED 100%) !important;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-}
-
-html.light ::-webkit-scrollbar-track {
-  background: #F8FAFC;
-}
-
-html.light ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
-}
-
-html.light ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
-}
-
-/* ============================================================
-   ULTRA-LUXE FROSTED GLASSMORPHISM HEADER
-   ============================================================ */
+/* Ultra-Luxe Frosted Glassmorphism Header */
 .glass-header {
-  background: rgba(13, 17, 24, 0.55);
-  backdrop-filter: blur(28px) saturate(190%);
-  -webkit-backdrop-filter: blur(28px) saturate(190%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-top: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  border-top: 1px solid rgba(255, 255, 255, 0.95);
   box-shadow: 
-    0 20px 40px -15px rgba(0, 0, 0, 0.6),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
-    inset 0 -1px 0 0 rgba(0, 0, 0, 0.2);
+    0 10px 30px -10px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
 }
 
 .glass-header-scrolled {
-  background: rgba(7, 9, 13, 0.82);
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(36px) saturate(200%);
   -webkit-backdrop-filter: blur(36px) saturate(200%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-top: 1px solid rgba(255, 255, 255, 0.28);
+  border: 1px solid rgba(203, 213, 225, 0.9);
+  border-top: 1px solid #FFFFFF;
   box-shadow: 
-    0 25px 50px -12px rgba(0, 0, 0, 0.75),
-    0 0 30px rgba(77, 141, 255, 0.12),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.25);
+    0 20px 40px -10px rgba(0, 0, 0, 0.08),
+    0 0 25px rgba(37, 99, 235, 0.06),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.95);
 }
 
 .glass-nav-pill {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(241, 245, 249, 0.8);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
 }
 
-/* Light Theme Glass Header Overrides */
-html.light .glass-header {
-  background: rgba(255, 255, 255, 0.68) !important;
-  backdrop-filter: blur(28px) saturate(190%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
-  border: 1px solid rgba(226, 232, 240, 0.85) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.95) !important;
-  box-shadow: 
-    0 20px 40px -15px rgba(0, 0, 0, 0.06),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.9) !important;
+/* ============================================================
+   UNIVERSAL LIGHT THEME RESILIENCE OVERRIDES
+   Guarantees that any legacy dark colors/classes instantly render
+   with modern light theme styling across every route.
+   ============================================================ */
+.bg-\[\#07090D\],
+.bg-\[\#04060a\] {
+  background-color: var(--bg-primary) !important;
 }
 
-html.light .glass-header-scrolled {
-  background: rgba(255, 255, 255, 0.88) !important;
-  backdrop-filter: blur(36px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(36px) saturate(200%) !important;
-  border: 1px solid rgba(203, 213, 225, 0.9) !important;
-  border-top: 1px solid #FFFFFF !important;
-  box-shadow: 
-    0 25px 50px -12px rgba(0, 0, 0, 0.1),
-    0 0 30px rgba(37, 99, 235, 0.08),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.95) !important;
+.bg-\[\#0D1118\],
+.bg-\[\#0B0F17\],
+.bg-\[\#0D1424\] {
+  background-color: var(--bg-secondary) !important;
 }
 
-html.light .glass-nav-pill {
-  background: rgba(241, 245, 249, 0.7) !important;
-  border: 1px solid rgba(226, 232, 240, 0.95) !important;
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.9) !important;
+.bg-\[\#111722\],
+.bg-\[\#161F2E\],
+.bg-\[\#111A2E\] {
+  background-color: var(--bg-card-hover) !important;
 }
 
+.border-\[\#1C2430\],
+.border-\[\#2C3A4E\] {
+  border-color: var(--border-color) !important;
+}
+
+.border-white\/5,
+.border-white\/10,
+.border-white\/15,
+.border-white\/20 {
+  border-color: rgba(226, 232, 240, 0.9) !important;
+}
+
+.bg-black\/40,
+.bg-black\/60,
+.bg-black\/70,
+.bg-black\/80 {
+  background-color: rgba(241, 245, 249, 0.85) !important;
+  color: #0F172A !important;
+}
+
+.text-\[\#8B95A5\] {
+  color: #475569 !important;
+}
+
+.text-\[\#5A6475\] {
+  color: #64748B !important;
+}

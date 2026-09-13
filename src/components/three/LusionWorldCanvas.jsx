@@ -135,7 +135,7 @@ export default function LusionWorldCanvas({ activeTrackId, onSelectTrack }) {
   activeTrackIdRef.current = activeTrackId;
 
   const { theme } = useTheme();
-  const isLight = theme === "light";
+  const isLight = true;
   const sceneRef = useRef(null);
   const rendererRef = useRef(null);
 
