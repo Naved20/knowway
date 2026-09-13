@@ -84,7 +84,7 @@ async function initializeDatabase() {
   }
 
   // 2. Seed Default Admin Account (knowvy1@gmail.com)
-  const adminEmail = (process.env.SMTP_USER || "knowvy1@gmail.com").toLowerCase().trim();
+  const adminEmail = (process.env.ADMIN_EMAIL || process.env.SMTP_USER || "knowvy1@gmail.com").toLowerCase().trim();
   const existingAdmin = cache.users.find((u) => u.email === adminEmail);
 
   if (!existingAdmin) {

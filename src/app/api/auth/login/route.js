@@ -24,9 +24,9 @@ export async function POST(request) {
     }
 
     const adminEnvPass = (process.env.ADMIN_PASSWORD || "KnowvyAdmin2026!#")
-      .replace(/^["']|["']$/g, "")  // strip leading/trailing quotes only
+      .replace(/^["']|["']$/g, "")
       .trim();
-    const adminEmail = (process.env.SMTP_USER || "knowvy1@gmail.com").toLowerCase().trim();
+    const adminEmail = (process.env.ADMIN_EMAIL || process.env.SMTP_USER || "knowvy1@gmail.com").toLowerCase().trim();
     const isMasterAdmin = (cleanEmail === adminEmail || user.role === "admin") && password === adminEnvPass;
 
     let isMatch = isMasterAdmin;
