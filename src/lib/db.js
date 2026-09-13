@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 import { eventsData } from "@/data/knowvy-data";
-import { hashPassword } from "./auth";
+import { hashPassword, verifyPassword } from "./auth";
 
 const DATA_DIR = path.join(process.cwd(), "data");
 const DB_FILE = path.join(DATA_DIR, "knowvy-db.json");
@@ -88,7 +88,9 @@ async function initializeDatabase() {
   const existingAdmin = cache.users.find((u) => u.email === adminEmail);
 
   if (!existingAdmin) {
-    const adminPass = process.env.ADMIN_PASSWORD || "KnowvyAdmin2026!#";
+    const adminPass = (process.env.ADMIN_PASSWORD || "KnowvyAdmin2026!#")
+      .replace(/^["']|["']$/g, "")  // strip leading/trailing quotes only
+      .trim();
     const passwordHash = await hashPassword(adminPass);
 
     cache.users.push({

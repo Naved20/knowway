@@ -3,7 +3,7 @@
     {
       "id": "usr_admin_671fc9fd",
       "email": "knowvy1@gmail.com",
-      "passwordHash": "28994b9d4e83d4cdd3a2ffcf5a51eb7a:f924fab61dd462754d519bfedf45cc69061eb89a05180b0e78cbd2fcb58a78d2d4c2bd1c1b9309d09eb452c21d007bba65f1779985a0b15750d7451891dec8da",
+      "passwordHash": "b6bba51e87a0f9e956ad8b26f3c01601:5b1cacbe6138eb33fcd85d4e143e04a0a79da295fc5b496195352df074afbd1ad1b69e5279e5c50953585072e595b100eaa74752a56c0ebe0cef64f04df1e3e0",
       "name": "Knowvy Administrator",
       "role": "admin",
       "college": "MANIT Bhopal",
@@ -17,7 +17,7 @@
         "transactional": true
       },
       "createdAt": "2026-09-13T10:06:51.470Z",
-      "updatedAt": "2026-09-13T10:06:51.470Z"
+      "updatedAt": "2026-09-13T10:25:41.803Z"
     }
   ],
   "otps": [
