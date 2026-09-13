@@ -6,13 +6,13 @@ export default function PartnersMarquee() {
   const marqueeItems = [...partnersData, ...partnersData, ...partnersData];
 
   return (
-    <section className="py-20 bg-[#07090D] border-t border-[#1C2430] overflow-hidden">
+    <section className="py-20 bg-slate-50/80 border-t border-slate-200 overflow-hidden text-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#111722] border border-[#1C2430] text-xs font-mono text-[#5A6475] mb-3">
-          <Handshake className="w-3.5 h-3.5 text-[#4D8DFF]" />
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 text-xs font-mono text-slate-600 mb-3 shadow-xs font-semibold">
+          <Handshake className="w-3.5 h-3.5 text-blue-600" />
           Verified Community Collaborations
         </div>
-        <h3 className="text-xl sm:text-2xl font-display font-bold text-white tracking-tight">
+        <h3 className="text-xl sm:text-2xl font-display font-bold text-slate-900 tracking-tight">
           Supported by trusted developer networks.
         </h3>
       </div>
@@ -20,21 +20,21 @@ export default function PartnersMarquee() {
       {/* Infinite Horizontal Marquee */}
       <div className="relative w-full overflow-hidden mask-fade-edges">
         {/* Left and Right Fade Gradients */}
-        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[#07090D] to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[#07090D] to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none" />
 
         <div className="animate-marquee flex items-center gap-6">
           {marqueeItems.map((partner, idx) => (
             <div
               key={idx}
-              className="flex-shrink-0 px-6 py-4 rounded-xl bg-[#0D1118] border border-[#1C2430] hover:border-[#4D8DFF]/40 transition-all duration-300 group cursor-default flex items-center gap-3.5"
+              className="flex-shrink-0 px-6 py-4 rounded-xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all duration-300 group cursor-default flex items-center gap-3.5 shadow-xs"
             >
-              <div className="w-2.5 h-2.5 rounded-full bg-[#5A6475] group-hover:bg-[#4D8DFF] transition-colors" />
+              <div className="w-2.5 h-2.5 rounded-full bg-slate-300 group-hover:bg-blue-600 transition-colors" />
               <div>
-                <span className="text-sm font-display font-bold text-[#8B95A5] group-hover:text-white transition-colors block">
+                <span className="text-sm font-display font-bold text-slate-700 group-hover:text-slate-900 transition-colors block">
                   {partner.name}
                 </span>
-                <span className="text-[11px] font-mono text-[#5A6475] group-hover:text-[#4D8DFF] transition-colors block">
+                <span className="text-[11px] font-mono text-slate-500 group-hover:text-blue-600 transition-colors block">
                   {partner.badge}
                 </span>
               </div>

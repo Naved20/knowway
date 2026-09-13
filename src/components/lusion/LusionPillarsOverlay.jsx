@@ -1,7 +1,7 @@
 "use client";
 
 import { brandData } from "@/data/knowvy-data";
-import { BookOpen, Hammer, Network, Sparkles, CheckCircle2 } from "lucide-react";
+import { Sparkles, CheckCircle2 } from "lucide-react";
 
 export default function LusionPillarsOverlay() {
   return (
@@ -9,28 +9,28 @@ export default function LusionPillarsOverlay() {
       <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         {/* Left Column: Narrative Headline */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full lusion-tag text-xs font-mono text-[#4D8DFF]">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full lusion-tag text-xs font-mono text-blue-600 bg-blue-50/80 border-blue-200">
             <Sparkles className="w-3.5 h-3.5" />
             Act II // The Internal Engine
           </div>
 
-          <h2 className="text-4xl sm:text-6xl font-display font-extrabold tracking-tight text-white leading-[1.05]">
+          <h2 className="text-4xl sm:text-6xl font-display font-extrabold tracking-tight text-slate-900 leading-[1.05]">
             More than a club. <br />
             <span className="gradient-text-blue">An acceleration engine.</span>
           </h2>
 
-          <p className="text-base text-[#8B95A5] leading-relaxed">
+          <p className="text-base text-slate-600 leading-relaxed">
             As you scroll closer to the core, the outer cage unfolds. Knowvy bridges the gap between passive academic lectures and production engineering reality.
           </p>
 
           {/* Telemetry Stats Strip */}
           <div className="grid grid-cols-2 gap-3 pt-2">
             {brandData.stats.map((st, i) => (
-              <div key={i} className="p-4 rounded-xl lusion-glass border border-white/5 space-y-1">
-                <span className="text-2xl sm:text-3xl font-display font-black text-white block">
+              <div key={i} className="p-4 rounded-xl lusion-glass border border-slate-200 bg-white/90 shadow-sm space-y-1">
+                <span className="text-2xl sm:text-3xl font-display font-black text-slate-900 block">
                   {st.value.toLocaleString()}{st.suffix}
                 </span>
-                <span className="text-[11px] font-mono text-[#8B5CF6] uppercase block">
+                <span className="text-[11px] font-mono text-purple-600 uppercase block font-semibold">
                   {st.label}
                 </span>
               </div>
@@ -43,23 +43,23 @@ export default function LusionPillarsOverlay() {
           {brandData.pillars.map((pillar, idx) => (
             <div
               key={pillar.id}
-              className="p-6 sm:p-7 rounded-2xl lusion-glass border border-white/5 hover:border-[#4D8DFF]/40 transition-all duration-300 space-y-3"
+              className="p-6 sm:p-7 rounded-2xl lusion-glass border border-slate-200 bg-white/90 shadow-sm hover:border-blue-400/80 hover:shadow-md transition-all duration-300 space-y-3"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <span className="text-xs font-mono text-[#4D8DFF] font-bold">
+                  <span className="text-xs font-mono text-blue-600 font-bold">
                     0{idx + 1} //
                   </span>
-                  <h3 className="text-xl font-display font-bold text-white">
+                  <h3 className="text-xl font-display font-bold text-slate-900">
                     {pillar.title}
                   </h3>
                 </div>
-                <span className="text-xs font-mono text-[#8B5CF6]">
+                <span className="text-xs font-mono text-purple-600 font-medium">
                   {pillar.subtitle}
                 </span>
               </div>
 
-              <p className="text-xs sm:text-sm text-[#8B95A5] leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 {pillar.description}
               </p>
 
@@ -67,9 +67,9 @@ export default function LusionPillarsOverlay() {
                 {pillar.tags.map((t, tIdx) => (
                   <span
                     key={tIdx}
-                    className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-mono text-[#8B95A5] bg-black/40 border border-white/5"
+                    className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-mono text-slate-700 bg-slate-100 border border-slate-200"
                   >
-                    <CheckCircle2 className="w-3 h-3 text-[#4D8DFF]" />
+                    <CheckCircle2 className="w-3 h-3 text-blue-600" />
                     {t}
                   </span>
                 ))}

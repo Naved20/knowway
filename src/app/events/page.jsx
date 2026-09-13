@@ -60,36 +60,36 @@ export default function EventsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#07090D] pt-32 pb-24 text-white relative overflow-hidden">
+    <div className="min-h-screen bg-[#F8FAFC] pt-32 pb-24 text-slate-900 relative overflow-hidden">
       {/* 3D Ambient WebGL Background Constellation */}
       <EventsAmbientCanvas />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 relative z-10">
         {/* Header */}
         <div className="space-y-4 max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#4D8DFF]/10 border border-[#4D8DFF]/30 text-xs font-mono text-[#4D8DFF]">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-xs font-mono text-blue-600 font-semibold">
             <Sparkles className="w-3.5 h-3.5" />
             Active & Past Initiatives
           </div>
-          <h1 className="text-4xl sm:text-6xl font-display font-extrabold tracking-tight">
+          <h1 className="text-4xl sm:text-6xl font-display font-extrabold tracking-tight text-slate-900">
             Explore <span className="gradient-text-blue">Events.</span>
           </h1>
-          <p className="text-base sm:text-lg text-[#8B95A5] leading-relaxed">
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
             From central India's flagship 36-hour hackathons to focused cloud deployments with Azure Tech Group Bhopal.
           </p>
         </div>
 
         {/* Filters Bar */}
-        <div className="p-4 rounded-2xl bg-[#0D1118]/80 backdrop-blur-md border border-[#1C2430] flex flex-col md:flex-row items-center gap-4 justify-between">
+        <div className="p-4 rounded-2xl bg-white/90 backdrop-blur-md border border-slate-200 shadow-sm flex flex-col md:flex-row items-center gap-4 justify-between">
           {/* Search Box */}
           <div className="relative w-full md:w-80">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#5A6475]" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search events, cities, topics..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#111722] border border-[#1C2430] text-white text-xs font-mono placeholder:text-[#5A6475] focus:outline-none focus:border-[#4D8DFF] transition-colors"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-xs font-mono placeholder:text-slate-400 focus:outline-none focus:border-blue-600 transition-colors"
             />
           </div>
 
@@ -101,8 +101,8 @@ export default function EventsPage() {
                 onClick={() => setStatusFilter(st)}
                 className={`px-3.5 py-1.5 rounded-lg text-xs font-mono capitalize transition-all cursor-pointer ${
                   statusFilter === st
-                    ? "bg-[#4D8DFF] text-white font-bold"
-                    : "bg-[#111722] text-[#8B95A5] hover:text-white border border-[#1C2430]"
+                    ? "bg-blue-600 text-white font-bold shadow-xs"
+                    : "bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200"
                 }`}
               >
                 {st}
@@ -113,7 +113,7 @@ export default function EventsPage() {
 
         {/* Platform Filter Pills */}
         <div className="flex items-center gap-2 overflow-x-auto pb-2">
-          <span className="text-xs font-mono text-[#5A6475] uppercase mr-2 flex-shrink-0">
+          <span className="text-xs font-mono text-slate-500 uppercase mr-2 flex-shrink-0 font-medium">
             Platform:
           </span>
           {[
@@ -129,8 +129,8 @@ export default function EventsPage() {
               onClick={() => setPlatformFilter(p.id)}
               className={`px-3.5 py-1.5 rounded-full text-xs font-mono transition-all flex-shrink-0 cursor-pointer ${
                 platformFilter === p.id
-                  ? "bg-[#8B5CF6] text-white font-bold shadow-md shadow-[#8B5CF6]/30"
-                  : "bg-[#111722] text-[#8B95A5] hover:text-white border border-[#1C2430]"
+                  ? "bg-purple-600 text-white font-bold shadow-md shadow-purple-500/20"
+                  : "bg-white text-slate-600 hover:text-slate-900 border border-slate-200 shadow-xs"
               }`}
             >
               {p.label}
@@ -149,17 +149,17 @@ export default function EventsPage() {
         </div>
 
         {filteredEvents.length === 0 && (
-          <div className="py-20 text-center rounded-2xl bg-[#0D1118] border border-dashed border-[#1C2430] space-y-3">
-            <p className="text-base text-[#8B95A5]">No events match your selected filters.</p>
+          <div className="py-20 text-center rounded-2xl bg-white border border-dashed border-slate-200 space-y-3 shadow-xs">
+            <p className="text-base text-slate-600">No events match your selected filters.</p>
             <button
               onClick={() => {
                 setSearchQuery("");
                 setStatusFilter("all");
                 setPlatformFilter("all");
               }}
-              className="text-xs font-mono text-[#4D8DFF] hover:underline cursor-pointer"
+              className="text-xs font-mono text-blue-600 hover:underline cursor-pointer font-bold"
             >
-              Reset all filters
+              Reset Filters
             </button>
           </div>
         )}

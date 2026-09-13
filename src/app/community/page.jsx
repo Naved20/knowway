@@ -10,18 +10,18 @@ export const metadata = {
 
 export default function CommunityPage() {
   return (
-    <div className="min-h-screen bg-[#07090D] pt-32 pb-24 text-white">
+    <div className="min-h-screen bg-[#F8FAFC] pt-32 pb-24 text-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
         {/* Header */}
         <div className="max-w-3xl space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#4D8DFF]/10 border border-[#4D8DFF]/30 text-xs font-mono text-[#4D8DFF]">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-xs font-mono text-blue-600 font-semibold shadow-xs">
             <Sparkles className="w-3.5 h-3.5" />
             Active Student Network
           </div>
-          <h1 className="text-4xl sm:text-6xl font-display font-extrabold tracking-tight">
+          <h1 className="text-4xl sm:text-6xl font-display font-extrabold tracking-tight text-slate-900">
             The Knowvy <span className="gradient-text-blue">Community.</span>
           </h1>
-          <p className="text-base sm:text-lg text-[#8B95A5] leading-relaxed">
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
             Founded in Bhopal by student builders, Knowvy is home to engineers, competitive coders, designers, and open-source enthusiasts collaborating 24/7.
           </p>
 
@@ -30,7 +30,7 @@ export default function CommunityPage() {
               href={brandData.links.whatsapp}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#4D8DFF] to-[#3B82F6] text-white font-display font-bold text-xs shadow-lg shadow-[#4D8DFF]/25 hover:scale-[1.02] transition-transform"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 text-white font-display font-bold text-xs shadow-md shadow-blue-500/25 hover:scale-[1.02] transition-transform"
             >
               <MessageCircle className="w-4 h-4" />
               Join Official WhatsApp Community

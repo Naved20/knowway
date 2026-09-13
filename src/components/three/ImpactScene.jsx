@@ -80,17 +80,19 @@ export default function ImpactScene() {
     const positions = [];
 
     const blueMat = new THREE.MeshStandardMaterial({
-      color: 0x4d8dff,
+      color: 0x2563eb,
       emissive: 0x1d4ed8,
-      roughness: 0.2,
-      metalness: 0.8,
+      emissiveIntensity: 0.3,
+      roughness: 0.3,
+      metalness: 0.5,
     });
 
     const violetMat = new THREE.MeshStandardMaterial({
-      color: 0x8b5cf6,
+      color: 0x7c3aed,
       emissive: 0x6d28d9,
-      roughness: 0.2,
-      metalness: 0.8,
+      emissiveIntensity: 0.3,
+      roughness: 0.3,
+      metalness: 0.5,
     });
 
     for (let i = 0; i < maxNodes; i++) {
@@ -114,9 +116,9 @@ export default function ImpactScene() {
 
     // Dynamic Connecting Lines
     const lineMat = new THREE.LineBasicMaterial({
-      color: 0x4d8dff,
+      color: 0x2563eb,
       transparent: true,
-      opacity: 0.15,
+      opacity: 0.3,
     });
     let lineSegments;
 
@@ -144,14 +146,14 @@ export default function ImpactScene() {
     updateLines(activeCountRef.current, activeRadiusRef.current);
 
     // Lights
-    const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+    const ambient = new THREE.AmbientLight(0xffffff, 0.9);
     scene.add(ambient);
 
-    const light1 = new THREE.PointLight(0x4d8dff, 3, 20);
+    const light1 = new THREE.PointLight(0x2563eb, 2, 20);
     light1.position.set(5, 5, 5);
     scene.add(light1);
 
-    const light2 = new THREE.PointLight(0x8b5cf6, 2.5, 20);
+    const light2 = new THREE.PointLight(0x7c3aed, 2, 20);
     light2.position.set(-5, -5, 5);
     scene.add(light2);
 
@@ -217,20 +219,20 @@ export default function ImpactScene() {
     <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
       {/* Narrative Progression Column */}
       <div className="lg:col-span-6 space-y-6">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8B5CF6]/10 border border-[#8B5CF6]/30 text-xs font-mono text-[#8B5CF6]">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-50 border border-violet-200 text-xs font-mono text-violet-600">
           Step {stage.step} — {stage.label}
         </div>
 
         <div>
-          <h3 className="text-3xl sm:text-4xl font-display font-extrabold text-white tracking-tight">
+          <h3 className="text-3xl sm:text-4xl font-display font-extrabold text-slate-900 tracking-tight">
             {stage.title}
           </h3>
-          <p className="text-base font-mono text-[#4D8DFF] mt-2">
+          <p className="text-base font-mono text-blue-600 mt-2 font-medium">
             {stage.metric}
           </p>
         </div>
 
-        <p className="text-[#8B95A5] text-base leading-relaxed">
+        <p className="text-slate-600 text-base leading-relaxed">
           {stage.description}
         </p>
 
@@ -244,11 +246,11 @@ export default function ImpactScene() {
                 onClick={() => handleStageSelect(idx)}
                 className={`p-3 rounded-xl text-left border transition-all ${
                   isSelected
-                    ? "bg-[#111722] border-[#4D8DFF] text-white shadow-lg shadow-[#4D8DFF]/15"
-                    : "bg-[#07090D] border-[#1C2430] text-[#5A6475] hover:text-[#8B95A5]"
+                    ? "bg-blue-50 border-blue-500 text-slate-900 shadow-md shadow-blue-500/10 ring-1 ring-blue-500"
+                    : "bg-white border-slate-200 text-slate-600 hover:text-slate-900 hover:border-slate-300 shadow-sm"
                 }`}
               >
-                <span className="text-xs font-mono block text-[#4D8DFF]">
+                <span className="text-xs font-mono block text-blue-600 font-semibold">
                   {s.step}
                 </span>
                 <span className="text-xs font-bold font-display mt-0.5 block truncate">
@@ -261,13 +263,13 @@ export default function ImpactScene() {
       </div>
 
       {/* 3D Network Sphere Visualizer */}
-      <div className="lg:col-span-6 relative h-[420px] sm:h-[480px] rounded-2xl bg-[#0D1118]/60 border border-[#1C2430] overflow-hidden flex items-center justify-center">
+      <div className="lg:col-span-6 relative h-[420px] sm:h-[480px] rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden flex items-center justify-center">
         <div ref={mountRef} className="w-full h-full" />
-        <div className="absolute top-4 right-4 text-right pointer-events-none">
-          <span className="text-[10px] font-mono text-[#5A6475] uppercase block">
+        <div className="absolute top-4 right-4 text-right pointer-events-none bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-slate-200">
+          <span className="text-[10px] font-mono text-slate-500 uppercase block">
             Ecosystem Density
           </span>
-          <span className="text-xs font-mono text-[#4D8DFF] font-bold">
+          <span className="text-xs font-mono text-blue-600 font-bold">
             {stage.nodeCount} Active Network Nodes
           </span>
         </div>

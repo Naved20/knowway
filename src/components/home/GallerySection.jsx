@@ -9,18 +9,18 @@ export default function GallerySection() {
   const [activeItem, setActiveItem] = useState(null);
 
   return (
-    <section className="py-24 bg-[#0D1118] border-t border-[#1C2430] relative overflow-hidden">
+    <section className="py-24 bg-transparent border-t border-slate-200 relative overflow-hidden text-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-16">
           <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#4D8DFF]/10 border border-[#4D8DFF]/30 text-xs font-mono text-[#4D8DFF]">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-xs font-mono text-blue-600 font-semibold">
               <Camera className="w-3.5 h-3.5" />
               On-Ground Moments
             </div>
-            <h2 className="text-4xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
+            <h2 className="text-4xl sm:text-5xl font-display font-extrabold text-slate-900 tracking-tight">
               Event <span className="gradient-text-blue">Gallery.</span>
             </h2>
-            <p className="text-sm sm:text-base text-[#8B95A5] max-w-xl">
+            <p className="text-sm sm:text-base text-slate-600 max-w-xl">
               Real moments from Hack-Knowvy, Cloud Sprints with Azure Tech Group Bhopal, and student workshops. Optimized via Cloudinary.
             </p>
           </div>

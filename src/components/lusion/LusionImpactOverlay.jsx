@@ -8,17 +8,17 @@ export default function LusionImpactOverlay() {
     <section className="relative min-h-screen flex flex-col justify-center py-28 px-4 sm:px-6 lg:px-12 pointer-events-none">
       <div className="max-w-7xl mx-auto w-full space-y-12">
         <div className="space-y-4 max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full lusion-tag text-xs font-mono text-[#8B5CF6]">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full lusion-tag text-xs font-mono text-purple-700 bg-purple-50/80 border-purple-200">
             <Milestone className="w-3.5 h-3.5" />
             Act V // Galactic Expansion
           </div>
 
-          <h2 className="text-4xl sm:text-6xl font-display font-extrabold tracking-tight text-white leading-[1.05]">
+          <h2 className="text-4xl sm:text-6xl font-display font-extrabold tracking-tight text-slate-900 leading-[1.05]">
             From Bhopal roots <br />
             <span className="gradient-text-violet">to nationwide scale.</span>
           </h2>
 
-          <p className="text-base text-[#8B95A5] leading-relaxed">
+          <p className="text-base text-slate-600 leading-relaxed">
             The 3D network expands into an 80+ node galactic constellation. Tracking real outcomes: hackathon wins, open-source PRs, and student tech chapters.
           </p>
         </div>
@@ -46,25 +46,25 @@ export default function LusionImpactOverlay() {
             },
             {
               phase: "04",
-              title: "1,500+ Builders",
+              title: "2,000+ Builders",
               loc: "National Ecosystem",
               detail: "3 National Hackathons, 150+ PRs merged, and direct startup incubation.",
             },
           ].map((m, idx) => (
             <div
               key={idx}
-              className="p-6 rounded-2xl lusion-glass border border-white/5 space-y-2 hover:border-[#8B5CF6]/50 transition-colors"
+              className="p-6 rounded-2xl lusion-glass border border-slate-200 bg-white/90 shadow-sm space-y-2 hover:border-purple-400/80 hover:shadow-md transition-all"
             >
-              <span className="text-xs font-mono text-[#8B5CF6] font-bold block">
+              <span className="text-xs font-mono text-purple-600 font-bold block">
                 PHASE // {m.phase}
               </span>
-              <h3 className="text-xl font-display font-bold text-white">
+              <h3 className="text-xl font-display font-bold text-slate-900">
                 {m.title}
               </h3>
-              <span className="text-xs font-mono text-[#4D8DFF] block">
+              <span className="text-xs font-mono text-blue-600 font-medium block">
                 {m.loc}
               </span>
-              <p className="text-xs text-[#8B95A5] leading-relaxed pt-1">
+              <p className="text-xs text-slate-600 leading-relaxed pt-1">
                 {m.detail}
               </p>
             </div>
@@ -72,15 +72,15 @@ export default function LusionImpactOverlay() {
         </div>
 
         {/* Ecosystem Partners Bar */}
-        <div className="p-6 rounded-2xl lusion-glass border border-white/5 flex flex-col md:flex-row items-center justify-between gap-4 pointer-events-auto">
-          <div className="flex items-center gap-3 text-xs font-mono text-[#8B95A5]">
-            <Globe2 className="w-4 h-4 text-[#4D8DFF]" />
+        <div className="p-6 rounded-2xl lusion-glass border border-slate-200 bg-white/90 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4 pointer-events-auto">
+          <div className="flex items-center gap-3 text-xs font-mono text-slate-600 font-medium">
+            <Globe2 className="w-4 h-4 text-blue-600" />
             <span>Verified Ecosystem Affiliates:</span>
           </div>
-          <div className="flex flex-wrap items-center gap-6 text-xs font-mono text-white/90">
+          <div className="flex flex-wrap items-center gap-6 text-xs font-mono text-slate-700">
             {partnersData.map((p, pIdx) => (
-              <span key={pIdx} className="flex items-center gap-1.5 text-xs">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#10B981]" />
+              <span key={pIdx} className="flex items-center gap-1.5 text-xs font-medium">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                 {p.name}
               </span>
             ))}

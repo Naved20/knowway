@@ -45,38 +45,38 @@ export default async function PlatformDetailPage({ params }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#07090D] pt-32 pb-24 text-white">
+    <div className="min-h-screen bg-[#F8FAFC] pt-32 pb-24 text-slate-900">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Back Link */}
         <Link
           href="/opportunities"
-          className="inline-flex items-center gap-2 text-xs font-mono text-[#8B95A5] hover:text-white transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-mono text-slate-600 hover:text-slate-900 transition-colors font-medium"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           Back to Opportunities Hub
         </Link>
 
         {/* Platform Hero */}
-        <div className="p-8 sm:p-12 rounded-3xl bg-[#0D1118] border border-[#1C2430] space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8B5CF6]/10 border border-[#8B5CF6]/30 text-xs font-mono text-[#8B5CF6]">
+        <div className="p-8 sm:p-12 rounded-3xl bg-white border border-slate-200 shadow-md space-y-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-50 border border-purple-200 text-xs font-mono text-purple-700 font-semibold shadow-xs">
             <Compass className="w-3.5 h-3.5" />
             {plat.badge}
           </div>
 
-          <h1 className="text-4xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
+          <h1 className="text-4xl sm:text-5xl font-display font-extrabold text-slate-900 tracking-tight">
             {plat.name}
           </h1>
 
-          <p className="text-base sm:text-lg text-[#8B95A5] leading-relaxed">
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
             {plat.description}
           </p>
 
-          <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-[#1C2430]">
+          <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-slate-200">
             <a
               href={plat.officialUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#4D8DFF] to-[#3B82F6] text-white font-display font-bold text-xs shadow-lg shadow-[#4D8DFF]/25 flex items-center gap-2 hover:scale-[1.02] transition-transform"
+              className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 text-white font-display font-bold text-xs shadow-md shadow-blue-500/25 flex items-center gap-2 hover:scale-[1.02] transition-transform"
             >
               Visit Official Platform
               <ArrowUpRight className="w-4 h-4" />
@@ -86,7 +86,7 @@ export default async function PlatformDetailPage({ params }) {
               href={brandData.links.whatsapp}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-6 py-3 rounded-xl bg-[#111722] border border-[#1C2430] text-white font-display font-semibold text-xs hover:border-[#4D8DFF] transition-colors"
+              className="px-6 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 font-display font-semibold text-xs hover:border-blue-400 shadow-xs transition-colors"
             >
               Find a Teammate on WhatsApp
             </a>
@@ -97,12 +97,12 @@ export default async function PlatformDetailPage({ params }) {
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#10B981] animate-ping" />
-              <h2 className="text-2xl font-display font-bold text-white">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+              <h2 className="text-2xl font-display font-bold text-slate-900">
                 Live & Upcoming {plat.name} Sprints
               </h2>
             </div>
-            <span className="text-xs font-mono text-[#4D8DFF] bg-[#4D8DFF]/10 px-3 py-1 rounded-full border border-[#4D8DFF]/30">
+            <span className="text-xs font-mono text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-200 font-semibold shadow-xs">
               Synced via Supabase & Cloudinary
             </span>
           </div>
@@ -122,17 +122,17 @@ export default async function PlatformDetailPage({ params }) {
 
         {/* Curated Pathways Deep Dive */}
         <div className="space-y-6 pt-6">
-          <h2 className="text-2xl font-display font-bold text-white">
+          <h2 className="text-2xl font-display font-bold text-slate-900">
             Curated Tracks & Sprints
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {plat.curatedTracks.map((track, idx) => (
               <div
                 key={idx}
-                className="p-5 rounded-xl bg-[#0D1118] border border-[#1C2430] flex items-start gap-3"
+                className="p-5 rounded-xl bg-white border border-slate-200 flex items-start gap-3 shadow-xs"
               >
-                <CheckCircle2 className="w-4 h-4 text-[#4D8DFF] flex-shrink-0 mt-0.5" />
-                <span className="text-sm text-[#8B95A5] font-mono leading-relaxed">
+                <CheckCircle2 className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-slate-600 font-mono leading-relaxed">
                   {track}
                 </span>
               </div>
@@ -140,13 +140,12 @@ export default async function PlatformDetailPage({ params }) {
           </div>
         </div>
 
-        {/* Knowvy Student Guidance Strategy */}
-        <div className="p-7 rounded-2xl bg-[#111722] border border-[#1C2430] space-y-3">
-          <div className="flex items-center gap-2 text-xs font-mono text-[#10B981]">
-            <ShieldCheck className="w-4 h-4" />
-            <span>How Knowvy Accelerates Your Chances</span>
-          </div>
-          <p className="text-sm text-[#8B95A5] leading-relaxed">
+        {/* Guidance Support */}
+        <div className="p-8 rounded-3xl bg-white border border-slate-200 space-y-4 shadow-sm">
+          <h3 className="text-xl font-display font-bold text-slate-900">
+            How Knowvy Accelerates Your {plat.name} Journey
+          </h3>
+          <p className="text-slate-600 text-sm leading-relaxed">
             {plat.knowvyGuidance}
           </p>
         </div>
@@ -154,4 +153,3 @@ export default async function PlatformDetailPage({ params }) {
     </div>
   );
 }
-
