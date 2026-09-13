@@ -79,17 +79,17 @@ export default async function EventDetailPage({ params }) {
             </h1>
 
             {/* Quick Metadata Bar */}
-            <div className="flex flex-wrap items-center gap-6 text-xs sm:text-sm font-mono text-[#8B95A5] pt-2 border-t border-white/10">
+            <div className="flex flex-wrap items-center gap-6 text-xs sm:text-sm font-mono text-slate-200 pt-2 border-t border-white/20">
               <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-[#4D8DFF]" />
+                <Calendar className="w-4 h-4 text-blue-400" />
                 <span>{event.date}</span>
               </div>
               <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-[#8B5CF6]" />
+                <MapPin className="w-4 h-4 text-violet-400" />
                 <span>{event.location}</span>
               </div>
               <div className="flex items-center gap-2">
-                <Users className="w-4 h-4 text-[#10B981]" />
+                <Users className="w-4 h-4 text-emerald-400" />
                 <span>{event.participants}</span>
               </div>
             </div>
