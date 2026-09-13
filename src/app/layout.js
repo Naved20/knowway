@@ -5,6 +5,7 @@ import Footer from "@/components/layout/Footer";
 import CustomCursor from "@/components/ui/CustomCursor";
 import SmoothScrollProvider from "@/components/providers/SmoothScrollProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import Intro3DPreloader from "@/components/ui/Intro3DPreloader";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -59,6 +60,7 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] font-body antialiased flex flex-col selection:bg-[#4D8DFF]/30 selection:text-[var(--text-primary)] transition-colors duration-300">
         <ThemeProvider>
+          <Intro3DPreloader />
           <SmoothScrollProvider>
             <CustomCursor />
             <Navbar />
