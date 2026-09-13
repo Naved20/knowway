@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { teamData } from "@/data/knowvy-data";
-import { Users, MapPin, Linkedin, Github } from "lucide-react";
+import { Users, MapPin } from "lucide-react";
+import { GithubIcon, LinkedinIcon } from "@/components/ui/BrandIcons";
 
 const CATEGORIES = ["All", "Leadership", "Technical", "Community", "Operations"];
 
@@ -116,7 +117,7 @@ export default function CommunitySection() {
                       className="text-slate-400 hover:text-blue-600 transition-colors"
                       aria-label="LinkedIn Profile"
                     >
-                      <Linkedin className="w-4 h-4" />
+                      <LinkedinIcon className="w-4 h-4" />
                     </a>
                   )}
                   {member.socials.github && (
@@ -127,7 +128,7 @@ export default function CommunitySection() {
                       className="text-slate-400 hover:text-slate-900 transition-colors"
                       aria-label="GitHub Profile"
                     >
-                      <Github className="w-4 h-4" />
+                      <GithubIcon className="w-4 h-4" />
                     </a>
                   )}
                 </div>

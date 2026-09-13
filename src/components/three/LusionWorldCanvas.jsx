@@ -547,25 +547,25 @@ export default function LusionWorldCanvas({ activeTrackId, onSelectTrack }) {
       {/* Floating 3D HUD Tooltip when hovering any node */}
       {hoveredTrack && (
         <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-30 pointer-events-none animate-in fade-in zoom-in-95 duration-200">
-          <div className="px-5 py-3 rounded-2xl lusion-glass border border-[#4D8DFF]/40 shadow-2xl flex items-center gap-4">
+          <div className="px-5 py-3 rounded-2xl lusion-glass border border-blue-200 shadow-xl flex items-center gap-4 bg-white/95">
             <div
               className="w-3 h-3 rounded-full animate-ping"
               style={{ backgroundColor: hoveredTrack.color }}
             />
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-mono font-bold text-white">
+                <span className="text-xs font-mono font-bold text-slate-900">
                   {hoveredTrack.title}
                 </span>
-                <span className="text-[10px] font-mono text-[#4D8DFF]">
+                <span className="text-[10px] font-mono text-blue-600 font-semibold">
                   [{hoveredTrack.tag}]
                 </span>
               </div>
-              <p className="text-[11px] font-mono text-[#8B95A5] mt-0.5">
+              <p className="text-[11px] font-mono text-slate-600 mt-0.5">
                 {hoveredTrack.metric}
               </p>
             </div>
-            <span className="text-[10px] font-mono text-[#5A6475] uppercase border-l border-[#1C2430] pl-3">
+            <span className="text-[10px] font-mono text-slate-500 uppercase border-l border-slate-200 pl-3">
               Click to Inspect
             </span>
           </div>
