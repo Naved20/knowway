@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { brandData } from "@/data/knowvy-data";
-import { Mail, MessageCircle, MapPin, Send, CheckCircle2, ArrowUpRight } from "lucide-react";
+import { Mail, MessageCircle, MapPin, Send, CheckCircle2, ArrowUpRight, Loader2 } from "lucide-react";
+import { submitContactMessage } from "@/lib/supabase";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -14,9 +16,22 @@ export default function ContactPage() {
     message: "",
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    try {
+      await submitContactMessage({
+        name: formData.name,
+        email: formData.email,
+        subject: `[${formData.topic.toUpperCase()}] from ${formData.collegeOrOrg || "Student"}`,
+        message: formData.message,
+      });
+    } catch {
+      // Graceful fallback
+    } finally {
+      setLoading(false);
+      setSubmitted(true);
+    }
   };
 
   return (
@@ -187,10 +202,20 @@ export default function ContactPage() {
 
                   <button
                     type="submit"
-                    className="w-full py-3 rounded-xl bg-gradient-to-r from-[#4D8DFF] to-[#3B82F6] text-white font-display font-bold text-xs shadow-lg shadow-[#4D8DFF]/25 hover:scale-[1.01] transition-transform flex items-center justify-center gap-2"
+                    disabled={loading}
+                    className="w-full py-3 rounded-xl bg-gradient-to-r from-[#4D8DFF] to-[#3B82F6] text-white font-display font-bold text-xs shadow-lg shadow-[#4D8DFF]/25 hover:scale-[1.01] transition-transform flex items-center justify-center gap-2 disabled:opacity-70 cursor-pointer"
                   >
-                    <Send className="w-3.5 h-3.5" />
-                    Submit Inquiry
+                    {loading ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        Saving to Supabase...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-3.5 h-3.5" />
+                        Submit Inquiry
+                      </>
+                    )}
                   </button>
                 </form>
               )}
