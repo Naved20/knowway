@@ -12,6 +12,7 @@
     "@google/genai": "^2.22.0",
     "@supabase/supabase-js": "^2.109.0",
     "@types/three": "^0.186.0",
+    "@upstash/redis": "^1.38.4",
     "cloudinary": "^2.11.0",
     "clsx": "^2.1.1",
     "framer-motion": "^13.2.0",

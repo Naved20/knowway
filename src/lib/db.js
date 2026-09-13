@@ -1,21 +1,36 @@
-import fs from "fs";
-import path from "path";
 import crypto from "crypto";
+import { Redis } from "@upstash/redis";
 import { eventsData } from "@/data/knowvy-data";
 import { hashPassword, verifyPassword } from "./auth";
 
-const DATA_DIR = path.join(process.cwd(), "data");
-const DB_FILE = path.join(DATA_DIR, "knowvy-db.json");
+// ─────────────────────────────────────────────────────────────────────────────
+// Upstash Redis Client (lazy-initialized)
+// ─────────────────────────────────────────────────────────────────────────────
+let redisClient = null;
 
-// In-memory cache for fast lookups
+function getRedis() {
+  if (redisClient) return redisClient;
+
+  const url = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+
+  if (!url || !token || url === "your_upstash_url_here") {
+    throw new Error(
+      "[DB] Upstash Redis not configured. Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN in environment variables."
+    );
+  }
+
+  redisClient = new Redis({ url, token });
+  return redisClient;
+}
+
+const DB_KEY = "knowvy:db:v1";
+
+// ─────────────────────────────────────────────────────────────────────────────
+// In-memory cache (warm requests within the same function instance)
+// ─────────────────────────────────────────────────────────────────────────────
 let cache = null;
 let initPromise = null;
-
-function ensureDataDir() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
-}
 
 function getInitialState() {
   return {
@@ -28,15 +43,26 @@ function getInitialState() {
   };
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Initialize Database
+// ─────────────────────────────────────────────────────────────────────────────
 async function initializeDatabase() {
-  ensureDataDir();
+  const redis = getRedis();
 
-  if (fs.existsSync(DB_FILE)) {
+  // Try to load from Redis
+  let existing = null;
+  try {
+    existing = await redis.get(DB_KEY);
+  } catch (e) {
+    console.error("[DB] Redis get error:", e.message);
+  }
+
+  if (existing && typeof existing === "object") {
+    cache = existing;
+  } else if (typeof existing === "string") {
     try {
-      const raw = fs.readFileSync(DB_FILE, "utf-8");
-      cache = JSON.parse(raw);
-    } catch (e) {
-      console.error("[DB] Failed to read database, initializing fresh:", e.message);
+      cache = JSON.parse(existing);
+    } catch {
       cache = getInitialState();
     }
   } else {
@@ -53,7 +79,7 @@ async function initializeDatabase() {
 
   let needsSave = false;
 
-  // 1. Seed Flagship Events from knowvy-data.js if events collection is empty
+  // 1. Seed Flagship Events if empty
   if (cache.events.length === 0 && Array.isArray(eventsData) && eventsData.length > 0) {
     cache.events = eventsData.map((ev) => ({
       id: `evt_${crypto.randomUUID()}`,
@@ -65,9 +91,10 @@ async function initializeDatabase() {
       date: ev.date || "Upcoming 2026",
       time: "10:00 AM - 06:00 PM IST",
       location: ev.location || "Bhopal, India",
-      meetingLink: ev.location?.includes("Online") || ev.location?.includes("Hybrid")
-        ? "https://meet.google.com/kno-wvy-bho"
-        : "",
+      meetingLink:
+        ev.location?.includes("Online") || ev.location?.includes("Hybrid")
+          ? "https://meet.google.com/kno-wvy-bho"
+          : "",
       banner: ev.banner,
       shortDescription: ev.shortDescription || "",
       about: ev.about || "",
@@ -83,13 +110,19 @@ async function initializeDatabase() {
     needsSave = true;
   }
 
-  // 2. Seed Default Admin Account (knowvy1@gmail.com)
-  const adminEmail = (process.env.ADMIN_EMAIL || process.env.SMTP_USER || "knowvy1@gmail.com").toLowerCase().trim();
+  // 2. Seed Default Admin Account
+  const adminEmail = (
+    process.env.ADMIN_EMAIL ||
+    process.env.SMTP_USER ||
+    "knowvy1@gmail.com"
+  )
+    .toLowerCase()
+    .trim();
   const existingAdmin = cache.users.find((u) => u.email === adminEmail);
 
   if (!existingAdmin) {
     const adminPass = (process.env.ADMIN_PASSWORD || "KnowvyAdmin2026!#")
-      .replace(/^["']|["']$/g, "")  // strip leading/trailing quotes only
+      .replace(/^["']|["']$/g, "")
       .trim();
     const passwordHash = await hashPassword(adminPass);
 
@@ -105,10 +138,7 @@ async function initializeDatabase() {
       phone: "+91 93026 89234",
       bio: "Official administrative lead of Knowvy Technologies developer ecosystem.",
       avatar: "/images/knowvy-logo.png",
-      emailPreferences: {
-        promotional: true,
-        transactional: true,
-      },
+      emailPreferences: { promotional: true, transactional: true },
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
@@ -116,40 +146,46 @@ async function initializeDatabase() {
   }
 
   if (needsSave) {
-    saveDatabaseSync();
+    await persistToRedis();
   }
 
   return cache;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Persist to Redis (with 30-day TTL)
+// ─────────────────────────────────────────────────────────────────────────────
+async function persistToRedis() {
+  if (!cache) return;
+  try {
+    const redis = getRedis();
+    await redis.set(DB_KEY, JSON.stringify(cache), { ex: 60 * 60 * 24 * 30 }); // 30 days TTL
+  } catch (err) {
+    console.error("[DB] Redis set error:", err.message);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Public API
+// ─────────────────────────────────────────────────────────────────────────────
 export async function getDb() {
   if (cache) return cache;
   if (!initPromise) {
-    initPromise = initializeDatabase();
+    initPromise = initializeDatabase().catch((err) => {
+      initPromise = null; // allow retry on next call
+      throw err;
+    });
   }
   return await initPromise;
 }
 
-function saveDatabaseSync() {
-  if (!cache) return;
-  ensureDataDir();
-  const tempFile = `${DB_FILE}.tmp.${Date.now()}`;
-  try {
-    fs.writeFileSync(tempFile, JSON.stringify(cache, null, 2), "utf-8");
-    fs.renameSync(tempFile, DB_FILE);
-  } catch (err) {
-    console.error("[DB] Error saving database atomically:", err);
-  }
-}
-
 export async function saveDb() {
-  saveDatabaseSync();
+  await persistToRedis();
 }
 
-// -------------------------------------------------------------
+// ─────────────────────────────────────────────────────────────────────────────
 // User Operations
-// -------------------------------------------------------------
-
+// ─────────────────────────────────────────────────────────────────────────────
 export async function findUserByEmail(email) {
   const db = await getDb();
   if (!email) return null;
@@ -222,15 +258,13 @@ export async function getAllUsers() {
   return db.users.map(({ passwordHash, ...safeUser }) => safeUser);
 }
 
-// -------------------------------------------------------------
+// ─────────────────────────────────────────────────────────────────────────────
 // OTP Operations
-// -------------------------------------------------------------
-
+// ─────────────────────────────────────────────────────────────────────────────
 export async function saveOtp({ email, otpHash, purpose = "register", expiresInMinutes = 10 }) {
   const db = await getDb();
   const cleanEmail = email.toLowerCase().trim();
 
-  // Invalidate previous OTPs for this email & purpose
   db.otps = db.otps.filter((o) => !(o.email === cleanEmail && o.purpose === purpose));
 
   const otpRecord = {
@@ -270,10 +304,9 @@ export async function deleteOtpRecord(id) {
   await saveDb();
 }
 
-// -------------------------------------------------------------
+// ─────────────────────────────────────────────────────────────────────────────
 // Events Operations
-// -------------------------------------------------------------
-
+// ─────────────────────────────────────────────────────────────────────────────
 export async function getPublishedEvents() {
   const db = await getDb();
   return db.events.filter((e) => e.isPublished !== false);
@@ -304,7 +337,9 @@ export async function createEvent(eventData) {
     time: eventData.time || "10:00 AM - 05:00 PM IST",
     location: eventData.location || "Bhopal, India",
     meetingLink: eventData.meetingLink || "",
-    banner: eventData.banner || "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80",
+    banner:
+      eventData.banner ||
+      "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80",
     shortDescription: eventData.shortDescription || "",
     about: eventData.about || "",
     highlights: Array.isArray(eventData.highlights) ? eventData.highlights : [],
@@ -347,10 +382,9 @@ export async function deleteEvent(idOrSlug) {
   return true;
 }
 
-// -------------------------------------------------------------
+// ─────────────────────────────────────────────────────────────────────────────
 // Registrations Operations
-// -------------------------------------------------------------
-
+// ─────────────────────────────────────────────────────────────────────────────
 export function generateTicketCode(eventSlug) {
   const cleanSlug = (eventSlug || "EVT").toUpperCase().slice(0, 4);
   const randomSuffix = crypto.randomBytes(3).toString("hex").toUpperCase();
@@ -371,7 +405,6 @@ export async function createRegistration({
   const db = await getDb();
   const cleanEmail = userEmail.toLowerCase().trim();
 
-  // Check if already registered
   const existing = db.registrations.find(
     (r) => r.eventSlug === eventSlug && r.userEmail === cleanEmail && r.status !== "cancelled"
   );
@@ -379,7 +412,6 @@ export async function createRegistration({
     return { success: false, alreadyRegistered: true, registration: existing };
   }
 
-  // Check event capacity
   const event = db.events.find((e) => e.slug === eventSlug);
   if (event && event.maxCapacity && event.registeredCount >= event.maxCapacity) {
     return { success: false, capacityFull: true, error: "Event registration is at maximum capacity." };
@@ -404,7 +436,6 @@ export async function createRegistration({
 
   db.registrations.push(registration);
 
-  // Increment event registeredCount
   if (event) {
     event.registeredCount = (event.registeredCount || 0) + 1;
   }
@@ -419,7 +450,8 @@ export async function getUserRegistrations(userEmail, userId = null) {
 
   return db.registrations
     .filter(
-      (r) => (cleanEmail && r.userEmail === cleanEmail) || (userId && r.userId === userId)
+      (r) =>
+        (cleanEmail && r.userEmail === cleanEmail) || (userId && r.userId === userId)
     )
     .map((reg) => {
       const event = db.events.find((e) => e.slug === reg.eventSlug) || {};
@@ -457,7 +489,6 @@ export async function updateRegistrationStatus(id, status) {
   const oldStatus = reg.status;
   reg.status = status;
 
-  // Adjust event count if cancelled or re-opened
   const event = db.events.find((e) => e.slug === reg.eventSlug);
   if (event) {
     if (oldStatus !== "cancelled" && status === "cancelled") {
@@ -471,10 +502,9 @@ export async function updateRegistrationStatus(id, status) {
   return reg;
 }
 
-// -------------------------------------------------------------
+// ─────────────────────────────────────────────────────────────────────────────
 // Email Queue & Delivery Logging Operations
-// -------------------------------------------------------------
-
+// ─────────────────────────────────────────────────────────────────────────────
 export async function enqueueEmail({
   recipient,
   emailType = "transactional",
@@ -519,14 +549,13 @@ export async function logEmailDelivery({
     recipient: recipient.toLowerCase().trim(),
     emailType,
     subject,
-    status, // "sent" | "failed"
+    status,
     error,
     campaignId,
     sentAt: new Date().toISOString(),
   };
 
   db.emailLogs.unshift(logItem);
-  // Keep logs capped at 1000 items
   if (db.emailLogs.length > 1000) {
     db.emailLogs = db.emailLogs.slice(0, 1000);
   }
@@ -549,3 +578,6 @@ export async function getQueueStatus() {
 
   return { pending, processing, failed, sent, totalLogs: db.emailLogs.length };
 }
+
+// Export verifyPassword for routes that need it
+export { verifyPassword };
