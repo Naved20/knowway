@@ -1,74 +1,76 @@
-import HeroSection from "@/components/home/HeroSection";
-import StatsSection from "@/components/home/StatsSection";
-import AboutSection from "@/components/home/AboutSection";
-import EcosystemSection from "@/components/home/EcosystemSection";
-import FeaturedEventsSection from "@/components/home/FeaturedEventsSection";
-import OpportunitiesSection from "@/components/home/OpportunitiesSection";
-import ProgramsSection from "@/components/home/ProgramsSection";
-import ImpactStorySection from "@/components/home/ImpactStorySection";
-import PartnersMarquee from "@/components/home/PartnersMarquee";
+"use client";
+
+import { useState } from "react";
+import dynamic from "next/dynamic";
+import LusionHeroOverlay from "@/components/lusion/LusionHeroOverlay";
+import LusionPillarsOverlay from "@/components/lusion/LusionPillarsOverlay";
+import LusionEcosystemOverlay from "@/components/lusion/LusionEcosystemOverlay";
+import LusionEventsOverlay from "@/components/lusion/LusionEventsOverlay";
+import LusionImpactOverlay from "@/components/lusion/LusionImpactOverlay";
+import LusionCTAOverlay from "@/components/lusion/LusionCTAOverlay";
 import CommunitySection from "@/components/home/CommunitySection";
-import TestimonialsSection from "@/components/home/TestimonialsSection";
 import GallerySection from "@/components/home/GallerySection";
-import CreativeLabSection from "@/components/home/CreativeLabSection";
-import FinalCTASection from "@/components/home/FinalCTASection";
+import TestimonialsSection from "@/components/home/TestimonialsSection";
+import { LUSION_TRACKS } from "@/components/three/LusionWorldCanvas";
 
-export const metadata = {
-  title: "Knowvy — Where Students Build What's Next",
-  description:
-    "Knowvy connects students, developers, creators and founders through technology, national hackathons, community workshops, and verified real-world opportunities.",
-  openGraph: {
-    title: "Knowvy — Student Technology Ecosystem",
-    description:
-      "Where students build what's next. Central India's premier student developer ecosystem founded in Bhopal.",
-    siteName: "Knowvy Technologies",
-  },
-};
+// Dynamically load the Master WebGL Canvas to ensure optimal client-side rendering
+const LusionWorldCanvas = dynamic(
+  () => import("@/components/three/LusionWorldCanvas"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="fixed inset-0 z-0 bg-[#07090D] flex items-center justify-center pointer-events-none">
+        <div className="w-12 h-12 rounded-full border-2 border-[#4D8DFF]/20 border-t-[#4D8DFF] animate-spin" />
+      </div>
+    ),
+  }
+);
 
-export default function HomePage() {
+export default function LusionHomePage() {
+  const [activeTrack, setActiveTrack] = useState(LUSION_TRACKS[0]);
+
   return (
-    <main className="w-full min-h-screen bg-[#07090D] text-white">
-      {/* 1. Hero Section with 3D Ecosystem Orb */}
-      <HeroSection />
+    <main className="relative w-full min-h-screen bg-[#07090D] text-white selection:bg-[#4D8DFF]/30 selection:text-white overflow-x-hidden">
+      {/* -------------------------------------------------------------
+          1. Master Continuous WebGL Canvas Engine (Fixed Background)
+          ------------------------------------------------------------- */}
+      <LusionWorldCanvas
+        activeTrackId={activeTrack.id}
+        onSelectTrack={(track) => setActiveTrack(track)}
+      />
 
-      {/* 2. Community Statistics */}
-      <StatsSection />
+      {/* -------------------------------------------------------------
+          2. Scroll-Choreographed Cinematic DOM Overlay (6 Acts)
+          ------------------------------------------------------------- */}
+      <div className="relative z-10 w-full flex flex-col">
+        {/* Act I: Hero — The Builder Nexus */}
+        <LusionHeroOverlay />
 
-      {/* 3. About Knowvy & Interactive Pillars */}
-      <AboutSection />
+        {/* Act II: Core Dissection & Telemetry (Learn, Build, Connect) */}
+        <LusionPillarsOverlay />
 
-      {/* 4. Signature 3D Ecosystem Graph */}
-      <EcosystemSection />
+        {/* Act III: Spatial Constellation (7 Interconnected Tracks) */}
+        <LusionEcosystemOverlay
+          activeTrack={activeTrack}
+          onSelectTrack={(track) => setActiveTrack(track)}
+        />
 
-      {/* 5. Featured Events */}
-      <FeaturedEventsSection />
+        {/* Act IV: Flagship Initiatives & Event Portals */}
+        <LusionEventsOverlay />
 
-      {/* 7. External Opportunities Ecosystem */}
-      <OpportunitiesSection />
+        {/* Act V: Galactic Scale (Bhopal Genesis to Nationwide Network) */}
+        <LusionImpactOverlay />
 
-      {/* 9. Asymmetric Programs & Tracks */}
-      <ProgramsSection />
+        {/* Verified Community Voices & Leadership */}
+        <div className="relative z-10 bg-[#07090D]/80 backdrop-blur-xl border-t border-[#1C2430]">
+          <CommunitySection />
+          <TestimonialsSection />
+          <GallerySection />
+        </div>
 
-      {/* 10. Impact Progression Storytelling */}
-      <ImpactStorySection />
-
-      {/* 11. Verified Partners Marquee */}
-      <PartnersMarquee />
-
-      {/* 8 & 14. Community & Core Team */}
-      <CommunitySection />
-
-      {/* 12. Verified Testimonials */}
-      <TestimonialsSection />
-
-      {/* 13. Dynamic Masonry Event Gallery */}
-      <GallerySection />
-
-      {/* 15. Luma Creative Lab Showcase */}
-      <CreativeLabSection />
-
-      {/* 16. Final Cinematic CTA */}
-      <FinalCTASection />
+        {/* Act VI: The Final Cosmic Horizon & Call to Action */}
+        <LusionCTAOverlay />
+      </div>
     </main>
   );
 }
