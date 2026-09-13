@@ -22,6 +22,7 @@
     "nodemailer": "^10.0.9",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "resend": "^6.28.0",
     "tailwind-merge": "^3.7.0",
     "three": "^0.186.0"
   },
