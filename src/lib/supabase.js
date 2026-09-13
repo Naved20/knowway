@@ -111,3 +111,68 @@ export async function requestMentorship({ studentName, email, track, message, gi
   if (error) return { success: false, error: error.message };
   return { success: true, data };
 }
+
+// -------------------------------------------------------------
+// Multi-Platform Events Operations (Unstop, MLH, Devpost, Devfolio)
+// -------------------------------------------------------------
+
+export async function upsertEvents(events) {
+  if (!isConfigured) {
+    return { success: false, error: "Supabase not configured" };
+  }
+  if (!Array.isArray(events) || events.length === 0) {
+    return { success: true, count: 0 };
+  }
+
+  const { data, error } = await supabase
+    .from("events")
+    .upsert(events, { onConflict: "slug" });
+
+  if (error) {
+    console.error("[Supabase] Failed to upsert events:", error.message);
+    return { success: false, error: error.message };
+  }
+  return { success: true, data, count: events.length };
+}
+
+export async function getEventsByPlatform(platform, limit = 20) {
+  if (!isConfigured) {
+    return { success: false, data: [] };
+  }
+
+  const { data, error } = await supabase
+    .from("events")
+    .select("*")
+    .eq("platform", platform.toLowerCase())
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    console.warn(`[Supabase] Failed to get events for ${platform}:`, error.message);
+    return { success: false, data: [], error: error.message };
+  }
+  return { success: true, data: data || [] };
+}
+
+export async function getAllEvents({ limit = 50, platform = null, status = null } = {}) {
+  if (!isConfigured) {
+    return { success: false, data: [] };
+  }
+
+  let query = supabase.from("events").select("*").order("created_at", { ascending: false }).limit(limit);
+
+  if (platform && platform !== "all") {
+    query = query.eq("platform", platform.toLowerCase());
+  }
+  if (status && status !== "all") {
+    query = query.eq("status", status);
+  }
+
+  const { data, error } = await query;
+  if (error) {
+    console.warn("[Supabase] Failed to get all events:", error.message);
+    return { success: false, data: [], error: error.message };
+  }
+  return { success: true, data: data || [] };
+}
+

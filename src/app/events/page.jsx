@@ -1,30 +1,60 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { eventsData } from "@/data/knowvy-data";
-import { Calendar, MapPin, Users, ArrowRight, Search, SlidersHorizontal, Sparkles } from "lucide-react";
+import { Calendar, MapPin, Users, ArrowRight, ArrowUpRight, Search, SlidersHorizontal, Sparkles, Trophy } from "lucide-react";
+import { PLATFORM_FEEDS } from "@/lib/eventsSync";
 
 export default function EventsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [platformFilter, setPlatformFilter] = useState("all");
+  const [allEvents, setAllEvents] = useState([]);
 
-  const categories = ["all", "National Hackathon", "Technical Workshop", "AI & Engineering", "Community Sprint"];
+  // Merge flagship Knowvy events with multi-platform synced feeds
+  useEffect(() => {
+    const knowvyFormatted = eventsData.map((e) => ({
+      ...e,
+      platform: "knowvy",
+      banner_url: e.banner,
+      short_description: e.shortDescription,
+      external_url: `/events/${e.slug}`,
+      isInternal: true,
+    }));
 
-  const filteredEvents = eventsData.filter((event) => {
+    const externalFeeds = [];
+    Object.keys(PLATFORM_FEEDS).forEach((plat) => {
+      PLATFORM_FEEDS[plat].forEach((ev) => {
+        externalFeeds.push({
+          ...ev,
+          banner: ev.banner_url,
+          shortDescription: ev.short_description,
+          isInternal: false,
+        });
+      });
+    });
+
+    setAllEvents([...knowvyFormatted, ...externalFeeds]);
+  }, []);
+
+  const filteredEvents = allEvents.filter((event) => {
+    const title = event.title || "";
+    const desc = event.short_description || event.shortDescription || "";
+    const loc = event.location || "";
+
     const matchesSearch =
-      event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      event.shortDescription.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      event.location.toLowerCase().includes(searchQuery.toLowerCase());
+      title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      desc.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      loc.toLowerCase().includes(searchQuery.toLowerCase());
 
     const matchesStatus =
-      statusFilter === "all" || event.status.toLowerCase() === statusFilter.toLowerCase();
+      statusFilter === "all" || (event.status && event.status.toLowerCase() === statusFilter.toLowerCase());
 
-    const matchesCategory =
-      categoryFilter === "all" || event.category.toLowerCase() === categoryFilter.toLowerCase();
+    const matchesPlatform =
+      platformFilter === "all" || (event.platform && event.platform.toLowerCase() === platformFilter.toLowerCase());
 
-    return matchesSearch && matchesStatus && matchesCategory;
+    return matchesSearch && matchesStatus && matchesPlatform;
   });
 
   return (
@@ -64,7 +94,7 @@ export default function EventsPage() {
               <button
                 key={st}
                 onClick={() => setStatusFilter(st)}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-mono capitalize transition-all ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-mono capitalize transition-all cursor-pointer ${
                   statusFilter === st
                     ? "bg-[#4D8DFF] text-white font-bold"
                     : "bg-[#111722] text-[#8B95A5] hover:text-white border border-[#1C2430]"
@@ -76,6 +106,33 @@ export default function EventsPage() {
           </div>
         </div>
 
+        {/* Platform Filter Pills */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-2">
+          <span className="text-xs font-mono text-[#5A6475] uppercase mr-2 flex-shrink-0">
+            Platform:
+          </span>
+          {[
+            { id: "all", label: "All Platforms" },
+            { id: "knowvy", label: "Knowvy Flagship" },
+            { id: "unstop", label: "Unstop" },
+            { id: "mlh", label: "MLH" },
+            { id: "devfolio", label: "Devfolio" },
+            { id: "devpost", label: "Devpost" },
+          ].map((p) => (
+            <button
+              key={p.id}
+              onClick={() => setPlatformFilter(p.id)}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-mono transition-all flex-shrink-0 cursor-pointer ${
+                platformFilter === p.id
+                  ? "bg-[#8B5CF6] text-white font-bold shadow-md shadow-[#8B5CF6]/30"
+                  : "bg-[#111722] text-[#8B95A5] hover:text-white border border-[#1C2430]"
+              }`}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+
         {/* Event Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredEvents.map((event) => (
@@ -85,7 +142,7 @@ export default function EventsPage() {
             >
               <div className="relative h-52 overflow-hidden bg-[#07090D]">
                 <img
-                  src={event.banner}
+                  src={event.banner || event.banner_url}
                   alt={event.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-85 group-hover:opacity-100"
                 />
@@ -101,17 +158,31 @@ export default function EventsPage() {
                 >
                   {event.status}
                 </span>
-                <span className="absolute bottom-3 left-4 text-xs font-mono text-white/90 px-2 py-0.5 rounded bg-black/60 backdrop-blur-sm border border-white/10">
-                  {event.category}
-                </span>
+
+                <div className="absolute top-4 right-4 px-2 py-0.5 rounded-full bg-black/70 backdrop-blur-md border border-white/10 text-[10px] font-mono text-[#4D8DFF] uppercase font-bold">
+                  {event.platform || "Knowvy"}
+                </div>
+
+                {event.prizes && (
+                  <div className="absolute bottom-3 left-4 text-xs font-mono text-[#F59E0B] px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-sm border border-[#F59E0B]/30 flex items-center gap-1.5 font-bold">
+                    <Trophy className="w-3.5 h-3.5" />
+                    {event.prizes}
+                  </div>
+                )}
               </div>
 
               <div className="p-6 flex flex-col flex-1 space-y-4">
-                <h3 className="text-xl font-display font-bold text-white group-hover:text-[#4D8DFF] transition-colors">
-                  {event.title}
-                </h3>
+                <div>
+                  <span className="text-[10px] font-mono text-[#8B5CF6] uppercase block mb-1">
+                    {event.category}
+                  </span>
+                  <h3 className="text-xl font-display font-bold text-white group-hover:text-[#4D8DFF] transition-colors line-clamp-2">
+                    {event.title}
+                  </h3>
+                </div>
+
                 <p className="text-xs text-[#8B95A5] line-clamp-2 leading-relaxed">
-                  {event.shortDescription}
+                  {event.shortDescription || event.short_description}
                 </p>
 
                 <div className="pt-2 border-t border-[#1C2430] space-y-2 text-xs font-mono text-[#8B95A5]">
@@ -130,13 +201,25 @@ export default function EventsPage() {
                 </div>
 
                 <div className="pt-4 mt-auto">
-                  <Link
-                    href={`/events/${event.slug}`}
-                    className="w-full py-2.5 rounded-xl bg-[#111722] border border-[#1C2430] group-hover:bg-[#4D8DFF] group-hover:border-[#4D8DFF] text-white group-hover:text-black font-display font-bold text-xs flex items-center justify-center gap-2 transition-all duration-300"
-                  >
-                    View Details & Challenges
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </Link>
+                  {event.isInternal ? (
+                    <Link
+                      href={`/events/${event.slug}`}
+                      className="w-full py-2.5 rounded-xl bg-[#111722] border border-[#1C2430] group-hover:bg-[#4D8DFF] group-hover:border-[#4D8DFF] text-white group-hover:text-black font-display font-bold text-xs flex items-center justify-center gap-2 transition-all duration-300"
+                    >
+                      View Details & Challenges
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                  ) : (
+                    <a
+                      href={event.external_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full py-2.5 rounded-xl bg-[#111722] border border-[#1C2430] group-hover:bg-[#4D8DFF] group-hover:border-[#4D8DFF] text-white group-hover:text-black font-display font-bold text-xs flex items-center justify-center gap-2 transition-all duration-300"
+                    >
+                      Register on {(event.platform || "Platform").toUpperCase()}
+                      <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </a>
+                  )}
                 </div>
               </div>
             </div>

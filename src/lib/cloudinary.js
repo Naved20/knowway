@@ -1,51 +1,43 @@
+import { v2 as cloudinary } from "cloudinary";
+
+// Initialize Cloudinary with CLOUDINARY_URL from .env
+cloudinary.config({
+  cloudinary_url: process.env.CLOUDINARY_URL,
+  secure: true,
+});
+
 /**
- * Cloudinary Media Optimization Utility
- * Automatically injects responsive widths, auto-format (WebP/AVIF),
- * auto-quality compression, and aspect-ratio transformations.
+ * Upload an external event banner image to Cloudinary with automated WebP & optimization
+ * @param {string} imageUrl - External image URL (from MLH, Unstop, Devpost, Devfolio)
+ * @param {string} publicId - Custom public ID (e.g. event slug)
+ * @returns {Promise<string>} - The optimized Cloudinary secure URL
  */
-
-const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "agdaiyhe";
-
-/**
- * Returns an optimized Cloudinary delivery URL.
- * If given an external URL (e.g. Unsplash), it returns the URL or wraps it in Cloudinary fetch if supported.
- *
- * @param {string} publicIdOrUrl - Cloudinary public ID or media URL
- * @param {object} options - Transformation options
- * @param {number} [options.width] - Target width in pixels
- * @param {number} [options.height] - Target height in pixels
- * @param {string} [options.crop] - Crop mode (e.g., 'fill', 'scale', 'thumb')
- * @param {number} [options.quality] - Quality (default 'auto')
- * @param {string} [options.format] - Format (default 'auto')
- * @returns {string}
- */
-export function getOptimizedMediaUrl(publicIdOrUrl, options = {}) {
-  if (!publicIdOrUrl) return "";
-
-  // If it's already a full HTTP URL
-  if (publicIdOrUrl.startsWith("http://") || publicIdOrUrl.startsWith("https://")) {
-    // If it's already a Cloudinary URL, inject transformations
-    if (publicIdOrUrl.includes("res.cloudinary.com")) {
-      const parts = publicIdOrUrl.split("/upload/");
-      if (parts.length === 2) {
-        const transforms = buildTransformationString(options);
-        return `${parts[0]}/upload/${transforms}/${parts[1]}`;
-      }
-    }
-    return publicIdOrUrl;
+export async function uploadEventBanner(imageUrl, publicId) {
+  if (!imageUrl) {
+    return "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80";
   }
 
-  // Otherwise it's a Cloudinary public ID
-  const transforms = buildTransformationString(options);
-  return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${transforms}/${publicIdOrUrl}`;
+  // If image is already on Cloudinary, return as-is
+  if (imageUrl.includes("cloudinary.com")) {
+    return imageUrl;
+  }
+
+  try {
+    const uploadResult = await cloudinary.uploader.upload(imageUrl, {
+      folder: "knowvy/events/banners",
+      public_id: publicId ? `event_${publicId.replace(/[^a-zA-Z0-9_-]/g, "_")}` : undefined,
+      overwrite: true,
+      transformation: [
+        { width: 1200, height: 630, crop: "fill", gravity: "auto" },
+        { fetch_format: "auto", quality: "auto" },
+      ],
+    });
+
+    return uploadResult.secure_url;
+  } catch (error) {
+    console.warn(`[Cloudinary] Failed to upload ${imageUrl}, falling back to original:`, error.message);
+    return imageUrl;
+  }
 }
 
-function buildTransformationString(options = {}) {
-  const parts = ["f_auto", "q_auto"];
-
-  if (options.width) parts.push(`w_${options.width}`);
-  if (options.height) parts.push(`h_${options.height}`);
-  if (options.crop) parts.push(`c_${options.crop}`);
-
-  return parts.join(",");
-}
+export { cloudinary };

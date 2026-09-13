@@ -13,6 +13,11 @@ import {
   ArrowUpRight,
   UploadCloud,
   CheckCircle2,
+  Loader2,
+  RefreshCw,
+  Trophy,
+  Globe,
+  Database,
 } from "lucide-react";
 
 export default function AdminDashboardPage() {
@@ -21,6 +26,45 @@ export default function AdminDashboardPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [newEventTitle, setNewEventTitle] = useState("");
   const [newEventCategory, setNewEventCategory] = useState("Technical Workshop");
+
+  // Multi-Platform Sync States (Unstop, MLH, Devpost, Devfolio)
+  const [syncing, setSyncing] = useState(false);
+  const [syncResult, setSyncResult] = useState(null);
+  const [customJsonInput, setCustomJsonInput] = useState("");
+  const [customPlatform, setCustomPlatform] = useState("unstop");
+
+  const handleTriggerSync = async (plat, customData = null) => {
+    setSyncing(true);
+    setSyncResult(null);
+    try {
+      const res = await fetch("/api/events/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          platform: plat,
+          customEvents: customData,
+        }),
+      });
+      const data = await res.json();
+      setSyncResult(data);
+    } catch (err) {
+      setSyncResult({ error: err.message });
+    } finally {
+      setSyncing(false);
+    }
+  };
+
+  const handleCustomJsonSync = (e) => {
+    e.preventDefault();
+    if (!customJsonInput.trim()) return;
+    try {
+      const parsed = JSON.parse(customJsonInput);
+      const eventsArray = Array.isArray(parsed) ? parsed : [parsed];
+      handleTriggerSync(customPlatform, eventsArray);
+    } catch (err) {
+      alert("Invalid JSON format: " + err.message);
+    }
+  };
 
   const handleCreateEvent = (e) => {
     e.preventDefault();
@@ -85,6 +129,7 @@ export default function AdminDashboardPage() {
         <div className="flex items-center gap-2 border-b border-[#1C2430] pb-2 overflow-x-auto">
           {[
             { id: "events", label: "Events & Hackathons", icon: Calendar },
+            { id: "sync", label: "Multi-Platform Ingestion (Unstop, MLH, etc.)", icon: UploadCloud },
             { id: "team", label: "Team & Ambassadors", icon: Users },
             { id: "gallery", label: "Gallery & Cloudinary", icon: ImageIcon },
           ].map((tab) => {
@@ -252,6 +297,197 @@ export default function AdminDashboardPage() {
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Tab: Multi-Platform Sync (Unstop, MLH, Devpost, Devfolio) */}
+        {activeTab === "sync" && (
+          <div className="space-y-8 animate-in fade-in duration-200">
+            {/* Header & Architecture Status */}
+            <div className="p-7 rounded-3xl bg-[#0D1118] border border-[#1C2430] space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#10B981]/10 border border-[#10B981]/30 text-xs font-mono text-[#10B981] mb-2">
+                    <Database className="w-3.5 h-3.5" />
+                    Automated Ingestion Pipeline Active
+                  </div>
+                  <h3 className="text-2xl font-display font-bold text-white">
+                    Multi-Platform Event Sync & Cloudinary Processing
+                  </h3>
+                  <p className="text-xs text-[#8B95A5] mt-1 max-w-2xl">
+                    Fetches live competitions and hackathons, extracts banner images, optimizes and uploads them to your Cloudinary storage, and persists structured records into Supabase.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-3 text-xs font-mono">
+                  <span className="px-3 py-1.5 rounded-xl bg-black/50 border border-white/10 text-white">
+                    Cloudinary: <span className="text-[#4D8DFF] font-bold">agdaiyhe</span>
+                  </span>
+                  <span className="px-3 py-1.5 rounded-xl bg-black/50 border border-white/10 text-white">
+                    Supabase: <span className="text-[#10B981] font-bold">oaigwpwlrbylmzvlfskq</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* 1-Click Platform Sync Cards */}
+            <div className="space-y-4">
+              <h4 className="text-sm font-mono text-[#8B95A5] uppercase tracking-wider">
+                1-Click Platform Synchronizers
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {[
+                  { id: "all", name: "Sync All Platforms", desc: "Ingests Unstop, MLH, Devpost & Devfolio in parallel", color: "#4D8DFF" },
+                  { id: "unstop", name: "Sync Unstop", desc: "Corporate hackathons, Flipkart GRiD, Tata challenges", color: "#F59E0B" },
+                  { id: "mlh", name: "Sync MLH", desc: "Major League Hacking global collegiate sprints", color: "#EC4899" },
+                  { id: "devfolio", name: "Sync Devfolio", desc: "ETHIndia, university hackathons & fellowship bounties", color: "#3B82F6" },
+                  { id: "devpost", name: "Sync Devpost", desc: "Virtual AI, cloud & foundation model hackathons", color: "#8B5CF6" },
+                ].map((p) => (
+                  <div
+                    key={p.id}
+                    className="p-5 rounded-2xl bg-[#0D1118] border border-[#1C2430] flex flex-col justify-between space-y-4 hover:border-white/20 transition-all"
+                  >
+                    <div>
+                      <span
+                        className="text-xs font-mono font-bold block mb-1"
+                        style={{ color: p.color }}
+                      >
+                        {p.name}
+                      </span>
+                      <p className="text-xs text-[#8B95A5] leading-relaxed">
+                        {p.desc}
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={() => handleTriggerSync(p.id)}
+                      disabled={syncing}
+                      className="w-full py-2.5 rounded-xl bg-[#111722] hover:bg-[#4D8DFF] border border-[#1C2430] hover:border-transparent text-white text-xs font-mono font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-50 cursor-pointer"
+                    >
+                      {syncing ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <RefreshCw className="w-3.5 h-3.5" />
+                      )}
+                      Run Sync
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Custom API / JSON Payload Ingestion Form */}
+            <div className="p-7 rounded-3xl bg-[#0D1118] border border-[#1C2430] space-y-4">
+              <h4 className="text-base font-display font-bold text-white flex items-center gap-2">
+                <Globe className="w-4 h-4 text-[#4D8DFF]" />
+                Custom API Response / JSON Ingestion
+              </h4>
+              <p className="text-xs text-[#8B95A5]">
+                Have a raw API JSON payload or custom event list from a competition page? Paste it below to automatically extract details, upload banners to Cloudinary, and save into Supabase.
+              </p>
+
+              <form onSubmit={handleCustomJsonSync} className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-48">
+                    <label className="text-xs font-mono text-[#8B95A5] block mb-1">
+                      Platform Source
+                    </label>
+                    <select
+                      value={customPlatform}
+                      onChange={(e) => setCustomPlatform(e.target.value)}
+                      className="w-full px-3 py-2 rounded-xl bg-[#111722] border border-[#1C2430] text-white text-xs font-mono focus:outline-none focus:border-[#4D8DFF]"
+                    >
+                      <option value="unstop">Unstop</option>
+                      <option value="mlh">MLH</option>
+                      <option value="devpost">Devpost</option>
+                      <option value="devfolio">Devfolio</option>
+                      <option value="knowvy">Knowvy Flagship</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-xs font-mono text-[#8B95A5] block mb-1">
+                    Event JSON Payload (Object or Array)
+                  </label>
+                  <textarea
+                    rows={6}
+                    value={customJsonInput}
+                    onChange={(e) => setCustomJsonInput(e.target.value)}
+                    placeholder={`[
+  {
+    "title": "Hackathon Name",
+    "date": "Nov 15 - 17, 2025",
+    "location": "Online",
+    "banner": "https://example.com/banner.jpg",
+    "website": "https://example.com/register",
+    "prizes": "$10,000",
+    "description": "Short summary of the hackathon"
+  }
+]`}
+                    className="w-full p-4 rounded-xl bg-[#07090D] border border-[#1C2430] text-xs font-mono text-white placeholder:text-[#5A6475] focus:outline-none focus:border-[#4D8DFF]"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={syncing || !customJsonInput.trim()}
+                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#4D8DFF] to-[#3B82F6] text-white text-xs font-display font-bold shadow-lg shadow-[#4D8DFF]/25 hover:scale-[1.02] transition-transform flex items-center gap-2 disabled:opacity-50 cursor-pointer"
+                >
+                  {syncing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <UploadCloud className="w-4 h-4" />}
+                  Ingest & Process to Cloudinary + Supabase
+                </button>
+              </form>
+            </div>
+
+            {/* Sync Output Results Terminal */}
+            {syncResult && (
+              <div className="p-6 rounded-3xl bg-[#05070A] border border-[#1C2430] space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-xs font-mono text-white">
+                    <CheckCircle2 className="w-4 h-4 text-[#10B981]" />
+                    <span>Sync Operation Status</span>
+                  </div>
+                  <span className="text-[11px] font-mono text-[#8B95A5]">
+                    {syncResult.syncedCount || 0} events processed
+                  </span>
+                </div>
+
+                {syncResult.events && syncResult.events.length > 0 && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
+                    {syncResult.events.map((evt) => (
+                      <div
+                        key={evt.slug}
+                        className="p-3 rounded-xl bg-[#0D1118] border border-[#1C2430] flex gap-3 items-center"
+                      >
+                        <div className="w-16 h-12 rounded-lg overflow-hidden bg-black flex-shrink-0">
+                          <img
+                            src={evt.banner_url}
+                            alt={evt.title}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <span className="text-[10px] font-mono text-[#4D8DFF] uppercase block truncate">
+                            {evt.platform}
+                          </span>
+                          <span className="text-xs font-bold text-white block truncate">
+                            {evt.title}
+                          </span>
+                          <span className="text-[10px] font-mono text-[#5A6475] block truncate">
+                            {evt.prizes || evt.date}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <pre className="p-4 rounded-xl bg-black/60 border border-white/5 text-[11px] font-mono text-[#8B95A5] overflow-x-auto max-h-48">
+                  {JSON.stringify(syncResult, null, 2)}
+                </pre>
+              </div>
+            )}
           </div>
         )}
 

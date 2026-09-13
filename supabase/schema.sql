@@ -94,3 +94,42 @@ CREATE POLICY "Allow service role read all"
 CREATE POLICY "Allow service role read registrations"
     ON public.event_registrations FOR SELECT
     USING (auth.role() = 'service_role' OR auth.role() = 'authenticated');
+
+-- =============================================================
+-- 9. Events Table (Multi-Platform Synced: Unstop, MLH, Devpost, Devfolio)
+-- =============================================================
+CREATE TABLE IF NOT EXISTS public.events (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    slug TEXT UNIQUE NOT NULL,
+    title TEXT NOT NULL,
+    platform TEXT NOT NULL CHECK (platform IN ('knowvy', 'mlh', 'devfolio', 'devpost', 'unstop')),
+    category TEXT DEFAULT 'Hackathon',
+    status TEXT DEFAULT 'Upcoming' CHECK (status IN ('Upcoming', 'Ongoing', 'Completed')),
+    date TEXT NOT NULL,
+    start_date TIMESTAMPTZ,
+    end_date TIMESTAMPTZ,
+    location TEXT DEFAULT 'Online',
+    participants TEXT DEFAULT 'Open',
+    banner_url TEXT NOT NULL,
+    original_banner_url TEXT,
+    external_url TEXT NOT NULL,
+    short_description TEXT,
+    about TEXT,
+    prizes TEXT,
+    tags TEXT[] DEFAULT '{}',
+    synced_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.events ENABLE ROW LEVEL SECURITY;
+
+-- Allow public read access to all events
+CREATE POLICY "Allow public read events"
+    ON public.events FOR SELECT
+    USING (true);
+
+-- Allow upserting events from sync workers (service_role or public for dev convenience)
+CREATE POLICY "Allow public insert and update events"
+    ON public.events FOR ALL
+    USING (true)
+    WITH CHECK (true);
+
