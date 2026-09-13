@@ -1,0 +1,357 @@
+{
+  "users": [
+    {
+      "id": "usr_admin_671fc9fd",
+      "email": "knowvy1@gmail.com",
+      "passwordHash": "28994b9d4e83d4cdd3a2ffcf5a51eb7a:f924fab61dd462754d519bfedf45cc69061eb89a05180b0e78cbd2fcb58a78d2d4c2bd1c1b9309d09eb452c21d007bba65f1779985a0b15750d7451891dec8da",
+      "name": "Knowvy Administrator",
+      "role": "admin",
+      "college": "MANIT Bhopal",
+      "year": "Alumni",
+      "github": "knowvytech",
+      "phone": "+91 93026 89234",
+      "bio": "Official administrative lead of Knowvy Technologies developer ecosystem.",
+      "avatar": "/images/knowvy-logo.png",
+      "emailPreferences": {
+        "promotional": true,
+        "transactional": true
+      },
+      "createdAt": "2026-09-13T10:06:51.470Z",
+      "updatedAt": "2026-09-13T10:06:51.470Z"
+    }
+  ],
+  "otps": [
+    {
+      "id": "otp_51b5ae6a-78e3-4d49-836a-54bf3aa472a3",
+      "email": "testbuilder_1789294056374@example.com",
+      "otpHash": "2cbd7c030d3770f3f332286b8fe5bf921cecf869e892893d847f2300dc944780",
+      "purpose": "register",
+      "attempts": 0,
+      "maxAttempts": 5,
+      "expiresAt": 1789294656577,
+      "createdAt": 1789294056577
+    }
+  ],
+  "events": [
+    {
+      "id": "evt_d0fe428f-8850-4805-b970-0598ed741faf",
+      "slug": "tic-national-hackathon",
+      "title": "TIC National Hackathon (Technocats Innovation Challenge)",
+      "category": "National Hackathon",
+      "status": "Upcoming",
+      "isPublished": true,
+      "date": "April 03, 2026",
+      "time": "10:00 AM - 06:00 PM IST",
+      "location": "Offline • Bhopal, Madhya Pradesh",
+      "meetingLink": "",
+      "banner": "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80",
+      "shortDescription": "Technocats Innovation Challenge is a 36-hour offline hackathon organised by Knowvy Technologies and Vexite Studio.",
+      "about": "The flagship national 36-hour hackathon bringing together the finest student engineers across India to solve high-stakes challenges. Organized by Knowvy Technologies in collaboration with Vexite Studio, this competition features cash prizes, top venture mentors, and direct recruitment fast-tracks.",
+      "highlights": [
+        "36 Hours of Non-stop Collaborative Building",
+        "Cash Prizes & Grants for Winning Prototypes",
+        "Mentorship from Senior Founders & Tech Leads",
+        "Co-organized with Vexite Studio"
+      ],
+      "challenges": [
+        "AI-Powered Developer Tools & Autonomous Systems",
+        "Decentralized Data & Open Financial Architecture",
+        "Campus & Educational Productivity Infrastructure",
+        "Smart City & Sustainable Technology"
+      ],
+      "partners": [
+        "Knowvy Technologies",
+        "Vexite Studio",
+        "Google for Developers",
+        "TIT Bhopal"
+      ],
+      "winningTeams": [],
+      "maxCapacity": 200,
+      "registeredCount": 0,
+      "createdAt": "2026-09-13T10:06:51.341Z",
+      "updatedAt": "2026-09-13T10:06:51.342Z"
+    },
+    {
+      "id": "evt_8f0d08c9-7be2-4262-9d2c-1a3d78be942b",
+      "slug": "heygen-india-roadshow",
+      "title": "HeyGen India RoadShow Series (9 Cities)",
+      "category": "National RoadShow",
+      "status": "Upcoming",
+      "isPublished": true,
+      "date": "Series 2026",
+      "time": "10:00 AM - 06:00 PM IST",
+      "location": "9 Cities Across India (Bhopal, Delhi, Mumbai, Bengaluru, etc.)",
+      "meetingLink": "",
+      "banner": "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1200&q=80",
+      "shortDescription": "Connecting founders, creators, and marketers across 9 major cities for real conversations on modern growth and AI video.",
+      "about": "A nationwide initiative led by Knowvy Technologies and HeyGen Ambassadors. We're taking HeyGen across 9 dynamic cities in India to spark direct, grounded conversations with creators, founders, and growth teams.",
+      "highlights": [
+        "9 Cities: Jabalpur, Delhi, Hyderabad, Chennai, Mumbai, Pune, Bengaluru, Bhopal, Indore",
+        "Real talk on modern marketing & scaling 10x video output",
+        "Hands-on AI avatar workflows & publish-ready pipelines",
+        "Founder-to-founder relationships & distribution playbooks"
+      ],
+      "challenges": [
+        "Create your first AI avatar and script live on site"
+      ],
+      "partners": [
+        "Knowvy Technologies",
+        "HeyGen",
+        "HeyGen Ambassadors"
+      ],
+      "winningTeams": [],
+      "maxCapacity": 200,
+      "registeredCount": 0,
+      "createdAt": "2026-09-13T10:06:51.342Z",
+      "updatedAt": "2026-09-13T10:06:51.342Z"
+    },
+    {
+      "id": "evt_96bd34cf-4cae-4ec0-ac0b-1dde2ddc66e1",
+      "slug": "ms-build-bhopal",
+      "title": "MS Build Bhopal",
+      "category": "Dev Day & Cloud Labs",
+      "status": "Completed",
+      "isPublished": true,
+      "date": "May 18, 2025",
+      "time": "10:00 AM - 06:00 PM IST",
+      "location": "Auditorium • Bhopal, India",
+      "meetingLink": "",
+      "banner": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80",
+      "shortDescription": "A flagship event bringing Microsoft technologies, Azure AI, and modern web architectures to students in Bhopal with live keynote streaming & hands-on labs.",
+      "about": "Brought the spirit of Microsoft Build directly to students in Central India. Featured hands-on labs with Azure OpenAI, GitHub Copilot integration, and modern microservice deployments on Azure Kubernetes Service.",
+      "highlights": [
+        "Keynote live streaming & technical breakdown",
+        "Azure Cloud Subscriptions & Lab passes for all attendees",
+        "Hands-on serverless & modern web architectures"
+      ],
+      "challenges": [
+        "Deploy a full-stack containerized app on Azure App Service"
+      ],
+      "partners": [
+        "Microsoft for Startups",
+        "Knowvy Technologies",
+        "Azure Tech Group Bhopal"
+      ],
+      "winningTeams": [],
+      "maxCapacity": 200,
+      "registeredCount": 0,
+      "createdAt": "2026-09-13T10:06:51.342Z",
+      "updatedAt": "2026-09-13T10:06:51.342Z"
+    },
+    {
+      "id": "evt_a2330bae-190f-48e4-8b98-e141461e95d9",
+      "slug": "agentic-ai-hackathon-2025",
+      "title": "Agentic AI Hackathon 2025",
+      "category": "AI Hackathon",
+      "status": "Completed",
+      "isPublished": true,
+      "date": "November 20 - 21, 2025",
+      "time": "10:00 AM - 06:00 PM IST",
+      "location": "Tech Labs • Bhopal, India",
+      "meetingLink": "",
+      "banner": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80",
+      "shortDescription": "A 36-hour intense hackathon where student teams built autonomous multi-agent systems, LangChain workflows, and AI vector database tools.",
+      "about": "Central India's first dedicated Agentic AI hackathon. 45 collegiate teams built autonomous agents capable of web automation, data retrieval, and complex task execution using LangChain, CrewAI, and ChromaDB.",
+      "highlights": [
+        "36 Hours of intense autonomous agent prototyping",
+        "Hands-on vector database & RAG pipelines",
+        "Direct reviews from AI engineers & startup founders"
+      ],
+      "challenges": [
+        "Build an autonomous multi-agent system for real-world operations"
+      ],
+      "partners": [
+        "Google for Developers",
+        "Knowvy Technologies"
+      ],
+      "winningTeams": [
+        {
+          "rank": "1st Place",
+          "team": "Team AgentZero",
+          "project": "Autonomous Customer Support & Incident Resolver"
+        },
+        {
+          "rank": "2nd Place",
+          "team": "Team VectorMind",
+          "project": "Distributed RAG over multi-format technical docs"
+        }
+      ],
+      "maxCapacity": 200,
+      "registeredCount": 0,
+      "createdAt": "2026-09-13T10:06:51.342Z",
+      "updatedAt": "2026-09-13T10:06:51.342Z"
+    },
+    {
+      "id": "evt_ed3a59b1-3149-4b8d-b904-46fd8a0ada0b",
+      "slug": "github-copilot-dev-days",
+      "title": "GitHub Copilot Dev Days",
+      "category": "Technical Workshop",
+      "status": "Completed",
+      "isPublished": true,
+      "date": "July 12, 2025",
+      "time": "10:00 AM - 06:00 PM IST",
+      "location": "Hands-on Lab • Bhopal, India",
+      "meetingLink": "",
+      "banner": "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=80",
+      "shortDescription": "Interactive session exploring AI-assisted software development, rapid prototyping with GitHub Copilot, and automated unit test generation.",
+      "about": "Students experienced firsthand how GitHub Copilot transforms developer productivity. From refactoring complex functions to generating end-to-end unit tests and Dockerfiles.",
+      "highlights": [
+        "Mastering Copilot prompt engineering for software engineers",
+        "Automated test generation & regex parsing drills",
+        "GitHub Education student tooling pack walkthrough"
+      ],
+      "challenges": [
+        "Refactor legacy codebase with 100% test coverage using Copilot"
+      ],
+      "partners": [
+        "GitHub Education",
+        "Knowvy Technologies"
+      ],
+      "winningTeams": [],
+      "maxCapacity": 200,
+      "registeredCount": 0,
+      "createdAt": "2026-09-13T10:06:51.342Z",
+      "updatedAt": "2026-09-13T10:06:51.342Z"
+    },
+    {
+      "id": "evt_8f3de527-22e1-4483-ba5b-fc5d79b77289",
+      "slug": "open-source-sprint-q1",
+      "title": "Open Source Sprint Q1",
+      "category": "Community PR Sprint",
+      "status": "Completed",
+      "isPublished": true,
+      "date": "January 24, 2026",
+      "time": "10:00 AM - 06:00 PM IST",
+      "location": "Campus Hub • Bhopal, India",
+      "meetingLink": "",
+      "banner": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80",
+      "shortDescription": "A weekend PR sprint guiding student developers to resolve real GitHub issues, review pull requests, and contribute to popular open source repos.",
+      "about": "Demystified open-source engineering for collegiate developers. Mentors guided students through finding 'good first issues', understanding Git rebase and squash workflows, and adhering to strict open-source review guidelines.",
+      "highlights": [
+        "1-on-1 Pull Request reviews with experienced maintainers",
+        "Over 40 first-time PRs merged during the weekend",
+        "GSOC & open-source fellowship application masterclass"
+      ],
+      "challenges": [
+        "Merge at least 1 production PR into verified open-source repos"
+      ],
+      "partners": [
+        "Knowvy Open Source Chapter",
+        "GitHub Education"
+      ],
+      "winningTeams": [],
+      "maxCapacity": 200,
+      "registeredCount": 0,
+      "createdAt": "2026-09-13T10:06:51.342Z",
+      "updatedAt": "2026-09-13T10:06:51.342Z"
+    },
+    {
+      "id": "evt_bfc0951c-1605-444f-83cc-acfa6536f0c5",
+      "slug": "aws-builder-day",
+      "title": "AWS Builder Day",
+      "category": "Cloud Dev Day",
+      "status": "Completed",
+      "isPublished": true,
+      "date": "December 14, 2025",
+      "time": "10:00 AM - 06:00 PM IST",
+      "location": "Bhopal, Madhya Pradesh",
+      "meetingLink": "",
+      "banner": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80",
+      "shortDescription": "Deep dive into AWS cloud architecture, container deployments, and hands-on cloud labs for student developers.",
+      "about": "An intensive architecture masterclass covering AWS Lambda, ECS container services, and S3 event-driven triggers. Attendees deployed live serverless backends with zero downtime.",
+      "highlights": [
+        "Hands-on AWS cloud lab environments",
+        "Serverless architecture patterns for student projects",
+        "Direct guidance on AWS Certified Cloud Practitioner prep"
+      ],
+      "challenges": [
+        "Build an event-driven image processing pipeline using AWS Lambda"
+      ],
+      "partners": [
+        "Knowvy Technologies"
+      ],
+      "winningTeams": [],
+      "maxCapacity": 200,
+      "registeredCount": 0,
+      "createdAt": "2026-09-13T10:06:51.342Z",
+      "updatedAt": "2026-09-13T10:06:51.342Z"
+    },
+    {
+      "id": "evt_037ad642-e6b2-4997-a2aa-330a4879035a",
+      "slug": "codesprint-bhopal",
+      "title": "CodeSprint Bhopal",
+      "category": "Competitive Programming",
+      "status": "Completed",
+      "isPublished": true,
+      "date": "March 15, 2026",
+      "time": "10:00 AM - 06:00 PM IST",
+      "location": "Collegiate Campus • Bhopal, India",
+      "meetingLink": "",
+      "banner": "https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=1200&q=80",
+      "shortDescription": "Competitive programming and rapid MVP development sprint testing algorithmic efficiency and full-stack deployment skills under time limits.",
+      "about": "Combined the algorithmic intensity of competitive programming with rapid product execution. Coders solved complex dynamic programming challenges and then had 4 hours to turn their solution into a functional web service.",
+      "highlights": [
+        "Algorithmic challenges benchmarked against strict time constraints",
+        "Rapid web MVP deployment judging",
+        "Top performers awarded direct interview opportunities"
+      ],
+      "challenges": [
+        "Build and deploy an algorithmic routing engine in under 4 hours"
+      ],
+      "partners": [
+        "Knowvy Technologies",
+        "Unstop"
+      ],
+      "winningTeams": [],
+      "maxCapacity": 200,
+      "registeredCount": 0,
+      "createdAt": "2026-09-13T10:06:51.342Z",
+      "updatedAt": "2026-09-13T10:06:51.342Z"
+    },
+    {
+      "id": "evt_733f320a-7da4-4f99-86a9-1a5adb798bd9",
+      "slug": "miro-meetup-bhopal",
+      "title": "Miro Meetup Bhopal",
+      "category": "Design & Systems Meetup",
+      "status": "Completed",
+      "isPublished": true,
+      "date": "September 05, 2025",
+      "time": "10:00 AM - 06:00 PM IST",
+      "location": "Co-working Space • Bhopal, India",
+      "meetingLink": "",
+      "banner": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80",
+      "shortDescription": "Visual collaboration meetup focused on system design diagramming, UX wireframing, and product management workflows for student founders.",
+      "about": "Explored the bridge between software architecture and product design. Attendees mapped end-to-end distributed system diagrams, wireframed mobile experiences, and learned agile sprint planning.",
+      "highlights": [
+        "Hands-on visual system design diagramming",
+        "Product wireframing and user journey mapping",
+        "Networking circle with local startup founders"
+      ],
+      "challenges": [
+        "Map an end-to-end microservices architecture on Miro in 30 minutes"
+      ],
+      "partners": [
+        "Knowvy Technologies"
+      ],
+      "winningTeams": [],
+      "maxCapacity": 200,
+      "registeredCount": 0,
+      "createdAt": "2026-09-13T10:06:51.342Z",
+      "updatedAt": "2026-09-13T10:06:51.342Z"
+    }
+  ],
+  "registrations": [],
+  "emailLogs": [
+    {
+      "id": "log_b7c045ea-b17f-4757-8e48-7c8045ed5a05",
+      "recipient": "testbuilder_1789294056374@example.com",
+      "emailType": "transactional",
+      "subject": "Verify your email to create your Knowvy account",
+      "status": "failed",
+      "error": "Invalid login: 534-5.7.9 Please log in with your web browser and then try again. For more\n534-5.7.9 information, go to\n534 5.7.9  https://support.google.com/mail/?p=WebLoginRequired 5a478bee46e88-33ba4f7390csm18900534eec.26 - gsmtp",
+      "campaignId": null,
+      "sentAt": "2026-09-13T10:07:38.843Z"
+    }
+  ],
+  "emailQueue": []
+}

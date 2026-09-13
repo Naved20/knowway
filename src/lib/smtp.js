@@ -20,7 +20,7 @@ export function getMailTransporter() {
     secure: port === 465, // true for 465, false for other ports
     auth: {
       user: user.trim(),
-      pass: pass.trim(),
+      pass: pass.replace(/\s+/g, "").trim(),
     },
     // Useful for local testing / self-signed certificates if needed
     tls: {
